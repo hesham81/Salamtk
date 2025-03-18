@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:twseef/core/validations/validations.dart';
+import '/core/utils/auth/sign_up_auth.dart';
+import '/core/validations/validations.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
@@ -17,29 +19,30 @@ class PatientSignUp extends StatefulWidget {
 }
 
 class _PatientSignUpState extends State<PatientSignUp> {
-  bool? _selectedValue;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  // bool done = false ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            0.01.height.hSpace,
-            SafeArea(
-              child: SvgPicture.asset(
-                AppAssets.signUpDoctorImage,
-              ).center,
-            ),
-            0.1.height.hSpace,
-            Form(
-              key: formKey,
-              child: Column(
+      body: Form(
+        key: formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              0.01.height.hSpace,
+              SafeArea(
+                child: SvgPicture.asset(
+                  AppAssets.signUpDoctorImage,
+                ).center,
+              ),
+              0.1.height.hSpace,
+              Column(
                 children: [
                   CustomTextFormField(
                     hintText: "Name",
@@ -58,7 +61,8 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   CustomTextFormField(
                     hintText: "Password",
                     isPassword: true,
-                    validate: (value) => Validations.isPasswordValid(value ?? ""),
+                    validate: (value) =>
+                        Validations.isPasswordValid(value ?? ""),
                     controller: passwordController,
                   ),
                   0.02.height.hSpace,
@@ -74,58 +78,49 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   0.02.height.hSpace,
                 ],
               ).hPadding(0.03.width),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Radio<bool>(
-                    focusColor: AppColors.secondaryColor,
-                    hoverColor: AppColors.secondaryColor,
-                    fillColor: WidgetStatePropertyAll(AppColors.secondaryColor),
-                    value: _selectedValue ?? false,
-                    groupValue: _selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedValue = value;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
+              0.02.height.hSpace,
+              SizedBox(
+                width: double.maxFinite,
+                child: CustomElevatedButton(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      EasyLoading.show();
+                      await SignUpAuth.signUp(
+                              email: emailController.text,
+                              password: passwordController.text)
+                          .then(
+                        (value) {
+                          if (value == null) {
+                            Navigator.pop(context);
+                            EasyLoading.dismiss();
+                            EasyLoading.showSuccess(
+                              "Account Created Successfully",
+                            );
+                          } else {
+                            EasyLoading.dismiss();
+                            EasyLoading.showError(value);
+                          }
+                        },
+                      );
+                    }
+                  },
                   child: Text(
-                    "I agree with the Terms of Service & Privacy Policy",
-                    overflow: TextOverflow.ellipsis,
+                    "Sign Up",
                     style: TextStyle(
-                      color: AppColors.slateBlueColor,
+                      color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 18,
                     ),
                   ),
                 ),
-              ],
-            ),
-            0.02.height.hSpace,
-            SizedBox(
-              width: double.maxFinite,
-              child: CustomElevatedButton(
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                onPressed: () {},
-              ),
-            ).hPadding(0.05.width),
-            0.02.height.hSpace,
-            CustomTextButton(
-              text: "Have an account? Log in",
-              onPressed: () => Navigator.pop(context),
-            )
-          ],
+              ).hPadding(0.05.width),
+              0.02.height.hSpace,
+              CustomTextButton(
+                text: "Have an account? Log in",
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          ),
         ),
       ),
     );
