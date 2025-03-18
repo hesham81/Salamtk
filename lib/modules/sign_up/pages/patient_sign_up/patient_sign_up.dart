@@ -25,8 +25,6 @@ class _PatientSignUpState extends State<PatientSignUp> {
   TextEditingController confirmPasswordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // bool done = false ;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +36,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
               0.01.height.hSpace,
               SafeArea(
                 child: SvgPicture.asset(
-                  AppAssets.signUpDoctorImage,
+                  AppAssets.signUpPatientImage,
                 ).center,
               ),
               0.1.height.hSpace,
@@ -86,9 +84,10 @@ class _PatientSignUpState extends State<PatientSignUp> {
                     if (formKey.currentState!.validate()) {
                       EasyLoading.show();
                       await SignUpAuth.signUp(
-                              email: emailController.text,
-                              password: passwordController.text)
-                          .then(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        name: nameController.text,
+                      ).then(
                         (value) {
                           if (value == null) {
                             Navigator.pop(context);
