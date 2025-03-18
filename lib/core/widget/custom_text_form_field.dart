@@ -9,7 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final IconData? suffixIcon;
   final bool isPassword;
   final ValidationFunction? validate;
-  final TextEditingController? controller;
+  final TextEditingController controller;
 
   const CustomTextFormField({
     super.key,
@@ -18,7 +18,7 @@ class CustomTextFormField extends StatefulWidget {
     this.suffixIcon,
     this.isPassword = false,
     this.validate,
-    this.controller,
+    required this.controller,
   });
 
   @override
@@ -26,11 +26,12 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool isVisible = false;
+  bool isVisible = false; // Controls password visibility
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
+
     return TextFormField(
       validator: widget.validate,
       controller: widget.controller,
@@ -38,19 +39,21 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         suffixIcon: (widget.isPassword == false)
             ? (widget.suffixIcon == null)
-                ? null
-                : Icon(widget.suffixIcon)
+            ? null
+            : Icon(widget.suffixIcon)
             : IconButton(
-                onPressed: () {
-                  setState(() {
-                    isVisible = !isVisible;
-                  });
-                },
-                icon: Icon((isVisible)
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined),
-              ),
-        hintText: widget.hintText,
+          onPressed: () {
+            setState(() {
+              isVisible = !isVisible; // Toggle password visibility
+            });
+          },
+          icon: Icon(
+            (isVisible)
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+          ),
+        ),
+        hintText: widget.hintText, // Use the provided hintText
         prefixIconColor: AppColors.slateBlueColor,
         suffixIconColor: AppColors.slateBlueColor,
         focusColor: AppColors.slateBlueColor,
@@ -65,15 +68,25 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderSide: BorderSide(color: Color(0xff677294)),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+        ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xff677294)),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
       ),
-      style: theme.labelLarge!.copyWith(
+      style: theme.labelLarge?.copyWith(
         color: AppColors.slateBlueColor,
-      ),
-      obscureText: (widget.isPassword) ? isVisible : false,
+      ) ??
+          TextStyle(
+            fontSize: 16,
+            color: AppColors.slateBlueColor,
+          ), // Fallback style if labelLarge is null
+      obscureText: (widget.isPassword) ? !isVisible : false, // Fix obscureText logic
     );
   }
 }

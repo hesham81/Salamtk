@@ -4,7 +4,7 @@ import '/core/theme/app_colors.dart';
 class CustomElevatedButton extends StatefulWidget {
   final Widget child;
 
-  final Function() onPressed;
+  final Function()? onPressed;
   final Color? btnColor;
   final double borderRadius;
 
@@ -24,7 +24,7 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: widget.btnColor ?? AppColors.secondaryColor,
         padding: EdgeInsets.symmetric(vertical: 15),
