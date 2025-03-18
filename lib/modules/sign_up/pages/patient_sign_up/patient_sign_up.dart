@@ -9,14 +9,14 @@ import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_button.dart';
 import '/core/widget/custom_text_form_field.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class PatientSignUp extends StatefulWidget {
+  const PatientSignUp({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<PatientSignUp> createState() => _PatientSignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _PatientSignUpState extends State<PatientSignUp> {
   bool? _selectedValue;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();

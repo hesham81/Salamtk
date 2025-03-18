@@ -9,4 +9,9 @@ abstract class AppAssets{
 
 
   static const String splashBG = 'assets/images/splash_background.svg';
+
+
+  //avatarts
+  static const String doctorAvatar = 'assets/images/doctor_avatar.jpg';
+  static const String patientAvatar = 'assets/images/patient_avatar.jpg';
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
-import '/modules/sign_up/pages/sign_up.dart';
+import 'package:twseef/modules/sign_up/pages/select_type/select_type.dart';
+import '../../sign_up/pages/patient_sign_up/patient_sign_up.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -84,7 +85,7 @@ class SignIn extends StatelessWidget {
                 CustomTextButton(
                   text: "Don't Have An Account ? Join Us",
                   onPressed: () => slideLeftWidget(
-                    newPage: SignUp(),
+                    newPage: SelectType(),
                     context: context,
                   ),
                 )
