@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/modules/sign_up/pages/sign_up.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -41,21 +43,21 @@ class SignIn extends StatelessWidget {
                   hintText: 'Password',
                   isPassword: true,
                 ),
-                0.02.height.hSpace,
-                CustomElevatedButton(
-                  child: Text("Login",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      )),
-                  onPressed: () {},
-                ).hPadding(0.07.width),
-                // 0.02.height.hSpace,
                 CustomTextButton(
                   text: "Forget Password",
                   onPressed: () {},
-                ),
+                ).alignBottomRight(),
+                CustomElevatedButton(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: () {},
+                ).hPadding(0.07.width),
                 0.02.height.hSpace,
                 CustomContainer(
                   child: Row(
@@ -81,7 +83,10 @@ class SignIn extends StatelessWidget {
                 0.02.height.hSpace,
                 CustomTextButton(
                   text: "Don't Have An Account ? Join Us",
-                  onPressed: () {},
+                  onPressed: () => slideLeftWidget(
+                    newPage: SignUp(),
+                    context: context,
+                  ),
                 )
               ],
             ).hPadding(0.03.width)
