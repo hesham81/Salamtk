@@ -22,27 +22,34 @@ class PatientHomeTab extends StatefulWidget {
 
 class _PatientHomeTabState extends State<PatientHomeTab> {
   List<Map<String, dynamic>> categories = [
-    {
-      "icon": "assets/icons/heart.jpg",
-      "text": "Heart",
-      "color": Colors.red,
-    },
-    {
-      "icon": "assets/icons/lung.png",
-      "text": "Lung",
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/teeth.png",
-      "text": "Teeth",
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/eye.png",
-      "text": "Eye",
-      "color": Colors.orange,
-    }
+    {"icon": "assets/icons/heart.jpg", "text": "Heart", "color": Colors.red},
+    {"icon": "assets/icons/lung.png", "text": "Lung", "color": Colors.green},
+    {"icon": "assets/icons/teeth.png", "text": "Teeth", "color": Colors.green},
+    {"icon": "assets/icons/eye.png", "text": "Eye", "color": Colors.orange}
   ];
+
+  List<DoctorModel> doctors = DoctorModel.doctorsList();
+  List<DoctorModel> searchList = [];
+  TextEditingController searchController = TextEditingController();
+
+  void _search(String? searchQuery) {
+    searchList.clear();
+    if (searchQuery == null || searchQuery.isEmpty) {
+      setState(() {});
+      return;
+    }
+    for (var doctor in doctors) {
+      if (doctor.name != null &&
+          doctor.location != null &&
+          (doctor.name!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              doctor.location!
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))) {
+        searchList.add(doctor);
+      }
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,10 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
             Row(
               children: [
                 Expanded(
-                  child: CupertinoSearchTextField(),
+                  child: CupertinoSearchTextField(
+                    controller: searchController,
+                    onChanged: _search,
+                  ),
                 ),
                 Image.asset(
                   AppAssets.logo,
@@ -64,86 +74,87 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Text(
-                  "Categories",
-                  style: theme.textTheme.titleMedium,
-                ),
-                Spacer(),
-                CustomTextButton(
-                  text: "See All",
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CategoryWidget.child(
-                  text: categories[0]["text"],
-                  color: categories[0]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      categories[0]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: categories[1]["text"],
-                  color: categories[1]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      categories[1]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ).allPadding(15),
-                ),
-                CategoryWidget.child(
-                  text: categories[2]["text"],
-                  color: categories[2]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      categories[2]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: categories[3]["text"],
-                  color: categories[3]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      categories[3]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ).allPadding(15),
-                ),
-              ],
-            ),
-            0.03.height.hSpace,
-            Text("Most booked doctors").alignRight(),
-            0.01.height.hSpace,
+            (searchList.isEmpty)
+                ? Row(
+                    children: [
+                      Text(
+                        "Categories",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      Spacer(),
+                      CustomTextButton(
+                        text: "See All",
+                        onPressed: () {},
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
+            (searchList.isEmpty)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CategoryWidget.child(
+                        text: categories[0]["text"],
+                        color: categories[0]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[0]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[1]["text"],
+                        color: categories[1]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[1]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(15),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[2]["text"],
+                        color: categories[2]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[2]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[3]["text"],
+                        color: categories[3]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[3]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(15),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
+            (searchList.isEmpty)
+                ? Text("Most booked doctors").alignRight()
+                : SizedBox(),
+            (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  GestureDetector(
-                    onTap: () {
-                      provider.setSelectedDoctor(DoctorModel.doctorsList()[index]);
-                      slideLeftWidget(
-                        newPage: SelectedDoctor(),
-                        context: context,
-                      );
-                    },
-                    child: MostDoctorsBooked(
-                      model: DoctorModel.doctorsList()[index],
-                    ),
-                  ),
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  provider.setSelectedDoctor(
+                    searchList.isEmpty ? doctors[index] : searchList[index],
+                  );
+                  slideLeftWidget(
+                    newPage: SelectedDoctor(),
+                    context: context,
+                  );
+                },
+                child: MostDoctorsBooked(
+                  model:
+                      searchList.isEmpty ? doctors[index] : searchList[index],
+                ),
+              ),
               separatorBuilder: (context, index) => 0.01.height.hSpace,
-              itemCount: 15,
+              itemCount:
+                  searchList.isEmpty ? doctors.length : searchList.length,
             ),
             0.02.height.hSpace,
           ],
