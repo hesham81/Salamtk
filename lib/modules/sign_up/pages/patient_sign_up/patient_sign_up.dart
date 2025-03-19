@@ -28,6 +28,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Form(
         key: formKey,
         child: SingleChildScrollView(
