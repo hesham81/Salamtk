@@ -1,15 +1,16 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:twseef/core/extensions/alignment.dart';
-import 'package:twseef/core/extensions/extensions.dart';
-import 'package:twseef/core/providers/patient_providers/patient_provider.dart';
-import 'package:twseef/core/theme/app_colors.dart';
-import 'package:twseef/core/widget/custom_elevated_button.dart';
-import 'package:twseef/core/widget/custom_text_button.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:twseef/modules/layout/patient/pages/patient_home/pages/reservation/pages/reservation.dart';
+import '/core/extensions/alignment.dart';
+import '/core/extensions/extensions.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
+import '/core/theme/app_colors.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/core/widget/custom_text_button.dart';
+import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
+import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
 
 class SelectedDoctor extends StatefulWidget {
   const SelectedDoctor({super.key});
@@ -19,7 +20,6 @@ class SelectedDoctor extends StatefulWidget {
 }
 
 class _SelectedDoctorState extends State<SelectedDoctor> {
-  // Class-level list to store reviews
   List<Map<String, dynamic>> reviews = [];
 
   void _generateReviews() {
@@ -128,10 +128,8 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
 
     final Random random = Random();
 
-    // Clear the existing reviews before generating new ones
     reviews.clear();
 
-    // Generate a huge list of reviews
     for (int i = 0; i < 100; i++) {
       final String name = names[random.nextInt(names.length)];
       final double rate = 4.0 + random.nextDouble();
@@ -139,23 +137,20 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
           '2023-${(random.nextInt(12) + 1).toString().padLeft(2, '0')}-${(random.nextInt(28) + 1).toString().padLeft(2, '0')}';
       final String review = reviewTexts[random.nextInt(reviewTexts.length)];
 
-      // Add the review to the class-level list
       reviews.add({
         'name': name,
-        'rate': rate,
+        'rate': rate.roundToDouble(),
         'date': date,
         'review': review,
       });
     }
 
-    // Update the state to reflect changes in the UI
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    // Generate reviews when the widget is initialized
     _generateReviews();
   }
 
@@ -164,7 +159,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.secondaryColor,
         title: Text(
           provider.getDoctor!.name!,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -183,6 +177,31 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
         ),
         centerTitle: true,
       ),
+      bottomNavigationBar: Row(
+        children: [
+          Text(
+            "${provider.getDoctor!.price} EGP",
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: AppColors.blackColor,
+                ),
+          ),
+          0.02.width.vSpace,
+          Expanded(
+            child: CustomElevatedButton(
+              child: Text(
+                "Reserve Now",
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.primaryColor,
+                    ),
+              ),
+              onPressed: () => slideLeftWidget(
+                newPage: Reservation(),
+                context: context,
+              ),
+            ),
+          )
+        ],
+      ).hPadding(0.03.width).vPadding(0.01.height),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -238,16 +257,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               itemCount: 3,
             ),
             0.05.height.hSpace,
-            CustomElevatedButton(
-              child: Text(
-                "Book Now",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              onPressed: () {},
-            ),
-            0.02.height.hSpace,
           ],
         ).hPadding(0.02.width),
       ),

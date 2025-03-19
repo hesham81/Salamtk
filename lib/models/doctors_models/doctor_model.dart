@@ -199,19 +199,12 @@ class DoctorModel {
       doctors.add(
         DoctorModel(
           name: names[i % names.length],
-          // Cycle through names
           location: locations[i % locations.length],
-          // Cycle through locations
           specialist: specialties[i % specialties.length],
-          // Cycle through specialties
-          rate: 4.0 + (i / 50),
-          // Rating between 4.0 and 5.0
+          rate: (4.0 + (i / 50)).roundToDouble(),
           description: 'Experienced in treating various medical conditions.',
-          // Generic description
           phoneNumber: '123-456-789${(i + 1).toString().padLeft(2, '0')}',
-          // Unique phone number
           price: 100.0 + (i * 10),
-          // Example price
           imagePath: 'assets/images/doctor_sample.jpg', // Fixed imagePath
         ),
       );
