@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/sign_in/pages/sign_in.dart';
+import '/modules/sign_in/pages/sign_in.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
               AppAssets.halfCircleLeft,
             ).alignTopLeft(),
           ),
-          SvgPicture.asset(AppAssets.logo).center,
+          Image.asset(AppAssets.logo).center,
           FadeInRight(
             duration: Duration(seconds: 2),
             child: SvgPicture.asset(

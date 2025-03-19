@@ -5,5 +5,12 @@ abstract class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.primaryColor,
+    textTheme: TextTheme(
+      titleMedium: TextStyle(
+        color: AppColors.blackColor,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
   );
 }
