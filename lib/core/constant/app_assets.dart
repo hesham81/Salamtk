@@ -22,4 +22,5 @@ abstract class AppAssets{
   //avatarts
   static const String doctorAvatar = 'assets/images/doctor_avatar.jpg';
   static const String patientAvatar = 'assets/images/patient_avatar.jpg';
+  static const String forgetPassword = 'assets/images/forget_password.jpg';
 }
