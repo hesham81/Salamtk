@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/modules/forget_password/pages/forget_password.dart';
+import '/core/validations/validations.dart';
 import '/modules/sign_up/pages/select_type/select_type.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_container.dart';
@@ -27,7 +29,9 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Form(
+        key: formKey,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -38,14 +42,11 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomTextFormField(
-                    hintText: 'Username / email',
+                    hintText: 'Email',
                     suffixIcon: Icons.person_outline,
                     controller: usernameController,
                     validate: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username or email';
-                      }
-                      return null;
+                      return Validations.isEmailValid(usernameController.text);
                     },
                   ),
                   0.02.height.hSpace,
@@ -63,7 +64,10 @@ class _SignInState extends State<SignIn> {
                   ),
                   CustomTextButton(
                     text: "Forget Password",
-                    onPressed: () {},
+                    onPressed: () => slideLeftWidget(
+                      newPage: ForgetPassword(),
+                      context: context,
+                    ),
                   ).alignBottomRight(),
                   CustomElevatedButton(
                     child: Text(
@@ -75,8 +79,7 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                      }
+                      if (formKey.currentState!.validate()) {}
                     },
                   ).hPadding(0.07.width),
                   0.02.height.hSpace,
