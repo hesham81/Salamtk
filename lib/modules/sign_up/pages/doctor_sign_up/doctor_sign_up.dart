@@ -53,6 +53,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Form(
           key: formKey,

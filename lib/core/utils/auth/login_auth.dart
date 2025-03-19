@@ -17,4 +17,15 @@ abstract class LoginAuth {
       return e.message;
     }
   }
+
+  static Future<String?> forgetPassword({
+    required String email,
+  }) async {
+    try {
+      await _firebase.sendPasswordResetEmail(email: email);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 }
