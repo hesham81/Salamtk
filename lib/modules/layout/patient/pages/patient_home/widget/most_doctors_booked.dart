@@ -50,19 +50,22 @@ class MostDoctorsBooked extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(
-                      model.location ?? "No Location",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall!
-                          .copyWith(color: Colors.grey),
-                    ),
-                    0.01.width.vSpace,
                     Icon(
                       Icons.location_on_outlined,
                       color: Colors.grey,
                       size: 15,
                     ),
+                    0.01.width.vSpace,
+                    Expanded(
+                      child: Text(
+                        model.location ?? "No Location",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.grey),
+                      ),
+                    ),
+
                   ],
                 ),
               ],
