@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:twseef/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/pages/confirm_payment.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/theme/app_colors.dart';
@@ -12,9 +16,6 @@ class Reservation extends StatefulWidget {
 }
 
 class _ReservationState extends State<Reservation> {
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
   final List<String> timeSlots = [
     "09:00 AM",
     "09:30 AM",
@@ -29,10 +30,11 @@ class _ReservationState extends State<Reservation> {
     "05:00 PM",
     "05:30 PM"
   ];
-  String? selectedSlot;
+  DateTime _focusedDay = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -50,17 +52,21 @@ class _ReservationState extends State<Reservation> {
             color: AppColors.primaryColor,
           ),
         ),
-        centerTitle: true,
       ),
       bottomNavigationBar: Expanded(
         child: CustomElevatedButton(
+          onPressed: (provider.getSelectedSlot == null)
+              ? null
+              : () => slideLeftWidget(
+                    newPage: ConfirmPayment(),
+                    context: context,
+                  ),
           child: Text(
             "Confirm",
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppColors.primaryColor,
                 ),
           ),
-          onPressed: () {},
         ),
       ).allPadding(0.01.height),
       body: SingleChildScrollView(
@@ -70,12 +76,13 @@ class _ReservationState extends State<Reservation> {
               focusedDay: _focusedDay,
               firstDay: DateTime.now(),
               lastDay: DateTime.now().add(Duration(days: 30)),
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              selectedDayPredicate: (day) =>
+                  isSameDay(provider.getSelectedDate, day),
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
-                  _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                 });
+                provider.setSelectedDate(selectedDay);
               },
               startingDayOfWeek: StartingDayOfWeek.saturday,
               daysOfWeekHeight: 0.05.height,
@@ -108,14 +115,12 @@ class _ReservationState extends State<Reservation> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      selectedSlot = timeSlots[index];
-                    });
+                    provider.setSelectedSlot(timeSlots[index]);
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: (selectedSlot != null)
-                          ? (selectedSlot == timeSlots[index])
+                      color: (provider.getSelectedSlot != null)
+                          ? (provider.getSelectedSlot == timeSlots[index])
                               ? AppColors.secondaryColor
                               : Colors.grey[200]
                           : Colors.grey[200],
@@ -126,7 +131,7 @@ class _ReservationState extends State<Reservation> {
                         timeSlots[index],
                         style: TextStyle(
                           fontSize: 14,
-                          color: (selectedSlot == timeSlots[index])
+                          color: (provider.getSelectedSlot == timeSlots[index])
                               ? Colors.white
                               : Colors.black,
                         ),
