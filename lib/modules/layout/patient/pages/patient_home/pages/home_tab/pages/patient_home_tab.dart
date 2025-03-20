@@ -25,7 +25,27 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
     {"icon": "assets/icons/heart.jpg", "text": "Heart", "color": Colors.red},
     {"icon": "assets/icons/lung.png", "text": "Lung", "color": Colors.green},
     {"icon": "assets/icons/teeth.png", "text": "Teeth", "color": Colors.green},
-    {"icon": "assets/icons/eye.png", "text": "Eye", "color": Colors.orange}
+    {"icon": "assets/icons/eye.png", "text": "Eye", "color": Colors.orange},
+    {
+      "icon": "assets/icons/general_doctor_icon.jpg",
+      "text": "General",
+      "color": AppColors.secondaryColor
+    },
+    {
+      "icon": "assets/icons/elbatna_icon.jpg",
+      "text": "The interior",
+      "color": Colors.orange
+    },
+    {
+      "icon": "assets/icons/nerves_icon.jpg",
+      "text": "Nerves",
+      "color": Colors.red
+    },
+    {
+      "icon": "assets/icons/surgery_icon.jpg",
+      "text": "Surgery",
+      "color": Colors.blue
+    },
   ];
 
   List<DoctorModel> doctors = DoctorModel.doctorsList();
@@ -125,6 +145,46 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                           AssetImage(categories[3]["icon"]),
                           color: AppColors.primaryColor,
                         ).allPadding(15),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
+            (searchList.isEmpty)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CategoryWidget.child(
+                        text: categories[4]["text"],
+                        color: categories[4]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[4]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[5]["text"],
+                        color: categories[5]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[5]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[6]["text"],
+                        color: categories[6]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[6]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(10),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[7]["text"],
+                        color: categories[7]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[7]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(10),
                       ),
                     ],
                   )

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:twseef/core/widget/custom_container.dart';
-import 'package:twseef/core/widget/custom_elevated_button.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/widget/choose_payment_methods_widget.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/widget/choose_payment_methods_widget.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/theme/app_colors.dart';

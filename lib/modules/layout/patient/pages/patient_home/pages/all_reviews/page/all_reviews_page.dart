@@ -1,26 +1,19 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:route_transitions/route_transitions.dart';
-import '/modules/layout/patient/pages/patient_home/pages/all_reviews/page/all_reviews_page.dart';
-import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/reservation.dart';
-import '/core/extensions/alignment.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
-import '/core/widget/custom_elevated_button.dart';
-import '/core/widget/custom_text_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
-import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
 
-class SelectedDoctor extends StatefulWidget {
-  const SelectedDoctor({super.key});
+class AllReviewsPage extends StatefulWidget {
+  const AllReviewsPage({super.key});
 
   @override
-  State<SelectedDoctor> createState() => _SelectedDoctorState();
+  State<AllReviewsPage> createState() => _AllReviewsPageState();
 }
 
-class _SelectedDoctorState extends State<SelectedDoctor> {
+class _AllReviewsPageState extends State<AllReviewsPage> {
   List<Map<String, dynamic>> reviews = [];
 
   void _generateReviews() {
@@ -161,14 +154,13 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          provider.getDoctor!.name!,
+          "${provider.getDoctor!.name}",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
         ),
         leading: IconButton(
           onPressed: () {
-            provider.clearSelectedDoctor();
             Navigator.pop(context);
           },
           icon: Icon(
@@ -176,77 +168,10 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             color: AppColors.primaryColor,
           ),
         ),
-        centerTitle: true,
       ),
-      bottomNavigationBar: Row(
-        children: [
-          Text(
-            "${provider.getDoctor!.price} EGP",
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.blackColor,
-                ),
-          ),
-          0.02.width.vSpace,
-          Expanded(
-            child: CustomElevatedButton(
-              child: Text(
-                "Reserve Now",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.primaryColor,
-                    ),
-              ),
-              onPressed: () => slideLeftWidget(
-                newPage: Reservation(),
-                context: context,
-              ),
-            ),
-          ),
-        ],
-      ).hPadding(0.03.width).vPadding(0.01.height),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            0.01.height.hSpace,
-            MostDoctorsBooked(
-              model: provider.getDoctor!,
-            ),
-            0.01.height.hSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "About Doctor",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                0.01.height.hSpace,
-                Text(
-                  provider.getDoctor!.description!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: Colors.grey),
-                ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Divider().hPadding(0.1.width),
-            Row(
-              children: [
-                Text(
-                  "Reviews",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ).leftBottomWidget(),
-                Spacer(),
-                CustomTextButton(
-                  text: "See All",
-                  onPressed: () => slideLeftWidget(
-                    newPage: AllReviewsPage(),
-                    context: context,
-                  ),
-                ),
-              ],
-            ),
             0.01.height.hSpace,
             ListView.separated(
               shrinkWrap: true,
@@ -258,11 +183,11 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 review: reviews[index]['review'],
               ),
               separatorBuilder: (context, index) => 0.01.height.hSpace,
-              itemCount: 3,
+              itemCount: reviews.length,
             ),
-            0.05.height.hSpace,
+            0.02.height.hSpace,
           ],
-        ).hPadding(0.02.width),
+        ).hPadding(0.03.width),
       ),
     );
   }
