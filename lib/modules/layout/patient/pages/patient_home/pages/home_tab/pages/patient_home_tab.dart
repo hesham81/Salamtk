@@ -12,6 +12,7 @@ import '/core/theme/app_colors.dart';
 import '/core/widget/custom_text_button.dart';
 import '/modules/layout/patient/pages/patient_home/widget/category_widget.dart';
 import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientHomeTab extends StatefulWidget {
   const PatientHomeTab({super.key});
@@ -21,33 +22,6 @@ class PatientHomeTab extends StatefulWidget {
 }
 
 class _PatientHomeTabState extends State<PatientHomeTab> {
-  List<Map<String, dynamic>> categories = [
-    {"icon": "assets/icons/heart.jpg", "text": "Heart", "color": Colors.red},
-    {"icon": "assets/icons/lung.png", "text": "Lung", "color": Colors.green},
-    {"icon": "assets/icons/teeth.png", "text": "Teeth", "color": Colors.green},
-    {"icon": "assets/icons/eye.png", "text": "Eye", "color": Colors.orange},
-    {
-      "icon": "assets/icons/general_doctor_icon.jpg",
-      "text": "General",
-      "color": AppColors.secondaryColor
-    },
-    {
-      "icon": "assets/icons/elbatna_icon.jpg",
-      "text": "The interior",
-      "color": Colors.orange
-    },
-    {
-      "icon": "assets/icons/nerves_icon.jpg",
-      "text": "Nerves",
-      "color": Colors.red
-    },
-    {
-      "icon": "assets/icons/surgery_icon.jpg",
-      "text": "Surgery",
-      "color": Colors.blue
-    },
-  ];
-
   List<DoctorModel> doctors = DoctorModel.doctorsList();
   List<DoctorModel> searchList = [];
   TextEditingController searchController = TextEditingController();
@@ -75,6 +49,50 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
+    List<Map<String, dynamic>> categories = [
+      {
+        "icon": "assets/icons/heart.jpg",
+        "text": local!.heart,
+        "color": Colors.red
+      },
+      {
+        "icon": "assets/icons/lung.png",
+        "text": local.lung,
+        "color": Colors.green
+      },
+      {
+        "icon": "assets/icons/teeth.png",
+        "text": local.teeth,
+        "color": Colors.green
+      },
+      {
+        "icon": "assets/icons/eye.png",
+        "text": local.eye,
+        "color": Colors.orange
+      },
+      {
+        "icon": "assets/icons/general_doctor_icon.jpg",
+        "text": local.general,
+        "color": AppColors.secondaryColor
+      },
+      {
+        "icon": "assets/icons/elbatna_icon.jpg",
+        "text": local.theInterior,
+        "color": Colors.orange
+      },
+      {
+        "icon": "assets/icons/nerves_icon.jpg",
+        "text": local.nerves,
+        "color": Colors.red
+      },
+      {
+        "icon": "assets/icons/surgery_icon.jpg",
+        "text": local.surgery,
+        "color": Colors.blue
+      },
+    ];
+
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -98,12 +116,12 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 ? Row(
                     children: [
                       Text(
-                        "Categories",
+                        local!.categories,
                         style: theme.textTheme.titleMedium,
                       ),
                       Spacer(),
                       CustomTextButton(
-                        text: "See All",
+                        text: local.seeAll,
                         onPressed: () {},
                       ),
                     ],
@@ -191,7 +209,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
             (searchList.isEmpty)
-                ? Text("Most booked doctors").alignRight()
+                ? Text(local.mostBookedDoctors).alignRight()
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             ListView.separated(

@@ -12,6 +12,8 @@ import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SelectedDoctor extends StatefulWidget {
   const SelectedDoctor({super.key});
@@ -157,6 +159,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -181,7 +184,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
       bottomNavigationBar: Row(
         children: [
           Text(
-            "${provider.getDoctor!.price} EGP",
+            "${provider.getDoctor!.price} ${local!.egp}",
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: AppColors.blackColor,
                 ),
@@ -190,7 +193,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
           Expanded(
             child: CustomElevatedButton(
               child: Text(
-                "Reserve Now",
+                local.reserveNow,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: AppColors.primaryColor,
                     ),
@@ -216,7 +219,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "About Doctor",
+                  local.aboutDoctor,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 0.01.height.hSpace,
@@ -234,12 +237,12 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             Row(
               children: [
                 Text(
-                  "Reviews",
+                  local.reviews,
                   style: Theme.of(context).textTheme.titleMedium,
                 ).leftBottomWidget(),
                 Spacer(),
                 CustomTextButton(
-                  text: "See All",
+                  text: local.seeAll,
                   onPressed: () => slideLeftWidget(
                     newPage: AllReviewsPage(),
                     context: context,

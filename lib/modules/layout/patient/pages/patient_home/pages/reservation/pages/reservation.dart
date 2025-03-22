@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:table_calendar/table_calendar.dart';
+// import 'package:table_calendar/table_calendar.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/pages/confirm_payment.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/extensions/extensions.dart';
@@ -72,35 +72,35 @@ class _ReservationState extends State<Reservation> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            TableCalendar(
-              focusedDay: _focusedDay,
-              firstDay: DateTime.now(),
-              lastDay: DateTime.now().add(Duration(days: 30)),
-              selectedDayPredicate: (day) =>
-                  isSameDay(provider.getSelectedDate, day),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _focusedDay = focusedDay;
-                });
-                provider.setSelectedDate(selectedDay);
-              },
-              startingDayOfWeek: StartingDayOfWeek.saturday,
-              daysOfWeekHeight: 0.05.height,
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-              ),
-              calendarStyle: CalendarStyle(
-                todayDecoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.3),
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
+            // TableCalendar(
+            //   focusedDay: _focusedDay,
+            //   firstDay: DateTime.now(),
+            //   lastDay: DateTime.now().add(Duration(days: 30)),
+            //   selectedDayPredicate: (day) =>
+            //       isSameDay(provider.getSelectedDate, day),
+            //   onDaySelected: (selectedDay, focusedDay) {
+            //     setState(() {
+            //       _focusedDay = focusedDay;
+            //     });
+            //     provider.setSelectedDate(selectedDay);
+            //   },
+            //   startingDayOfWeek: StartingDayOfWeek.saturday,
+            //   daysOfWeekHeight: 0.05.height,
+            //   headerStyle: HeaderStyle(
+            //     formatButtonVisible: false,
+            //     titleCentered: true,
+            //   ),
+            //   calendarStyle: CalendarStyle(
+            //     todayDecoration: BoxDecoration(
+            //       color: Colors.blue.withOpacity(0.3),
+            //       shape: BoxShape.circle,
+            //     ),
+            //     selectedDecoration: BoxDecoration(
+            //       color: AppColors.secondaryColor,
+            //       shape: BoxShape.circle,
+            //     ),
+            //   ),
+            // ),
             0.01.height.hSpace,
             GridView.builder(
               shrinkWrap: true,
