@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:twseef/core/constant/app_assets.dart';
-import 'package:twseef/core/extensions/dimensions.dart';
-import 'package:twseef/core/extensions/extensions.dart';
-import 'package:twseef/core/theme/app_colors.dart';
-import 'package:twseef/core/utils/auth/login_auth.dart';
-import 'package:twseef/core/validations/validations.dart';
-import 'package:twseef/core/widget/custom_elevated_button.dart';
-import 'package:twseef/core/widget/custom_text_form_field.dart';
+import '/core/constant/app_assets.dart';
+import '/core/extensions/extensions.dart';
+import '/core/theme/app_colors.dart';
+import '/core/utils/auth/login_auth.dart';
+import '/core/validations/validations.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/core/widget/custom_text_form_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -22,6 +22,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -35,7 +37,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ),
               0.02.height.hSpace,
               CustomTextFormField(
-                hintText: "Email",
+                hintText: local!.email,
                 controller: emailController,
                 suffixIcon: Icons.email_outlined,
                 validate: (value) {
@@ -45,7 +47,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               0.1.height.hSpace,
               CustomElevatedButton(
                 child: Text(
-                  "Forget Password",
+                  local.forgetPassword,
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,

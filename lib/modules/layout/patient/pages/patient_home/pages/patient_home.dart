@@ -3,6 +3,7 @@ import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/patient_
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/patient_profile_tab.dart';
 import '/core/theme/app_colors.dart';
 import 'my_dates_tab/pages/patient_dates_tab.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientHome extends StatefulWidget {
   const PatientHome({super.key});
@@ -21,6 +22,7 @@ class _PatientHomeState extends State<PatientHome> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: AppColors.secondaryColor,
@@ -34,7 +36,7 @@ class _PatientHomeState extends State<PatientHome> {
               Icons.home_outlined,
               color: AppColors.secondaryColor,
             ),
-            label: "Home",
+            label: local!.home,
             activeIcon: Icon(
               Icons.home_filled,
               color: AppColors.secondaryColor,
@@ -45,7 +47,7 @@ class _PatientHomeState extends State<PatientHome> {
               Icons.calendar_today_outlined,
               color: AppColors.secondaryColor,
             ),
-            label: "My Dates",
+            label: local.myDates,
             activeIcon: Icon(
               Icons.calendar_month_sharp,
               color: AppColors.secondaryColor,
@@ -60,7 +62,7 @@ class _PatientHomeState extends State<PatientHome> {
               Icons.person,
               color: AppColors.secondaryColor,
             ),
-            label: "Profile",
+            label: local.profile,
           ),
         ],
       ),

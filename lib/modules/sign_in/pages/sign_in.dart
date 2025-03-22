@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
+import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/utils/auth/login_auth.dart';
 import '/modules/forget_password/pages/forget_password.dart';
@@ -16,6 +16,7 @@ import '/core/constant/app_assets.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/extensions/align.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -31,7 +32,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).textTheme;
+    var local = AppLocalizations.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
@@ -46,7 +47,7 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomTextFormField(
-                    hintText: 'Email',
+                    hintText: local!.email,
                     suffixIcon: Icons.person_outline,
                     controller: usernameController,
                     validate: (value) {
@@ -55,7 +56,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: 'Password',
+                    hintText: local.password,
                     isPassword: true,
                     suffixIcon: Icons.lock_outline,
                     controller: passwordController,
@@ -67,7 +68,7 @@ class _SignInState extends State<SignIn> {
                     },
                   ),
                   CustomTextButton(
-                    text: "Forget Password",
+                    text: local.forgetPassword,
                     onPressed: () => slideLeftWidget(
                       newPage: ForgetPassword(),
                       context: context,
@@ -75,7 +76,7 @@ class _SignInState extends State<SignIn> {
                   ).alignBottomRight(),
                   CustomElevatedButton(
                     child: Text(
-                      "Login",
+                      local.login,
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,
@@ -92,7 +93,8 @@ class _SignInState extends State<SignIn> {
                         if (user == null) {
                           EasyLoading.dismiss();
                           EasyLoading.showError(
-                              "Email Or Password is incorrect");
+                            "Email Or Password is incorrect",
+                          );
                         } else if (user == "doctor") {
                           EasyLoading.dismiss();
                           EasyLoading.showSuccess("Login Successfully");
@@ -123,19 +125,18 @@ class _SignInState extends State<SignIn> {
                         ),
                         0.02.width.vSpace,
                         Text(
-                          "Login With Google",
-                          style: TextStyle(
-                            color: AppColors.slateBlueColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                          local.loginWithGoogle,
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: AppColors.slateBlueColor,
+                                  ),
                         )
                       ],
                     ),
                   ),
                   0.02.height.hSpace,
                   CustomTextButton(
-                    text: "Don't Have An Account ? Join Us",
+                    text: local.dontHaveAnAccountJoinUs,
                     onPressed: () => slideLeftWidget(
                       newPage: SelectType(),
                       context: context,
