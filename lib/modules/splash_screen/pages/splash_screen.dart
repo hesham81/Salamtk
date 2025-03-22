@@ -2,8 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
-import '/modules/sign_in/pages/sign_in.dart';
+import 'package:twseef/modules/sign_in/pages/sign_in.dart';
+import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      slideLeftWidget(newPage: PatientHome(), context: context);
+      slideLeftWidget(newPage: SignIn(), context: context);
     });
   }
 

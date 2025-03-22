@@ -1,15 +1,16 @@
 class DoctorModel {
-  String? name;
-  String? image;
-  double? price;
-  String? description;
-  String? location;
-  String? specialist;
-  String? phoneNumber;
-  double? rate;
-  double? lat;
-  double? long;
-  String? imagePath;
+  final String? name;
+  final String? image;
+  final double? price;
+  final String? description;
+  final String? location;
+  final String? specialist;
+  final String? phoneNumber;
+  final double? rate;
+  final double? lat;
+  final double? long;
+  final String? imagePath;
+   bool isInTheClinic;
 
   DoctorModel({
     this.name,
@@ -23,6 +24,7 @@ class DoctorModel {
     this.lat,
     this.long,
     this.imagePath,
+    this.isInTheClinic = false,
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class DoctorModel {
       lat: json['lat'],
       long: json['long'],
       imagePath: json['imagePath'],
+      isInTheClinic: json['isInTheClinic'],
     );
   }
 
@@ -54,6 +57,7 @@ class DoctorModel {
       'lat': lat,
       'long': long,
       'imagePath': imagePath,
+      'isInTheClinic': isInTheClinic,
     };
   }
 

@@ -21,4 +21,15 @@ abstract class AuthCollections {
       return error.toString();
     }
   }
-}
+
+  static Future<String?> getRole({
+    required String uid,
+  }) async {
+    try {
+      var res = await _firestore.doc(uid).get();
+      return res.data()!["role"];
+    } catch (error) {
+      return null;
+    }
+    }
+  }

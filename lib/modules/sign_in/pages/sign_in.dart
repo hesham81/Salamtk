@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:twseef/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
+import '/modules/layout/doctor/pages/doctor_home.dart';
+import '/core/utils/auth/login_auth.dart';
 import '/modules/forget_password/pages/forget_password.dart';
 import '/core/validations/validations.dart';
 import '/modules/sign_up/pages/select_type/select_type.dart';
@@ -78,8 +82,33 @@ class _SignInState extends State<SignIn> {
                         fontSize: 18,
                       ),
                     ),
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {}
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        EasyLoading.show();
+                        String? user = await LoginAuth.login(
+                          email: usernameController.text,
+                          password: passwordController.text,
+                        );
+                        if (user == null) {
+                          EasyLoading.dismiss();
+                          EasyLoading.showError(
+                              "Email Or Password is incorrect");
+                        } else if (user == "doctor") {
+                          EasyLoading.dismiss();
+                          EasyLoading.showSuccess("Login Successfully");
+                          slideLeftWidget(
+                            newPage: DoctorHome(),
+                            context: context,
+                          );
+                        } else {
+                          EasyLoading.dismiss();
+                          EasyLoading.showSuccess("Login Successfully");
+                          slideLeftWidget(
+                            newPage: PatientHome(),
+                            context: context,
+                          );
+                        }
+                      }
                     },
                   ).hPadding(0.07.width),
                   0.02.height.hSpace,

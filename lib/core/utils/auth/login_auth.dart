@@ -1,20 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import '/core/utils/auth/auth_collections.dart';
 
 abstract class LoginAuth {
   static final _firebase = FirebaseAuth.instance;
+  static String? _role;
 
   static Future<String?> login({
     required String email,
     required String password,
   }) async {
     try {
-      await _firebase.signInWithEmailAndPassword(
+      UserCredential? user = await _firebase.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return null;
+      if (user.user != null) {
+        _role = await AuthCollections.getRole(uid: user.user!.uid);
+      }
+      return _role;
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return null;
     }
   }
 
