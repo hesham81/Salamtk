@@ -10,6 +10,8 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final ValidationFunction? validate;
   final TextEditingController controller;
+  final int minLine;
+  final int maxLine;
 
   const CustomTextFormField({
     super.key,
@@ -19,6 +21,8 @@ class CustomTextFormField extends StatefulWidget {
     this.isPassword = false,
     this.validate,
     required this.controller,
+     this.minLine = 1 ,
+     this.maxLine = 1 ,
   });
 
   @override
@@ -26,46 +30,46 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool isVisible = false; // Controls password visibility
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
 
     return TextFormField(
+      minLines: widget.minLine,
+      maxLines: widget.maxLine,
       validator: widget.validate,
       controller: widget.controller,
       cursorColor: AppColors.secondaryColor,
       decoration: InputDecoration(
         suffixIcon: (widget.isPassword == false)
             ? (widget.suffixIcon == null)
-            ? null
-            : Icon(widget.suffixIcon)
+                ? null
+                : Icon(widget.suffixIcon)
             : IconButton(
-          onPressed: () {
-            setState(() {
-              isVisible = !isVisible; // Toggle password visibility
-            });
-          },
-          icon: Icon(
-            (isVisible)
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,
-          ),
-        ),
-        hintText: widget.hintText, // Use the provided hintText
+                onPressed: () {
+                  setState(() {
+                    isVisible = !isVisible;
+                  });
+                },
+                icon: Icon(
+                  (isVisible)
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                ),
+              ),
+        hintText: widget.hintText,
         prefixIconColor: AppColors.slateBlueColor,
         suffixIconColor: AppColors.slateBlueColor,
         focusColor: AppColors.slateBlueColor,
         iconColor: AppColors.slateBlueColor,
         border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xff677294),
-          ),
+          borderSide: BorderSide(color: Color(0xff677294), width: 1.5),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xff677294)),
+          borderSide: BorderSide(color: Color(0xff677294), width: 1.5),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         errorBorder: OutlineInputBorder(
@@ -75,18 +79,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xff677294)),
+          borderSide: BorderSide(color: Color(0xff677294), width: 1.5),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
       ),
       style: theme.labelLarge?.copyWith(
-        color: AppColors.slateBlueColor,
-      ) ??
+            color: AppColors.slateBlueColor,
+          ) ??
           TextStyle(
             fontSize: 16,
             color: AppColors.slateBlueColor,
-          ), // Fallback style if labelLarge is null
-      obscureText: (widget.isPassword) ? !isVisible : false, // Fix obscureText logic
+          ),
+      obscureText: (widget.isPassword) ? !isVisible : false,
     );
   }
 }

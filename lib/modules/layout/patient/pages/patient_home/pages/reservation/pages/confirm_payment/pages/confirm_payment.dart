@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:provider/provider.dart';
+import 'package:twseef/core/providers/patient_providers/patient_provider.dart';
+import 'package:twseef/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/widget/choose_payment_methods_widget.dart';
 import '/core/extensions/extensions.dart';
@@ -21,6 +24,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -55,6 +59,85 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             0.01.height.hSpace,
+            CustomContainer(
+              child: Column(
+                children: [
+                  Text(
+                    "Review",
+                    style: Theme.of(context).textTheme.titleMedium!,
+                  ),
+                  0.01.height.hSpace,
+                  Row(
+                    children: [
+                      Text(
+                        "Doctor :",
+                        style: Theme.of(context).textTheme.titleSmall!,
+                      ),
+                      Spacer(),
+                      Text(
+                        provider.getDoctor!.name!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.secondaryColor),
+                      ),
+                    ],
+                  ),
+                  0.01.height.hSpace,
+                  Row(
+                    children: [
+                      Text(
+                        "Name :",
+                        style: Theme.of(context).textTheme.titleSmall!,
+                      ),
+                      Spacer(),
+                      Text(
+                        FirebaseAuth.instance.currentUser!.displayName!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.secondaryColor),
+                      ),
+                    ],
+                  ),
+                  0.01.height.hSpace,
+                  Row(
+                    children: [
+                      Text(
+                        "Date :",
+                        style: Theme.of(context).textTheme.titleSmall!,
+                      ),
+                      Spacer(),
+                      Text(
+                        "${provider.getSelectedDate!.day}/${provider.getSelectedDate!.month}/${provider.getSelectedDate!.year} ",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.secondaryColor),
+                      ),
+                    ],
+                  ),
+                  0.01.height.hSpace,
+                  Row(
+                    children: [
+                      Text(
+                        "Time : ",
+                        style: Theme.of(context).textTheme.titleSmall!,
+                      ),
+                      Spacer(),
+                      Text(
+                        provider.getSelectedSlot!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.secondaryColor),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            0.03.height.hSpace,
             Text(
               "Name",
               style: Theme.of(context).textTheme.titleSmall!,
@@ -64,45 +147,17 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               hintText: "Name",
               controller: nameController,
             ),
-            0.02.height.hSpace,
-            IntlPhoneField(
-              showCursor: false,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xff677294),
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xff677294),
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xff677294),
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                focusColor: Color(0xff677294),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  phoneNumber = value.completeNumber;
-                });
-              },
-              initialCountryCode: 'EG',
-              invalidNumberMessage: "Please Enter A Valid Phone Number",
+            0.01.height.hSpace,
+            Text(
+              "Phone Number",
+              style: Theme.of(context).textTheme.titleSmall!,
             ),
+            0.01.height.hSpace,
+            CustomTextFormField(
+              hintText: "Phone Number ",
+              controller: TextEditingController(),
+            ),
+            0.02.height.hSpace,
             Text(
               "Email",
               style: Theme.of(context).textTheme.titleSmall!,
@@ -125,6 +180,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
             ChoosePaymentMethodsWidget(
               paymentMethod: 'Bank',
             ),
+            0.05.height.hSpace,
           ],
         ).hPadding(0.03.width),
       ),

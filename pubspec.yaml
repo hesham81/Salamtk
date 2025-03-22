@@ -25,6 +25,7 @@ dependencies:
   table_calendar: ^3.2.0
   horizontal_week_calendar: ^0.0.7
   linear_calender: ^0.0.7
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

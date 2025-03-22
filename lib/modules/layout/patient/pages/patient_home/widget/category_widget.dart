@@ -35,7 +35,7 @@ class CategoryWidget extends StatelessWidget {
           height: 0.1.height,
           width: 0.2.width,
           decoration: BoxDecoration(
-            color: color?.withAlpha(80) ?? Colors.red.withAlpha(80),
+            color: color ?? Colors.red.withAlpha(80),
             borderRadius: BorderRadius.circular(25),
           ),
           child: child ??
