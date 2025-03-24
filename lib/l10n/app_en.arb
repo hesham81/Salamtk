@@ -34,5 +34,14 @@
   "phoneError" : "Please Enter +20(XXX) XXX-XXXX",
   "emptyPhone" : "Please Enter Phone Number",
   "loginWithEmail" : "Login With Email",
-  "phonNumber" : "Phone Number"
+  "phonNumber" : "Phone Number",
+  "pay": "Pay",
+  "doctor": "Doctor",
+  "date": "Date",
+  "time": "Time",
+  "review": "Review",
+  "name": "Name",
+  "choosePaymentMethod": "Choose Payment Method",
+  "electronicWallet": "Electronic Wallet",
+  "bank": "Bank"
 }
