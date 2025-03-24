@@ -29,10 +29,24 @@ abstract class ReservationCollection {
     required String patientId,
   }) async {
     try {
-      var res = await _colRef().where("email", isEqualTo: patientId).get();
+      var res = await _colRef().where("uid", isEqualTo: patientId).get();
       return res.docs.first.data();
     } catch (error) {
       return null;
+    }
+  }
+
+  static Future<List<ReservationModel>> getReservations({
+    required String patientId,
+  }) async {
+    try {
+      var res = await _colRef().where("uid", isEqualTo: patientId).get();
+      List<ReservationModel> list = [];
+      list = res.docs.map((e) => e.data()).toList();
+      print(list.length);
+      return res.docs.map((e) => e.data()).toList();
+    } catch (error) {
+      return [];
     }
   }
 }
