@@ -24,12 +24,12 @@ class PatientProvider extends ChangeNotifier {
   }
 
   PatientProvider() {
-    _checkReservations();
+    checkReservations();
   }
 
 
 
-  Future<void> _checkReservations() async {
+  Future<void> checkReservations() async {
     try {
       _reservations.clear();
       var userId = await FirebaseAuth.instance.currentUser!.uid;

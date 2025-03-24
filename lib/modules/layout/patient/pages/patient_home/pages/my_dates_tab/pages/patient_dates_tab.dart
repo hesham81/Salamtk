@@ -14,6 +14,16 @@ class PatientDatesTab extends StatefulWidget {
 }
 
 class _PatientDatesTabState extends State<PatientDatesTab> {
+  Future<void> checkReservations() async {
+    var provider = Provider.of<PatientProvider>(context, listen: false);
+    await provider.checkReservations();
+  }
+
+  @override
+  void initState() {
+    checkReservations();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:linear_calender/linear_calender.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:twseef/modules/sign_in/pages/sign_in.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doctor_patient_reservation_check.dart';
 import '/modules/layout/doctor/widget/patients_list.dart';
@@ -59,6 +61,20 @@ class _DoctorHomeState extends State<DoctorHome> {
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.secondaryColor,
                             ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignIn(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        icon: Icon(Icons.logout),
                       )
                     ],
                   ),
