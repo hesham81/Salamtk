@@ -4,7 +4,8 @@ import '/models/doctors_models/doctor_model.dart';
 abstract class DoctorsCollection {
   static final _firestore = FirebaseFirestore.instance.collection("doctors");
 
-  static Stream<QuerySnapshot<DoctorModel>> getDoctors() => _collectionReference().snapshots();
+  static Stream<QuerySnapshot<DoctorModel>> getDoctors() =>
+      _collectionReference().snapshots();
 
   static CollectionReference<DoctorModel> _collectionReference() {
     return _firestore.withConverter<DoctorModel>(
@@ -19,6 +20,38 @@ abstract class DoctorsCollection {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  static Future<DoctorModel?> getDoctorData({
+    required String phoneNumber,
+  }) async {
+    try {
+      var res = await _collectionReference()
+          .where(
+            "phoneNumber",
+            isEqualTo: phoneNumber,
+          )
+          .get();
+      return res.docs.first.data();
+    } catch (error) {
+      return null;
+    }
+  }
+
+  static Future<List<DoctorModel>?> getListOfDoctors({
+    required String phoneNumber,
+  }) async {
+    try {
+      var res = await _collectionReference().where(
+        "phoneNumber",
+        isEqualTo: phoneNumber,
+      );
+      return res
+          .get()
+          .then((value) => value.docs.map((e) => e.data()).toList());
+    } catch (error) {
+      return null;
     }
   }
 }

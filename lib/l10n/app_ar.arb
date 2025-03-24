@@ -34,7 +34,16 @@
   "phoneError" : "ادخل رقم هاتف صحيح",
   "emptyPhone" : "من فضلك ادخل رقم الهاتف",
   "loginWithEmail" : "استمرار مع البريد الالكتروني",
-  "phonNumber" : "رقم الهاتف"
+  "phonNumber" : "رقم الهاتف",
+  "pay": "الدفع",
+  "doctor": "الطبيب",
+  "date": "التاريخ",
+  "time": "الوقت",
+  "review": "مراجعه",
+  "name": "الاسم",
+  "choosePaymentMethod": "اختر طريقة الدفع",
+  "electronicWallet": "محافظ الكترونية",
+  "bank": "حساب بنكي"
 
 
 

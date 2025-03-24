@@ -22,7 +22,7 @@ class LanguageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get getLanguage => _lang!;
+  String get getLanguage => _lang?? "en";
 
   void setLang(String lang) {
     _lang = lang;
