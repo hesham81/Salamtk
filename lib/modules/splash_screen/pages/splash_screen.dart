@@ -19,7 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      slideLeftWidget(newPage: SignIn(), context: context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignIn(),
+        ),
+      );
     });
   }
 

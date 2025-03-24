@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:twseef/core/extensions/alignment.dart';
+import 'package:twseef/core/utils/auth/phone_auth.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/utils/auth/login_auth.dart';
@@ -27,6 +29,31 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  void startPhoneVerification() {
+    String phoneNumber =
+        "+201027002208";
+
+    PhoneAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      onCodeSent: (verificationId) {
+        print("Verification ID: $verificationId");
+      },
+      onVerificationFailed: (error) {
+        print("Verification failed: ${error.message}");
+        // Show an error message to the user.
+      },
+      onVerificationCompleted: (credential) {
+        print("Verification completed automatically.");
+        // Sign in the user automatically using the credential.
+        FirebaseAuth.instance.signInWithCredential(credential);
+      },
+      onCodeAutoRetrievalTimeout: (verificationId) {
+        print("Auto-retrieval timed out. Verification ID: $verificationId");
+        // Handle timeout (e.g., prompt the user to enter the OTP manually).
+      },
+    );
+  }
+
   var formKey = GlobalKey<FormState>();
   var phoneNumberController = TextEditingController();
   var formNumberKey = GlobalKey<FormState>();
@@ -146,7 +173,11 @@ class _SignInState extends State<SignIn> {
                           },
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              loginWithEmail = !loginWithEmail;
+                            });
+                          },
                           child: Text(
                             local.loginWithEmail,
                             style: Theme.of(context)
@@ -168,7 +199,11 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                           onPressed: () async {
-                            if (formNumberKey.currentState!.validate()) {}
+                            if (formNumberKey.currentState!.validate()) {
+                              EasyLoading.show();
+                              startPhoneVerification();
+                              EasyLoading.dismiss();
+                            }
                           },
                         ).hPadding(0.07.width),
                       ],
