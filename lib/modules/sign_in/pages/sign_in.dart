@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:twseef/core/constant/shared_preference_key.dart';
 import 'package:twseef/core/extensions/alignment.dart';
+import 'package:twseef/core/services/local_storage/shared_preference.dart';
 import 'package:twseef/core/utils/auth/phone_auth.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
@@ -30,8 +32,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   void startPhoneVerification() {
-    String phoneNumber =
-        "+201027002208";
+    String phoneNumber = "+201027002208";
 
     PhoneAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -130,6 +131,10 @@ class _SignInState extends State<SignIn> {
                                 );
                               } else if (user == "doctor") {
                                 EasyLoading.dismiss();
+                                await SharedPreference.setString(
+                                  SharedPreferenceKey.role,
+                                  "doctor",
+                                );
                                 EasyLoading.showSuccess("Login Successfully");
                                 slideLeftWidget(
                                   newPage: DoctorHome(),
@@ -141,6 +146,10 @@ class _SignInState extends State<SignIn> {
                                 slideLeftWidget(
                                   newPage: PatientHome(),
                                   context: context,
+                                );
+                                await SharedPreference.setString(
+                                  SharedPreferenceKey.role,
+                                  "patient",
                                 );
                               }
                             }
