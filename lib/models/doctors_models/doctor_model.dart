@@ -10,7 +10,7 @@ class DoctorModel {
   final double? lat;
   final double? long;
   final String? imagePath;
-   bool isInTheClinic;
+  bool isInTheClinic;
 
   DoctorModel({
     this.name,
@@ -64,7 +64,6 @@ class DoctorModel {
   static List<DoctorModel> doctorsList() {
     final List<DoctorModel> doctors = [];
 
-    // List of realistic doctor names
     final List<String> names = [
       'Dr. Ahmed Ali',
       'Dr. Fatma Mohamed',
@@ -118,7 +117,6 @@ class DoctorModel {
       'Dr. Nourhan Mohamed'
     ];
 
-    // List of locations in Egypt
     final List<String> locations = [
       'Cairo',
       'Alexandria',
@@ -173,7 +171,6 @@ class DoctorModel {
       'Obour City'
     ];
 
-    // List of specialties
     final List<String> specialties = [
       'Cardiologist',
       'Dermatologist',
@@ -198,7 +195,6 @@ class DoctorModel {
       'Infectious Disease Specialist'
     ];
 
-    // Ensure exactly 50 doctors are created
     for (int i = 0; i < 50; i++) {
       doctors.add(
         DoctorModel(

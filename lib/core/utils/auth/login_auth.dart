@@ -33,4 +33,13 @@ abstract class LoginAuth {
       return e.message;
     }
   }
+
+  static Future<bool> logout() async {
+    try {
+      await _firebase.signOut();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      return false;
+    }
+  }
 }

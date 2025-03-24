@@ -23,5 +23,16 @@
   "reviews": "Reviews",
   "egp": "EGP",
   "reserveNow": "Reserve Now",
-  "seeAll": "See All"
+  "seeAll": "See All",
+  "privacy": "Privacy And Policy",
+  "callUs": "Call Us",
+  "language": "Language",
+  "myAccount" : "My Account",
+  "noName" : "No Name",
+  "logout" : "Logout",
+  "noEmail" : "No Email",
+  "phoneError" : "Please Enter +20(XXX) XXX-XXXX",
+  "emptyPhone" : "Please Enter Phone Number",
+  "loginWithEmail" : "Login With Email",
+  "phonNumber" : "Phone Number"
 }
