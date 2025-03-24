@@ -28,6 +28,8 @@ dependencies:
   intl: ^0.19.0
   flutter_localizations:
     sdk: flutter
+  cached_network_image: ^3.4.1
+  animated_custom_dropdown: ^3.1.1
 #  linear_calendar:
 
 dev_dependencies:

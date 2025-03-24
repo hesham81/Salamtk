@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/utils/doctors/doctors_collection.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
@@ -22,7 +23,7 @@ class PatientHomeTab extends StatefulWidget {
 }
 
 class _PatientHomeTabState extends State<PatientHomeTab> {
-  List<DoctorModel> doctors = DoctorModel.doctorsList();
+  List<DoctorModel> doctors = [];
   List<DoctorModel> searchList = [];
   TextEditingController searchController = TextEditingController();
 
@@ -92,8 +93,8 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
         "color": Colors.blue
       },
     ];
-
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: SafeArea(
         child: Column(
           children: [
@@ -212,27 +213,42 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 ? Text(local.mostBookedDoctors).alignRight()
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  provider.setSelectedDoctor(
-                    searchList.isEmpty ? doctors[index] : searchList[index],
+            StreamBuilder(
+              stream: DoctorsCollection.getDoctors(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return Text(snapshot.error.toString());
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.secondaryColor,
+                    ),
                   );
-                  slideLeftWidget(
-                    newPage: SelectedDoctor(),
-                    context: context,
-                  );
-                },
-                child: MostDoctorsBooked(
-                  model:
-                      searchList.isEmpty ? doctors[index] : searchList[index],
-                ),
-              ),
-              separatorBuilder: (context, index) => 0.01.height.hSpace,
-              itemCount:
-                  searchList.isEmpty ? doctors.length : searchList.length,
+                }
+                doctors = snapshot.data!.docs.map((e) => e.data()).toList();
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      provider.setSelectedDoctor(
+                        searchList.isEmpty ? doctors[index] : searchList[index],
+                      );
+                      slideLeftWidget(
+                        newPage: SelectedDoctor(),
+                        context: context,
+                      );
+                    },
+                    child: MostDoctorsBooked(
+                      model: searchList.isEmpty
+                          ? doctors[index]
+                          : searchList[index],
+                    ),
+                  ),
+                  separatorBuilder: (context, index) => 0.01.height.hSpace,
+                  itemCount:
+                      searchList.isEmpty ? doctors.length : searchList.length,
+                );
+              },
             ),
             0.02.height.hSpace,
           ],
