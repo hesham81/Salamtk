@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '/core/extensions/align.dart';
+import '/core/theme/app_colors.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
@@ -15,7 +17,6 @@ class MostDoctorsBooked extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       child: Row(
-
         children: [
           Expanded(
             flex: 2,
@@ -65,7 +66,6 @@ class MostDoctorsBooked extends StatelessWidget {
                             .copyWith(color: Colors.grey),
                       ),
                     ),
-
                   ],
                 ),
               ],
@@ -74,9 +74,20 @@ class MostDoctorsBooked extends StatelessWidget {
           Spacer(),
           Expanded(
             flex: 1,
-            child: Image.asset(
-              model.imagePath ?? "assets/images/doctor_sample.jpg",
-              height: 0.12.height,
+            child: Stack(
+              children: [
+                Image.asset(
+                  model.imagePath ?? "assets/images/doctor_sample.jpg",
+                  height: 0.12.height,
+                ),
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: Icon(
+                //     Icons.favorite_outline,
+                //     color: AppColors.secondaryColor,
+                //   ),
+                // ).alignTopRight()
+              ],
             ),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -74,7 +75,13 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                   if (value) {
                     EasyLoading.dismiss();
                     EasyLoading.showSuccess("Doctor has been reserved");
-                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PatientHome(),
+                      ),
+                      (route) => false,
+                    );
                   } else {
                     EasyLoading.dismiss();
                     EasyLoading.showError("Error While Reserve Doctor");
