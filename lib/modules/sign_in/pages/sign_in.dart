@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/utils/auth/social_auth.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/extensions/alignment.dart';
 import '/core/services/local_storage/shared_preference.dart';
@@ -221,23 +222,30 @@ class _SignInState extends State<SignIn> {
             0.02.height.hSpace,
             Column(
               children: [
-                CustomContainer(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.google,
-                        height: 25,
-                        width: 25,
-                      ),
-                      0.02.width.vSpace,
-                      Text(
-                        local.loginWithGoogle,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.slateBlueColor,
-                            ),
-                      )
-                    ],
+                GestureDetector(
+                  onTap: () async {
+                    EasyLoading.show();
+                    await SocialAuthServices.loginWithGoogle(context);
+                    EasyLoading.dismiss();
+                  },
+                  child: CustomContainer(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AppAssets.google,
+                          height: 25,
+                          width: 25,
+                        ),
+                        0.02.width.vSpace,
+                        Text(
+                          local.loginWithGoogle,
+                          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                color: AppColors.slateBlueColor,
+                              ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 0.02.height.hSpace,
