@@ -55,10 +55,10 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
           Row(
             children: [
               Text(
-                "${(difference == 0 || difference < 0) ? "Not Available" : "After " + difference.toString() + " Days"} ",
+                "${(difference == 0 || difference < 0) ? "Completed" : "After " + difference.toString() + " Days"} ",
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: (difference == 0 || difference < 0)
-                          ? Colors.red
+                          ? Colors.blue
                           : AppColors.blackColor,
                     ),
               ),

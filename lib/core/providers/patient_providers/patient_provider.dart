@@ -27,7 +27,12 @@ class PatientProvider extends ChangeNotifier {
     checkReservations();
   }
 
-
+  void removeData() {
+    _selectedDoctor = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    _selectedPaymentMethod = null;
+  }
 
   Future<void> checkReservations() async {
     try {
@@ -83,7 +88,7 @@ class PatientProvider extends ChangeNotifier {
 
   List<ReservationModel> get getReservations => _reservations;
 
-   Future<DoctorModel?> searchForDoctor({
+  Future<DoctorModel?> searchForDoctor({
     required String doctorPhoneNumber,
   }) async {
     DoctorModel? doctor = await DoctorsCollection.getDoctorData(

@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => (token == null)
-              ? SignIn()
+              ? PatientHome()
               : (role == "patient")
                   ? PatientHome()
                   : SignIn(),
