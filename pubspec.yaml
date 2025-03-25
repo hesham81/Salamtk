@@ -33,6 +33,7 @@ dependencies:
   animated_custom_dropdown: ^3.1.1
   flutter_launcher_icons: ^0.14.3
   nepali_date_picker: ^6.0.1
+  google_sign_in: ^6.3.0
 #  linear_calendar:
 
 dev_dependencies:

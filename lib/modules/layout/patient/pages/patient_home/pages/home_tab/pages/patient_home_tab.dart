@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:twseef/modules/layout/patient/pages/category/pages/all_categories/pages/all_categories.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -117,13 +118,16 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 ? Row(
                     children: [
                       Text(
-                        local!.categories,
+                        local.categories,
                         style: theme.textTheme.titleMedium,
                       ),
                       Spacer(),
                       CustomTextButton(
                         text: local.seeAll,
-                        onPressed: () {},
+                        onPressed: () => slideLeftWidget(
+                          newPage: AllCategories(),
+                          context: context,
+                        ),
                       ),
                     ],
                   )
