@@ -63,7 +63,9 @@ abstract class SignUpAuth {
           }
         },
       );
+      var user = _firebase.currentUser!.uid;
       var doctor = DoctorModel(
+        uid: user,
         name: name,
         price: price,
         description: description,

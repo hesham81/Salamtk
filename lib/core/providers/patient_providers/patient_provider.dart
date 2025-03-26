@@ -24,6 +24,7 @@ class PatientProvider extends ChangeNotifier {
   }
 
   PatientProvider() {
+    _totalReservations = 0;
     checkReservations();
   }
 
@@ -88,11 +89,24 @@ class PatientProvider extends ChangeNotifier {
 
   List<ReservationModel> get getReservations => _reservations;
 
+  late int _totalReservations;
+
+  void setTotalReservations(int value) {
+    _totalReservations = value;
+    notifyListeners();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
+  int get getTotalReservations => _totalReservations;
+
   Future<DoctorModel?> searchForDoctor({
     required String doctorPhoneNumber,
   }) async {
     DoctorModel? doctor = await DoctorsCollection.getDoctorData(
-      phoneNumber: doctorPhoneNumber,
+      uid: doctorPhoneNumber,
     );
     return doctor;
   }

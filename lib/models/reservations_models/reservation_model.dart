@@ -1,5 +1,5 @@
 class ReservationModel {
-   String reservationId;
+  String reservationId;
 
   final String uid;
 
@@ -9,13 +9,21 @@ class ReservationModel {
 
   final String slot;
 
+  final String patientName;
+
   final double price;
 
   final String paymentMethod;
 
   final String email;
 
+  final String patientPhoneNumber;
+
+
+  final String status;
+
   ReservationModel({
+    required this.patientPhoneNumber,
     required this.reservationId,
     required this.uid,
     required this.doctorId,
@@ -24,10 +32,13 @@ class ReservationModel {
     required this.price,
     required this.paymentMethod,
     required this.email,
+    required this.patientName,
+    this.status = "Pending",
   });
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
     return ReservationModel(
+      patientName: json['patientName'],
       reservationId: json['reservationId'],
       uid: json['uid'],
       doctorId: json['doctorId'],
@@ -36,6 +47,8 @@ class ReservationModel {
       price: json['price'],
       paymentMethod: json['paymentMethod'],
       email: json['email'],
+      patientPhoneNumber: json['patientPhoneNumber'],
+      status: json['status'],
     );
   }
 
@@ -49,6 +62,9 @@ class ReservationModel {
       'price': price,
       'paymentMethod': paymentMethod,
       'email': email,
+      'patientPhoneNumber': patientPhoneNumber,
+      'patientName': patientName,
+      'status': status,
     };
   }
 }

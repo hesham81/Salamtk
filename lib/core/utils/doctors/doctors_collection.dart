@@ -16,7 +16,7 @@ abstract class DoctorsCollection {
 
   static Future<bool> setDoctor(DoctorModel doctor) async {
     try {
-      await _collectionReference().doc().set(doctor);
+      await _collectionReference().doc(doctor.uid).set(doctor);
       return true;
     } catch (error) {
       return false;
@@ -24,13 +24,13 @@ abstract class DoctorsCollection {
   }
 
   static Future<DoctorModel?> getDoctorData({
-    required String phoneNumber,
+    required String uid,
   }) async {
     try {
       var res = await _collectionReference()
           .where(
-            "phoneNumber",
-            isEqualTo: phoneNumber,
+            "uid",
+            isEqualTo: uid,
           )
           .get();
       return res.docs.first.data();
@@ -44,7 +44,7 @@ abstract class DoctorsCollection {
   }) async {
     try {
       var res = await _collectionReference().where(
-        "phoneNumber",
+        "uid",
         isEqualTo: phoneNumber,
       );
       return res
@@ -52,6 +52,16 @@ abstract class DoctorsCollection {
           .then((value) => value.docs.map((e) => e.data()).toList());
     } catch (error) {
       return null;
+    }
+  }
+
+  static Future<bool> updateDoctor(DoctorModel doctor) async {
+    try {
+      doctor.isInTheClinic = !doctor.isInTheClinic;
+      await _collectionReference().doc(doctor.uid).set(doctor);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }

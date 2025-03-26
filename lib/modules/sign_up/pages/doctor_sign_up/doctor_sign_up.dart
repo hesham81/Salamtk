@@ -33,7 +33,6 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController city = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String phoneNumber = "";
   List<String> specialists = [
     "heart",
     "general",
@@ -210,12 +209,12 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             email: emailController.text,
                             password: passwordController.text,
                             name: nameController.text,
-                            phoneNumber: phoneNumber,
+                            phoneNumber: phoneNumberController.text,
                             specialist: selectedSpecialist!,
                             price: double.tryParse(price.text) ?? 150,
                             country: country.text,
-                            state: state.text,
-                            city: city.text,
+                            state: city.text,
+                            city: state.text,
                             description: description.text,
                           ).then(
                             (value) {
