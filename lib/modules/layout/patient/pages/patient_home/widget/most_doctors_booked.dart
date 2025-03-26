@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '/core/extensions/align.dart';
-import '/core/theme/app_colors.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
@@ -59,7 +57,7 @@ class MostDoctorsBooked extends StatelessWidget {
                     0.01.width.vSpace,
                     Expanded(
                       child: Text(
-                        model.location ?? "No Location",
+                        model.city ?? "No City",
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!

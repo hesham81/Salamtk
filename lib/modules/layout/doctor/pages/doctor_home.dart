@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // import 'package:linear_calender/linear_calender.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/sign_in/pages/sign_in.dart';
+import '/modules/sign_in/pages/sign_in.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doctor_patient_reservation_check.dart';
 import '/modules/layout/doctor/widget/patients_list.dart';
@@ -19,7 +19,17 @@ class DoctorHome extends StatefulWidget {
 
 class _DoctorHomeState extends State<DoctorHome> {
   var user = FirebaseAuth.instance.currentUser;
-  var doctor = DoctorModel.doctorsList()[0];
+
+  // var doctor = DoctorModel.doctorsList()[0];
+  var doctor = DoctorModel(
+      name: "name",
+      price: 50,
+      description: "description",
+      country: "country",
+      state: "state",
+      city: "city",
+      specialist: "specialist",
+      phoneNumber: "phoneNumber");
 
   @override
   Widget build(BuildContext context) {

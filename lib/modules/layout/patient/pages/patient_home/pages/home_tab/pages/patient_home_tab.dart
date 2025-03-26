@@ -35,10 +35,9 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
       return;
     }
     for (var doctor in doctors) {
-      if (doctor.name != null &&
-          doctor.location != null &&
+      if (doctor.city != null &&
           (doctor.name!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              doctor.location!
+              doctor.city!
                   .toLowerCase()
                   .contains(searchQuery.toLowerCase()))) {
         searchList.add(doctor);
