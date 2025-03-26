@@ -12,6 +12,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final int minLine;
   final int maxLine;
+  final TextInputType keyboardType;
 
   const CustomTextFormField({
     super.key,
@@ -23,6 +24,7 @@ class CustomTextFormField extends StatefulWidget {
     required this.controller,
      this.minLine = 1 ,
      this.maxLine = 1 ,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -37,6 +39,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     var theme = Theme.of(context).textTheme;
 
     return TextFormField(
+      keyboardType: widget.keyboardType,
       minLines: widget.minLine,
       maxLines: widget.maxLine,
       validator: widget.validate,
