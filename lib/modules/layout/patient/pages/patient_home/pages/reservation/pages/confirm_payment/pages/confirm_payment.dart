@@ -33,6 +33,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
+    emailController.text = FirebaseAuth.instance.currentUser!.email!;
     String userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
@@ -59,16 +60,18 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 provider.getPaymentMethod != null) {
               EasyLoading.show();
               ReservationModel model = ReservationModel(
+                patientPhoneNumber: phoneNumberController.text,
                 reservationId: "",
                 uid: userId,
-                doctorId: provider.getDoctor!.phoneNumber!,
+                doctorId: provider.getDoctor!.uid!,
                 date: provider.getSelectedDate!,
                 slot: provider.getSelectedSlot!,
-                price: provider.getDoctor!.price!,
+                price: provider.getDoctor!.price,
                 paymentMethod: (provider.getPaymentMethod == local.bank)
                     ? "Bank"
                     : "Electronic Wallet",
                 email: emailController.text,
+                patientName: nameController.text,
               );
               await ReservationCollection.addReservation(model).then(
                 (value) {
@@ -230,6 +233,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ),
               0.01.height.hSpace,
               CustomTextFormField(
+                isReadOnly: true,
                 hintText: local.email,
                 controller: emailController,
                 suffixIcon: Icons.email_outlined,

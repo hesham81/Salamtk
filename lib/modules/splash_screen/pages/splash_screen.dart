@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:twseef/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/services/local_storage/shared_preference.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ? PatientHome()
               : (role == "patient")
                   ? PatientHome()
-                  : SignIn(),
+                  : DoctorHome(),
         ),
       );
     });

@@ -41,7 +41,8 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
 
   @override
   Widget build(BuildContext context) {
-    var difference = widget.model.date.difference(DateTime.now()).inDays;
+    var difference = DateTime.now().difference(widget.model.date).inDays;
+    print(difference);
     return CustomContainer(
       child: Column(
         children: [
@@ -55,7 +56,7 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
           Row(
             children: [
               Text(
-                "${(difference == 0 || difference < 0) ? "Completed" : "After " + difference.toString() + " Days"} ",
+                "${(difference < 0) ? "Completed" : (difference == 0) ? "Today" : (difference == 1) ? "Tomorrow" : (difference > 1) ? "After " + difference.toString() + " Days" : ""} ",
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: (difference == 0 || difference < 0)
                           ? Colors.blue

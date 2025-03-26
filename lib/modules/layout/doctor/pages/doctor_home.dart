@@ -1,8 +1,12 @@
+import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:linear_calender/linear_calender.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
+import '/core/utils/doctors/doctors_collection.dart';
+import '/core/utils/reservations/reservation_collection.dart';
+import '/models/reservations_models/reservation_model.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doctor_patient_reservation_check.dart';
@@ -18,29 +22,42 @@ class DoctorHome extends StatefulWidget {
 }
 
 class _DoctorHomeState extends State<DoctorHome> {
-  var user = FirebaseAuth.instance.currentUser;
+  final user = FirebaseAuth.instance.currentUser;
+  late DoctorModel doctor;
+  bool isLoading = true; // Add a loading state
 
-  // var doctor = DoctorModel.doctorsList()[0];
-  var doctor = DoctorModel(
-      name: "name",
-      price: 50,
-      description: "description",
-      country: "country",
-      state: "state",
-      city: "city",
-      specialist: "specialist",
-      phoneNumber: "phoneNumber");
+  Future<void> getDoctorData() async {
+    try {
+      final doctorData = await DoctorsCollection.getDoctorData(uid: user!.uid);
+      setState(() {
+        doctor = doctorData!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching doctor data: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDoctorData(); // Fetch doctor data on initialization
+  }
+
+  DateTime? dateTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    var doctorName = user!.displayName;
-    doctorName = doctorName!.replaceFirst(RegExp(r'^(dr|Dr|DR|dR)\s+'), "");
+    var provider = Provider.of<PatientProvider>(context);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            doctor.isInTheClinic = !doctor.isInTheClinic;
-          });
+        onPressed: () async {
+          await DoctorsCollection.updateDoctor(doctor);
+          setState(() {});
         },
         backgroundColor: AppColors.secondaryColor,
         child: Icon(
@@ -50,98 +67,134 @@ class _DoctorHomeState extends State<DoctorHome> {
           color: AppColors.primaryColor,
         ),
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.maxFinite,
-                child: Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        "Welcome Dr :",
-                        style: (1.width < 600)
-                            ? Theme.of(context).textTheme.labelLarge
-                            : Theme.of(context).textTheme.titleSmall,
-                      ),
-                      0.01.width.vSpace,
-                      Text(
-                        doctorName,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.secondaryColor,
-                            ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SignIn(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        icon: Icon(Icons.logout),
-                      )
-                    ],
-                  ),
-                ),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: AppColors.secondaryColor,
               ),
-              0.01.height.hSpace,
-              SizedBox(
-                width: double.maxFinite,
-                child: Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        "Total Day Patients : ",
-                        style: (1.width < 600)
-                            ? Theme.of(context).textTheme.labelLarge
-                            : Theme.of(context).textTheme.titleSmall,
+            ) // Show loading indicator
+          : SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Row(
+                        children: [
+                          Text(
+                            "Welcome Dr :",
+                            style: (1.width < 600)
+                                ? Theme.of(context).textTheme.labelLarge
+                                : Theme.of(context).textTheme.titleSmall,
+                          ),
+                          0.01.width.vSpace,
+                          Text(
+                            user!.displayName!
+                                .replaceFirst(RegExp(r'^(dr|Dr|DR|dR)\s+'), ""),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color: AppColors.secondaryColor,
+                                ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () async {
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignIn(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            icon: Icon(Icons.logout),
+                          )
+                        ],
                       ),
-                      0.01.width.vSpace,
-                      Text(
-                        10.toString(),
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.secondaryColor,
+                    ),
+                    0.01.height.hSpace,
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Row(
+                        children: [
+                          Text(
+                            "Total Day Patients : ",
+                            style: (1.width < 600)
+                                ? Theme.of(context).textTheme.labelLarge
+                                : Theme.of(context).textTheme.titleSmall,
+                          ),
+                          0.01.width.vSpace,
+                          Text(
+                            provider.getTotalReservations.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color: AppColors.secondaryColor,
+                                ),
+                          )
+                        ],
+                      ),
+                    ),
+                    0.03.height.hSpace,
+                    CalendarTimeline(
+                      initialDate: dateTime ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(
+                        Duration(days: 30),
+                      ),
+                      onDateSelected: (date) => setState(() {
+                        dateTime = date;
+                      }),
+                      leftMargin: 20,
+                      monthColor: Colors.blueGrey,
+                      dayColor: AppColors.slateBlueColor,
+                      activeDayColor: Colors.white,
+                      activeBackgroundDayColor: AppColors.secondaryColor,
+                      selectableDayPredicate: (date) => date.day != 23,
+                    ),
+                    0.03.height.hSpace,
+                    StreamBuilder(
+                      stream: ReservationCollection.getAllPatients(
+                        doctorId: user!.uid,
+                      ),
+                      builder: (context, snapshot) {
+                        List<ReservationModel> reservations =
+                            snapshot.data?.docs.map((e) => e.data()).toList() ??
+                                [];
+
+                        List<ReservationModel> dateReservations = reservations
+                            .where((element) =>
+                                element.date.day == dateTime!.day &&
+                                element.date.month == dateTime!.month)
+                            .toList();
+                        provider.setTotalReservations(dateReservations.length);
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => slideLeftWidget(
+                              newPage: DoctorPatientReservationCheck(),
+                              context: context,
                             ),
-                      )
-                    ],
-                  ),
-                ),
+                            child: PatientsList(
+                              model: dateReservations[index],
+                            ),
+                          ),
+                          separatorBuilder: (context, index) =>
+                              0.01.height.hSpace,
+                          itemCount: dateReservations.length,
+                        );
+                      },
+                    ),
+                    0.01.height.hSpace,
+                  ],
+                ).hPadding(0.03.width),
               ),
-              0.01.height.hSpace,
-              // LinearCalendar(
-              //   monthVisibility: false,
-              //   selectedBorderColor: AppColors.primaryColor,
-              //   height: 0.1.height,
-              //   selectedColor: AppColors.secondaryColor,
-              //   unselectedBorderColor: AppColors.secondaryColor,
-              //   onChanged: (value) {},
-              //   startDate: DateTime.now(),
-              // ),
-              // 0.01.height.hSpace,
-              ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () => slideLeftWidget(
-                    newPage: DoctorPatientReservationCheck(),
-                    context: context,
-                  ),
-                  child: PatientsList(),
-                ),
-                separatorBuilder: (context, index) => 0.01.height.hSpace,
-                itemCount: 10,
-              ),
-              0.01.height.hSpace,
-            ],
-          ).hPadding(0.03.width),
-        ),
-      ),
+            ),
     );
   }
 }

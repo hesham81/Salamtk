@@ -49,4 +49,15 @@ abstract class ReservationCollection {
       return [];
     }
   }
+
+  static Stream<QuerySnapshot<ReservationModel>> getAllPatients({
+    required String doctorId,
+  }) {
+    return _colRef()
+        .where(
+          "doctorId",
+          isEqualTo: doctorId,
+        )
+        .snapshots();
+  }
 }

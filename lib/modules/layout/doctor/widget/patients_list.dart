@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '/models/reservations_models/reservation_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_container.dart';
 
 class PatientsList extends StatefulWidget {
-  const PatientsList({super.key});
+  final ReservationModel model;
+
+  const PatientsList({
+    super.key,
+    required this.model,
+  });
 
   @override
   State<PatientsList> createState() => _PatientsListState();
 }
 
 class _PatientsListState extends State<PatientsList> {
-  DateTime userDate = DateTime.now().add(Duration(hours: 8));
-
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -26,17 +30,42 @@ class _PatientsListState extends State<PatientsList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Patient Name",
+                  widget.model.patientName,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 0.01.width.hSpace,
                 Text(
-                  "5:30 AM",
+                  widget.model.slot,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 0.01.height.hSpace,
                 Text(
-                  "${userDate.difference(DateTime.now()).inHours}:${userDate.difference(DateTime.now()).inMinutes.toString().substring(0, 2)} Hours Left",
+                      () {
+                    // Calculate the difference in hours and days
+                    final difference = widget.model.date.difference(DateTime.now());
+                    final differenceInHours = difference.inHours;
+                    final differenceInDays = difference.inDays;
+
+                    if (differenceInDays > 0) {
+                      // Reservation is more than 24 hours away
+                      return "In $differenceInDays Day${differenceInDays > 1 ? 's' : ''}";
+                    } else if (differenceInHours > 0) {
+                      // Reservation is within the same day (less than 24 hours)
+                      return "In $differenceInHours Hour${differenceInHours > 1 ? 's' : ''}";
+                    } else if (differenceInHours == 0) {
+                      // Reservation is happening now
+                      return "Now";
+                    } else if (differenceInHours < 0 && differenceInDays >= -1) {
+                      // Reservation was within the last 24 hours
+                      return "${differenceInHours.abs()} Hour${differenceInHours.abs() > 1 ? 's' : ''} Ago";
+                    } else if (differenceInDays < -1) {
+                      // Reservation was more than 24 hours ago
+                      return "${differenceInDays.abs()} Day${differenceInDays.abs() > 1 ? 's' : ''} Ago";
+                    } else {
+                      // Do not display anything for exactly 0 days and not "Now"
+                      return "";
+                    }
+                  }(),
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
@@ -46,7 +75,7 @@ class _PatientsListState extends State<PatientsList> {
             ),
             Spacer(),
             Text(
-              "150 EGP",
+              "${widget.model.price} EGP",
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!
