@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:twseef/core/utils/doctors/doctors_collection.dart';
-import 'package:twseef/models/doctors_models/doctor_model.dart';
+import '/core/constant/shared_preference_key.dart';
+import '/core/services/local_storage/shared_preference.dart';
+import '/core/utils/doctors/doctors_collection.dart';
+import '/models/doctors_models/doctor_model.dart';
 import '/core/utils/auth/auth_collections.dart';
 
 abstract class SignUpAuth {
@@ -10,6 +12,7 @@ abstract class SignUpAuth {
     required String email,
     required String password,
     required String name,
+    String? phoneNumber,
     bool isDoctor = false,
   }) async {
     try {
@@ -20,6 +23,7 @@ abstract class SignUpAuth {
       user.user!.updateDisplayName(name);
       await AuthCollections.insertRole(
         uid: user.user!.uid,
+        phoneNumber: phoneNumber,
         role: isDoctor ? "doctor" : "patient",
       ).then(
         (value) {
@@ -42,10 +46,13 @@ abstract class SignUpAuth {
     required String state,
     required String city,
     required String description,
+    double? lat,
+    double? long,
   }) async {
     try {
       await signUp(
         email: email,
+        phoneNumber: phoneNumber,
         password: password,
         name: name,
         isDoctor: true,
@@ -65,6 +72,9 @@ abstract class SignUpAuth {
         city: city,
         specialist: specialist,
         phoneNumber: phoneNumber,
+        rate: 2.5,
+        lat: lat,
+        long: long,
       );
       await DoctorsCollection.setDoctor(doctor).then(
         (value) {
@@ -73,6 +83,7 @@ abstract class SignUpAuth {
           }
         },
       );
+      await SharedPreference.setString(SharedPreferenceKey.role, "doctor");
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;

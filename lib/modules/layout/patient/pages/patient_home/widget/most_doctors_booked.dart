@@ -21,9 +21,25 @@ class MostDoctorsBooked extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  model.name ?? "No Dr Name",
-                  style: Theme.of(context).textTheme.labelLarge,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (DateTime.now().difference(model.createdAt).inDays < 7)
+                        ? Text(
+                            "New",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(
+                                  color: Colors.blue,
+                                ),
+                          )
+                        : SizedBox(),
+                    Text(
+                      model.name ?? "No Dr Name",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ],
                 ),
                 VerticalDivider(
                   thickness: 1,

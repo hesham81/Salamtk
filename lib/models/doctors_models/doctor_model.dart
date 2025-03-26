@@ -15,7 +15,6 @@ class DoctorModel {
   final String imagePath; // Removed `final` to allow assignment from JSON
   final DateTime createdAt; // Kept `final` but ensured proper deserialization
   bool isInTheClinic;
-
   DoctorModel({
     required this.name,
     required this.price,
