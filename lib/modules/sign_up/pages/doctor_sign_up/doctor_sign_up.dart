@@ -27,6 +27,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController country = TextEditingController();
+  TextEditingController description = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
@@ -68,6 +69,15 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     suffixIcon: Icons.person_outline,
                     validate: (value) => Validations.isNameValid(value ?? ""),
                     controller: nameController,
+                  ),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: "Description",
+                    suffixIcon: Icons.edit,
+                    minLine: 3,
+                    maxLine: 3,
+                    validate: (value) => Validations.isNameValid(value ?? ""),
+                    controller: description,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
@@ -123,6 +133,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                       if (value == null || value.isEmpty) {
                         return "Enter Price";
                       }
+                      return null;
                     },
                   ),
                   0.02.height.hSpace,
@@ -171,38 +182,48 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   CountryStateCityPicker(
-                      country: country,
-                      state: state,
-                      city: city,
-                      dialogColor: Colors.grey.shade200,
-                      textFieldDecoration: InputDecoration(
-                          fillColor: Colors.blueGrey.shade100,
-                          filled: true,
-                          suffixIcon: const Icon(Icons.arrow_downward_rounded),
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide.none))),
+                    country: country,
+                    state: state,
+                    city: city,
+                    dialogColor: Colors.grey.shade200,
+                    textFieldDecoration: InputDecoration(
+                      fillColor: Colors.blueGrey.shade100,
+                      filled: true,
+                      suffixIcon: const Icon(Icons.arrow_downward_rounded),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
                   0.02.height.hSpace,
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomElevatedButton(
                       onPressed: () async {
-                        if (formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate() &&
+                            city.text != "" &&
+                            state.text != "" &&
+                            country.text != "" &&
+                            selectedSpecialist != null) {
                           EasyLoading.show();
-                          await SignUpAuth.signUp(
+                          await SignUpAuth.doctorSignUp(
                             email: emailController.text,
                             password: passwordController.text,
                             name: nameController.text,
                             phoneNumber: phoneNumber,
-                            isDoctor: true,
-                            specialist:
-                                selectedSpecialist ?? "No Specialist Selected",
+                            specialist: selectedSpecialist!,
+                            price: double.tryParse(price.text) ?? 150,
+                            country: country.text,
+                            state: state.text,
+                            city: city.text,
+                            description: description.text,
                           ).then(
                             (value) {
                               if (value == null) {
-                                Navigator.pop(context);
                                 EasyLoading.dismiss();
+                                Navigator.pop(context);
                                 EasyLoading.showSuccess(
-                                  "Account Created Successfully",
+                                  "Account Create Successfully",
                                 );
                               } else {
                                 EasyLoading.dismiss();
