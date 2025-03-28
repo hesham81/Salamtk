@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import '/core/constant/storage/storage_keys.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/services/loading_indicator.dart';
@@ -13,6 +15,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   configLoading();
+  await Supabase.initialize(
+    url: StorageKeys.projectUrl,
+    anonKey: StorageKeys.apiKey,
+  );
   runApp(
     MultiProvider(
       providers: [

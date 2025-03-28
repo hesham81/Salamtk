@@ -7,7 +7,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>We need access to your photo library to select images.</string>
 	<key>CFBundleDisplayName</key>
-	<string>Twseef</string>
+	<string>Salamtk</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>twseef</string>
+	<string>Salamtk</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

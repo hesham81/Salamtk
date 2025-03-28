@@ -2,7 +2,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/sign_in/pages/sign_in.dart';
+import '/modules/sign_in/pages/sign_in.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';

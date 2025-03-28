@@ -22,19 +22,24 @@ class DoctorHome extends StatefulWidget {
 }
 
 class _DoctorHomeState extends State<DoctorHome> {
-  final user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
   late DoctorModel doctor;
-  bool isLoading = true; // Add a loading state
+  bool isLoading = true;
+  bool isInTheClinic = false; // Track the "in the clinic" state
 
   Future<void> getDoctorData() async {
     try {
       final doctorData = await DoctorsCollection.getDoctorData(uid: user!.uid);
       setState(() {
         doctor = doctorData!;
+        isInTheClinic = doctor.isInTheClinic; // Initialize isInTheClinic
         isLoading = false;
       });
     } catch (e) {
       print("Error fetching doctor data: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load doctor data. Please try again.")),
+      );
       setState(() {
         isLoading = false;
       });
@@ -56,12 +61,15 @@ class _DoctorHomeState extends State<DoctorHome> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await DoctorsCollection.updateDoctor(doctor);
-          setState(() {});
+          await DoctorsCollection.updateDoctor(doctor); // Save changes to Firestore
+          setState(() {
+            isInTheClinic = !isInTheClinic; // Toggle the state
+            doctor.isInTheClinic = isInTheClinic; // Update the doctor model
+          });
         },
         backgroundColor: AppColors.secondaryColor,
         child: Icon(
-          (doctor.isInTheClinic)
+          (isInTheClinic)
               ? Icons.check_circle
               : Icons.check_circle_outline_outlined,
           color: AppColors.primaryColor,
@@ -69,132 +77,144 @@ class _DoctorHomeState extends State<DoctorHome> {
       ),
       body: isLoading
           ? Center(
-              child: CircularProgressIndicator(
-                color: AppColors.secondaryColor,
-              ),
-            ) // Show loading indicator
+        child: CircularProgressIndicator(
+          color: AppColors.secondaryColor,
+        ),
+      )
           : SingleChildScrollView(
-              child: SafeArea(
-                child: Column(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Welcome Message
+              SizedBox(
+                width: double.maxFinite,
+                child: Row(
                   children: [
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Welcome Dr :",
-                            style: (1.width < 600)
-                                ? Theme.of(context).textTheme.labelLarge
-                                : Theme.of(context).textTheme.titleSmall,
-                          ),
-                          0.01.width.vSpace,
-                          Text(
-                            user!.displayName!
-                                .replaceFirst(RegExp(r'^(dr|Dr|DR|dR)\s+'), ""),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  color: AppColors.secondaryColor,
-                                ),
-                          ),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () async {
-                              await FirebaseAuth.instance.signOut();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignIn(),
-                                ),
-                                (route) => false,
-                              );
-                            },
-                            icon: Icon(Icons.logout),
-                          )
-                        ],
-                      ),
+                    Text(
+                      "Welcome Dr :",
+                      style: (1.width < 600)
+                          ? Theme.of(context).textTheme.labelLarge
+                          : Theme.of(context).textTheme.titleSmall,
                     ),
-                    0.01.height.hSpace,
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Total Day Patients : ",
-                            style: (1.width < 600)
-                                ? Theme.of(context).textTheme.labelLarge
-                                : Theme.of(context).textTheme.titleSmall,
-                          ),
-                          0.01.width.vSpace,
-                          Text(
-                            provider.getTotalReservations.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  color: AppColors.secondaryColor,
-                                ),
-                          )
-                        ],
-                      ),
+                    0.01.width.vSpace,
+                    Text(
+                      user!.displayName?.replaceFirst(
+                          RegExp(r'^(dr|Dr|DR|dR)\s+'), "") ??
+                          "Doctor",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(color: AppColors.secondaryColor),
                     ),
-                    0.03.height.hSpace,
-                    CalendarTimeline(
-                      initialDate: dateTime ?? DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(
-                        Duration(days: 30),
-                      ),
-                      onDateSelected: (date) => setState(() {
-                        dateTime = date;
-                      }),
-                      leftMargin: 20,
-                      monthColor: Colors.blueGrey,
-                      dayColor: AppColors.slateBlueColor,
-                      activeDayColor: Colors.white,
-                      activeBackgroundDayColor: AppColors.secondaryColor,
-                      selectableDayPredicate: (date) => date.day != 23,
-                    ),
-                    0.03.height.hSpace,
-                    StreamBuilder(
-                      stream: ReservationCollection.getAllPatients(
-                        doctorId: user!.uid,
-                      ),
-                      builder: (context, snapshot) {
-                        List<ReservationModel> reservations =
-                            snapshot.data?.docs.map((e) => e.data()).toList() ??
-                                [];
-
-                        List<ReservationModel> dateReservations = reservations
-                            .where((element) =>
-                                element.date.day == dateTime!.day &&
-                                element.date.month == dateTime!.month)
-                            .toList();
-                        provider.setTotalReservations(dateReservations.length);
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => slideLeftWidget(
-                              newPage: DoctorPatientReservationCheck(),
-                              context: context,
-                            ),
-                            child: PatientsList(
-                              model: dateReservations[index],
-                            ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignIn(),
                           ),
-                          separatorBuilder: (context, index) =>
-                              0.01.height.hSpace,
-                          itemCount: dateReservations.length,
+                              (route) => false,
                         );
                       },
+                      icon: Icon(Icons.logout),
                     ),
-                    0.01.height.hSpace,
                   ],
-                ).hPadding(0.03.width),
+                ),
               ),
-            ),
+              0.01.height.hSpace,
+
+              // Total Patients
+              SizedBox(
+                width: double.maxFinite,
+                child: Row(
+                  children: [
+                    Text(
+                      "Total Day Patients : ",
+                      style: (1.width < 600)
+                          ? Theme.of(context).textTheme.labelLarge
+                          : Theme.of(context).textTheme.titleSmall,
+                    ),
+                    0.01.width.vSpace,
+                    Text(
+                      provider.getTotalReservations.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(color: AppColors.secondaryColor),
+                    ),
+                  ],
+                ),
+              ),
+              0.03.height.hSpace,
+
+              // Calendar Timeline
+              CalendarTimeline(
+                initialDate: dateTime ?? DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(Duration(days: 30)),
+                onDateSelected: (date) => setState(() {
+                  dateTime = date;
+                }),
+                leftMargin: 20,
+                monthColor: Colors.blueGrey,
+                dayColor: AppColors.slateBlueColor,
+                activeDayColor: Colors.white,
+                activeBackgroundDayColor: AppColors.secondaryColor,
+                selectableDayPredicate: (date) => date.day != 23,
+              ),
+              0.03.height.hSpace,
+
+              // Reservations List
+              StreamBuilder(
+                stream: ReservationCollection.getAllPatients(
+                  doctorId: user!.uid,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text("Error loading reservations"));
+                  }
+
+                  List<ReservationModel> reservations =
+                      snapshot.data?.docs.map((e) => e.data()).toList() ??
+                          [];
+
+                  List<ReservationModel> dateReservations = reservations
+                      .where((element) =>
+                  element.date.day == dateTime!.day &&
+                      element.date.month == dateTime!.month)
+                      .toList();
+
+                  provider.setTotalReservations(dateReservations.length);
+
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () => slideLeftWidget(
+                        newPage: DoctorPatientReservationCheck(),
+                        context: context,
+                      ),
+                      child: PatientsList(
+                        model: dateReservations[index],
+                      ),
+                    ),
+                    separatorBuilder: (context, index) =>
+                    0.01.height.hSpace,
+                    itemCount: dateReservations.length,
+                  );
+                },
+              ),
+              0.01.height.hSpace,
+            ],
+          ).hPadding(0.03.width),
+        ),
+      ),
     );
   }
 }

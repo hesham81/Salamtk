@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:twseef/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/my_account.dart';
+import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/my_account.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/un_login_profile/pages/un_login_patient_profile.dart';
 import '/core/utils/auth/login_auth.dart';
 import '/modules/sign_in/pages/sign_in.dart';

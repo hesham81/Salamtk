@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:twseef/core/extensions/extensions.dart';
+import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 
 class CategoryWidget extends StatelessWidget {

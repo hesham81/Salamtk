@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:twseef/modules/sign_in/pages/sign_in.dart';
+import '/modules/sign_in/pages/sign_in.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/pages/confirm_payment.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/extensions/extensions.dart';
