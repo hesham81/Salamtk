@@ -10,6 +10,8 @@ class AppProviders extends ChangeNotifier {
 
   User? get cred => _cred;
 
+
+
   static _getToken() async {
     User? user = await FirebaseAuth.instance.currentUser;
   }
