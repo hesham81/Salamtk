@@ -60,7 +60,9 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: (difference == 0 || difference < 0)
                           ? Colors.blue
-                          : AppColors.blackColor,
+                          : (difference < 0)
+                              ? Colors.red
+                              : AppColors.blackColor,
                     ),
               ),
               Spacer(),

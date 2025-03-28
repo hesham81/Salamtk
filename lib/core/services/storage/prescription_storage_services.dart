@@ -1,5 +1,4 @@
 import 'dart:io';
-// import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class PrescriptionStorageServices {
@@ -7,6 +6,13 @@ abstract class PrescriptionStorageServices {
 
   static Future<String?> uploadPrescription(String path, File fileName) async {
     try {
+      await checkIfExists(path).then(
+        (value) async {
+          if (value) {
+            await deleteFile(path);
+          }
+        },
+      );
       await _supabase.upload(path, fileName);
       return null;
     } catch (e) {
@@ -14,9 +20,9 @@ abstract class PrescriptionStorageServices {
     }
   }
 
-  static Future<String?> getUrl(String path) async {
+  static String getUrl(String path) {
     try {
-      final url = await _supabase.getPublicUrl(path);
+      final url = _supabase.getPublicUrl(path);
       return url;
     } catch (e) {
       return e.toString();
@@ -50,12 +56,12 @@ abstract class PrescriptionStorageServices {
     }
   }
 
-  // static Future<Uint8List?> downloadFile(String path) async {
-  //   try {
-  //     final response = await _supabase.download(path);
-  //     return response.;
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+// static Future<Uint8List?> downloadFile(String path) async {
+//   try {
+//     final response = await _supabase.download(path);
+//     return response.;
+//   } catch (e) {
+//     return null;
+//   }
+// }
 }
