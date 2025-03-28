@@ -12,16 +12,19 @@ class PrescriptionModel {
 
   factory PrescriptionModel.fromJson(Map<String, dynamic> json) {
     return PrescriptionModel(
-      uid: json['uid'],
-      lastUpdate: json['lastUpdate'].toDate(),
-      imageUrl: json['imageUrl'],
+      uid: json['uid'] ?? 'default_uid',
+      lastUpdate: json['lastUpdate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['lastUpdate'] as int)
+          : DateTime.now(),
+      imageUrl: json['imageUrl'] ??
+          'default_image_url',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'lastUpdate': lastUpdate,
+      'lastUpdate': lastUpdate.millisecondsSinceEpoch,
       'imageUrl': imageUrl,
     };
   }

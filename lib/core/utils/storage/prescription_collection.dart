@@ -1,36 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/models/prescription/prescription_model.dart';
 
-abstract class PrescriptionStorageServices {
-  static final _firebase =
-      FirebaseFirestore.instance.collection("prescription");
+abstract class PrescriptionCollection {
+  static final _firestore =
+      FirebaseFirestore.instance.collection("Prescriptions");
 
   static CollectionReference<PrescriptionModel> _colRef() {
-    return _firebase.withConverter(
-      fromFirestore: (snapshot, options) =>
+    return _firestore.withConverter<PrescriptionModel>(
+      fromFirestore: (snapshot, _) =>
           PrescriptionModel.fromJson(snapshot.data()!),
-      toFirestore: (value, options) => value.toJson(),
+      toFirestore: (prescription, _) => prescription.toJson(),
     );
   }
 
-  static Future<void> addPrescription(PrescriptionModel prescription) async {
-    await _colRef().add(prescription);
-  }
-
-  static Future<void> updatePrescription(PrescriptionModel prescription) async {
-    await _colRef().doc(prescription.uid).update(prescription.toJson());
-  }
-
-  static Future<void> deletePrescription(String uid) async {
-    await _colRef().doc(uid).delete();
-  }
-
-  static Future<bool> checkIfExists(String uid) async {
+  static Future<String?> addPrescription({
+    required PrescriptionModel model,
+  }) async {
     try {
-      await _colRef().doc(uid).get();
-      return true;
-    } catch (e) {
-      return false;
+      await _colRef().doc(model.uid).set(model);
+      return null;
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  static Future<PrescriptionModel?> getPrescription({
+    required String uid,
+  }) async {
+    try {
+      var res = await _colRef().doc(uid).get();
+      return res.data()!;
+    } catch (error) {
+      print(error.toString());
+      return null;
     }
   }
 }
