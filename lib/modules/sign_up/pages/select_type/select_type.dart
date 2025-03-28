@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
 import '/modules/sign_up/pages/doctor_sign_up/doctor_sign_up.dart';
 import '/core/constant/app_assets.dart';
