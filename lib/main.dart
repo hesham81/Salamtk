@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import '/core/providers/app_providers/all_app_providers_db.dart';
+import '/core/providers/reservations_providers/reservations_provider.dart';
 import '/core/constant/storage/storage_keys.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/core/providers/app_providers/language_provider.dart';
@@ -23,6 +25,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PatientProvider()),
+        ChangeNotifierProvider(create: (_) => AllAppProvidersDb()),
+        ChangeNotifierProvider(create: (_) => ReservationsProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
       child: const MyApp(),

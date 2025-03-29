@@ -38,13 +38,14 @@ class _ReservationState extends State<Reservation> {
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
     var provider = Provider.of<PatientProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Reserve Day",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: AppColors.primaryColor,
-              ),
+            color: AppColors.primaryColor,
+          ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -56,27 +57,32 @@ class _ReservationState extends State<Reservation> {
           ),
         ),
       ),
-      bottomNavigationBar: Expanded(
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(0.01.height),
         child: CustomElevatedButton(
           onPressed: (provider.getSelectedSlot == null)
               ? null
-              : () => (user == null)
-                  ? slideLeftWidget(
-                      newPage: SignIn(),
-                      context: context,
-                    )
-                  : slideLeftWidget(
-                      newPage: ConfirmPayment(),
-                      context: context,
-                    ),
+              : () {
+            if (user == null) {
+              slideLeftWidget(
+                newPage: SignIn(),
+                context: context,
+              );
+            } else {
+              slideLeftWidget(
+                newPage: ConfirmPayment(),
+                context: context,
+              );
+            }
+          },
           child: Text(
             "Confirm",
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColors.primaryColor,
-                ),
+              color: AppColors.primaryColor,
+            ),
           ),
         ),
-      ).allPadding(0.01.height),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -109,7 +115,7 @@ class _ReservationState extends State<Reservation> {
                 ),
               ),
             ),
-            0.01.height.hSpace,
+            SizedBox(height: 0.01.height),
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -129,8 +135,8 @@ class _ReservationState extends State<Reservation> {
                     decoration: BoxDecoration(
                       color: (provider.getSelectedSlot != null)
                           ? (provider.getSelectedSlot == timeSlots[index])
-                              ? AppColors.secondaryColor
-                              : Colors.grey[200]
+                          ? AppColors.secondaryColor
+                          : Colors.grey[200]
                           : Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
                     ),

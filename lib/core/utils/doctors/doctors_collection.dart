@@ -64,4 +64,18 @@ abstract class DoctorsCollection {
       return false;
     }
   }
+
+  static Future<List<DoctorModel>> doctors() async {
+    try {
+      // Get the first snapshot from the stream
+      final querySnapshot = await DoctorsCollection.getDoctors().first;
+
+      // Map the documents to DoctorModel objects
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (error) {
+      // Log the error and rethrow it
+      print('Error fetching doctors: $error');
+      rethrow;
+    }
+  }
 }

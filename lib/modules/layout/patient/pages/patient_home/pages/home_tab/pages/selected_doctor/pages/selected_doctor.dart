@@ -171,7 +171,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
         ),
         leading: IconButton(
           onPressed: () {
-            // provider.clearSelectedDoctor();
             Navigator.pop(context);
           },
           icon: Icon(

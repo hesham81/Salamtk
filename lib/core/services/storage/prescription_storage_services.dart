@@ -13,7 +13,8 @@ abstract class PrescriptionStorageServices {
           }
         },
       );
-      await _supabase.upload(path, fileName);
+      await _supabase.upload(path, fileName,
+          fileOptions: const FileOptions(upsert: true), retryAttempts: 3);
       return null;
     } catch (e) {
       return e.toString();
@@ -40,7 +41,11 @@ abstract class PrescriptionStorageServices {
 
   static Future<String?> deleteFile(String path) async {
     try {
-      await _supabase.remove([path]);
+      print("Removing The File ");
+      await _supabase.remove(
+        [path],
+      );
+      print("The File Removed");
       return null;
     } catch (e) {
       return e.toString();
@@ -49,19 +54,14 @@ abstract class PrescriptionStorageServices {
 
   static Future<String?> updateFile(String path, File fileName) async {
     try {
-      await _supabase.update(path, fileName);
+      await _supabase.update(
+        path,
+        fileName,
+        fileOptions: const FileOptions(upsert: true),
+      );
       return null;
     } catch (e) {
       return e.toString();
     }
   }
-
-// static Future<Uint8List?> downloadFile(String path) async {
-//   try {
-//     final response = await _supabase.download(path);
-//     return response.;
-//   } catch (e) {
-//     return null;
-//   }
-// }
 }
