@@ -38,33 +38,20 @@ class _MyAccountState extends State<MyAccount> {
       this._image = File(selectedImage.path);
     }
     EasyLoading.show();
-    bool isExist = await PrescriptionStorageServices.checkIfExists(uid).then(
-      (value) => value,
-    );
     setState(
       () {},
     );
-    if (isExist) {
-      await PrescriptionStorageServices.updateFile(uid, _image!).then(
-        (value) {
-          if (value != null) {
-            EasyLoading.dismiss();
-            isValid = false;
-            EasyLoading.showError(value);
-          }
-        },
-      );
-    } else {
-      await PrescriptionStorageServices.uploadPrescription(uid, _image!).then(
-        (value) {
-          if (value != null) {
-            EasyLoading.dismiss();
-            isValid = false;
-            EasyLoading.showError(value);
-          }
-        },
-      );
-    }
+    await PrescriptionStorageServices.updateFile(uid, _image!).then(
+      (value) {
+        if (value != null) {
+          EasyLoading.dismiss();
+          isValid = false;
+          EasyLoading.showError(value);
+        }
+      },
+    );
+    isValid = true;
+    await _checkIfPrescription();
 
     if (isValid) {
       String imageUrl = PrescriptionStorageServices.getUrl(uid);
@@ -121,69 +108,84 @@ class _MyAccountState extends State<MyAccount> {
           ? CircularProgressIndicator(
               color: AppColors.secondaryColor,
             ).center
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  0.01.height.hSpace,
-                  MixedTextColors(
-                    title: "Name",
-                    value: user!.displayName.toString(),
-                  ),
-                  0.01.height.hSpace,
-                  MixedTextColors(
-                    title: "Email",
-                    value: user.email!,
-                  ),
-                  0.01.height.hSpace,
-                  MixedTextColors(
-                    title: "Phone Number",
-                    value: user.phoneNumber ?? "No Number Set",
-                  ),
-                  0.01.height.hSpace,
-                  GestureDetector(
-                    onTap: () async {
-                      _pickImage(user.uid, context);
-                      setState(() {});
-                    },
-                    child: MixedTextColors(
-                      title: "Medical prescription",
-                      value: (model == null)
-                          ? "No Prescription Uploaded"
-                          : "${model!.lastUpdate.day} / ${model!.lastUpdate.month} / ${model!.lastUpdate.year}",
+          : RefreshIndicator(
+              onRefresh: () async {
+                _checkIfPrescription();
+              },
+              color: AppColors.secondaryColor,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    0.01.height.hSpace,
+                    MixedTextColors(
+                      title: "Name",
+                      value: user!.displayName.toString(),
                     ),
-                  ),
-                  0.01.height.hSpace,
-                  (model == null)
-                      ? SizedBox()
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            imageUrl: model!.imageUrl,
-                          ),
-                        ),
-                  0.05.height.hSpace,
-                  CustomElevatedButton(
-                    child: Text(
-                      "Delete Account",
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
+                    0.01.height.hSpace,
+                    MixedTextColors(
+                      title: "Email",
+                      value: user.email!,
                     ),
-                    onPressed: () async {
-                      EasyLoading.show();
-                      await DeleteAccount.deleteAccount();
-                      EasyLoading.dismiss();
-                      slideLeftWidget(
-                        newPage: PatientHome(),
-                        context: context,
-                      );
-                    },
-                    btnColor: Colors.red,
-                  ),
-                  0.02.height.hSpace,
-                ],
-              ).hPadding(0.03.width),
+                    0.01.height.hSpace,
+                    MixedTextColors(
+                      title: "Phone Number",
+                      value: user.phoneNumber ?? "No Number Set",
+                    ),
+                    0.01.height.hSpace,
+                    GestureDetector(
+                      onTap: () async {
+                        _pickImage(user.uid, context);
+                        setState(() {});
+                      },
+                      child: MixedTextColors(
+                        title: "Medical prescription",
+                        value: (model == null)
+                            ? "No Prescription Uploaded"
+                            : "${model!.lastUpdate.day} / ${model!.lastUpdate.month} / ${model!.lastUpdate.year}",
+                      ),
+                    ),
+                    0.01.height.hSpace,
+                    (model == null)
+                        ? SizedBox()
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: CachedNetworkImage(
+                              imageUrl: model!.imageUrl,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(
+                                color: AppColors.secondaryColor,
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outline,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                    0.05.height.hSpace,
+                    CustomElevatedButton(
+                      child: Text(
+                        "Delete Account",
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                      ),
+                      onPressed: () async {
+                        EasyLoading.show();
+                        await DeleteAccount.deleteAccount();
+                        EasyLoading.dismiss();
+                        slideLeftWidget(
+                          newPage: PatientHome(),
+                          context: context,
+                        );
+                      },
+                      btnColor: Colors.red,
+                    ),
+                    0.02.height.hSpace,
+                  ],
+                ).hPadding(0.03.width),
+              ),
             ),
     );
   }

@@ -56,13 +56,9 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
           Row(
             children: [
               Text(
-                "${(difference < 0) ? "Completed" : (difference == 0) ? "Today" : (difference == 1) ? "Tomorrow" : (difference > 1) ? "After " + difference.toString() + " Days" : ""} ",
+                "${widget.model.date.day}/${widget.model.date.month}/${widget.model.date.year}",
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: (difference == 0 || difference < 0)
-                          ? Colors.blue
-                          : (difference < 0)
-                              ? Colors.red
-                              : AppColors.blackColor,
+                      color: Colors.blue,
                     ),
               ),
               Spacer(),
@@ -78,6 +74,23 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
               Text(
                 widget.model.email,
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(),
+              ),
+            ],
+          ),
+          0.01.height.hSpace,
+          Row(
+            children: [
+              Text(
+                widget.model.status,
+                style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      color: (widget.model.status == "Completed")
+                          ? Colors.blue
+                          : (widget.model.status == "Pending")
+                              ? Colors.yellow
+                              : (widget.model.status == "Cancelled")
+                                  ? Colors.red
+                                  : AppColors.blackColor,
+                    ),
               ),
             ],
           ),

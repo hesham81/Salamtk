@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/modules/layout/patient/pages/patient_home/pages/my_dates_tab/pages/date_details/pages/date_datailes_screen.dart';
 import '/core/extensions/extensions.dart';
 import '/modules/layout/patient/pages/patient_home/pages/my_dates_tab/widget/patient_old_reservations.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -24,6 +26,7 @@ class _PatientDatesTabState extends State<PatientDatesTab> {
     checkReservations();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
@@ -38,8 +41,16 @@ class _PatientDatesTabState extends State<PatientDatesTab> {
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => PatientOldReservations(
-                      model: provider.getReservations[index],
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () => slideLeftWidget(
+                        newPage: DateDetailsScreen(
+                          model: provider.getReservations[index],
+                        ),
+                        context: context,
+                      ),
+                      child: PatientOldReservations(
+                        model: provider.getReservations[index],
+                      ),
                     ),
                     separatorBuilder: (context, index) => 0.01.height.hSpace,
                     itemCount: provider.getReservations.length,

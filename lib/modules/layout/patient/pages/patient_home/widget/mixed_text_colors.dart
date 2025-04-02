@@ -8,10 +8,13 @@ class MixedTextColors extends StatelessWidget {
 
   final String value;
 
+  final Color? valueColor;
+
   const MixedTextColors({
     super.key,
     required this.title,
     required this.value,
+    this.valueColor,
   });
 
   @override
@@ -28,8 +31,9 @@ class MixedTextColors extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: theme.textTheme.titleSmall!
-                  .copyWith(color: AppColors.secondaryColor),
+              style: theme.textTheme.titleSmall!.copyWith(
+                color: valueColor ?? AppColors.secondaryColor,
+              ),
             ),
           ),
         ],

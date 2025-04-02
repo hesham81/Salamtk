@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/core/theme/app_colors.dart';
 
 class AllCategories extends StatefulWidget {
   const AllCategories({super.key});
@@ -12,11 +13,26 @@ class _AllCategoriesState extends State<AllCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // title: Text("data"),
+        title: Text(
+          "Categories",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: AppColors.primaryColor,
           ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.primaryColor,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+
 
           ],
         ),

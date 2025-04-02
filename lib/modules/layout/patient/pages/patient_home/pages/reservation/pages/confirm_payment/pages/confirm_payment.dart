@@ -53,54 +53,52 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ),
         ),
       ),
-      bottomNavigationBar: Expanded(
-        child: CustomElevatedButton(
-          onPressed: () async {
-            if (formKey.currentState!.validate() &&
-                provider.getPaymentMethod != null) {
-              EasyLoading.show();
-              ReservationModel model = ReservationModel(
-                patientPhoneNumber: phoneNumberController.text,
-                reservationId: "",
-                uid: userId,
-                doctorId: provider.getDoctor!.uid!,
-                date: provider.getSelectedDate!,
-                slot: provider.getSelectedSlot!,
-                price: provider.getDoctor!.price,
-                paymentMethod: (provider.getPaymentMethod == local.bank)
-                    ? "Bank"
-                    : "Electronic Wallet",
-                email: emailController.text,
-                patientName: nameController.text,
-              );
-              await ReservationCollection.addReservation(model).then(
-                (value) {
-                  if (value) {
-                    EasyLoading.dismiss();
-                    EasyLoading.showSuccess("Doctor has been reserved");
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PatientHome(),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    EasyLoading.dismiss();
-                    EasyLoading.showError("Error While Reserve Doctor");
-                  }
-                },
-              );
-            }
-          },
-          child: Text(
-            local.pay,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColors.primaryColor,
-                ),
-          ),
-        ).allPadding(10),
-      ),
+      bottomNavigationBar: CustomElevatedButton(
+        onPressed: () async {
+          if (formKey.currentState!.validate() &&
+              provider.getPaymentMethod != null) {
+            EasyLoading.show();
+            ReservationModel model = ReservationModel(
+              patientPhoneNumber: phoneNumberController.text,
+              reservationId: "",
+              uid: userId,
+              doctorId: provider.getDoctor!.uid!,
+              date: provider.getSelectedDate!,
+              slot: provider.getSelectedSlot!,
+              price: provider.getDoctor!.price,
+              paymentMethod: (provider.getPaymentMethod == local.bank)
+                  ? "Bank"
+                  : "Electronic Wallet",
+              email: emailController.text,
+              patientName: nameController.text,
+            );
+            await ReservationCollection.addReservation(model).then(
+              (value) {
+                if (value) {
+                  EasyLoading.dismiss();
+                  EasyLoading.showSuccess("Doctor has been reserved");
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatientHome(),
+                    ),
+                    (route) => false,
+                  );
+                } else {
+                  EasyLoading.dismiss();
+                  EasyLoading.showError("Error While Reserve Doctor");
+                }
+              },
+            );
+          }
+        },
+        child: Text(
+          local.pay,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: AppColors.primaryColor,
+              ),
+        ),
+      ).allPadding(10),
       body: SingleChildScrollView(
         child: Form(
           key: formKey,

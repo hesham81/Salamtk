@@ -60,4 +60,14 @@ abstract class ReservationCollection {
         )
         .snapshots();
   }
+
+  static Future<List<ReservationModel>> getAllReservations() async {
+    try {
+      return await _colRef()
+          .get()
+          .then((value) => value.docs.map((e) => e.data()).toList());
+    } catch (error) {
+      return [];
+    }
+  }
 }
