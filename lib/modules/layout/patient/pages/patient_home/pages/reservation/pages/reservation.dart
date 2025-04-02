@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/pages/confirm_payment.dart';
@@ -38,14 +39,15 @@ class _ReservationState extends State<Reservation> {
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
     var provider = Provider.of<PatientProvider>(context);
+    var dataProvider = Provider.of<AllAppProvidersDb>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Reserve Day",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: AppColors.primaryColor,
-          ),
+                color: AppColors.primaryColor,
+              ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -63,23 +65,23 @@ class _ReservationState extends State<Reservation> {
           onPressed: (provider.getSelectedSlot == null)
               ? null
               : () {
-            if (user == null) {
-              slideLeftWidget(
-                newPage: SignIn(),
-                context: context,
-              );
-            } else {
-              slideLeftWidget(
-                newPage: ConfirmPayment(),
-                context: context,
-              );
-            }
-          },
+                  if (user == null) {
+                    slideLeftWidget(
+                      newPage: SignIn(),
+                      context: context,
+                    );
+                  } else {
+                    slideLeftWidget(
+                      newPage: ConfirmPayment(),
+                      context: context,
+                    );
+                  }
+                },
           child: Text(
             "Confirm",
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: AppColors.primaryColor,
-            ),
+                  color: AppColors.primaryColor,
+                ),
           ),
         ),
       ),
@@ -128,16 +130,19 @@ class _ReservationState extends State<Reservation> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: () {
-                    provider.setSelectedSlot(timeSlots[index]);
-                  },
+                  onTap: (dataProvider.getAllSlots.contains(timeSlots[index]))
+                      ? null
+                      : () {
+                          provider.setSelectedSlot(timeSlots[index]);
+                        },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: (provider.getSelectedSlot != null)
-                          ? (provider.getSelectedSlot == timeSlots[index])
-                          ? AppColors.secondaryColor
-                          : Colors.grey[200]
-                          : Colors.grey[200],
+                      color:
+                          (dataProvider.getAllSlots.contains(timeSlots[index]))
+                              ? Colors.red
+                              : (provider.getSelectedSlot == timeSlots[index])
+                                  ? AppColors.secondaryColor
+                                  : Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
@@ -147,7 +152,10 @@ class _ReservationState extends State<Reservation> {
                           fontSize: 14,
                           color: (provider.getSelectedSlot == timeSlots[index])
                               ? Colors.white
-                              : Colors.black,
+                              : (dataProvider.getAllSlots
+                                      .contains(timeSlots[index]))
+                                  ? AppColors.primaryColor
+                                  : Colors.black,
                         ),
                       ),
                     ),

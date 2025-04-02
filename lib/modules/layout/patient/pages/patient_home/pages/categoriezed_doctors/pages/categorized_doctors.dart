@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -67,8 +69,24 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
                     .where((element) => element.specialist == modal)
                     .toList();
                 return (doctors.isEmpty)
-                    ? Lottie.asset("assets/lottie/no_doctors_available.json")
-                        .center
+                    ? Column(
+                        children: [
+                          0.2.height.hSpace,
+                          Image.asset(
+                            AppAssets.logo,
+                          ),
+                          Text(
+                            "Coming Soon",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                  color: AppColors.slateBlueColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ).center
                     : ListView.separated(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
