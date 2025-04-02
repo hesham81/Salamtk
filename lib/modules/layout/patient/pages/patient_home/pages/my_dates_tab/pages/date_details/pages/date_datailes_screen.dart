@@ -39,7 +39,6 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
         setState(() {});
       },
     );
-    // TODO: implement initState
     super.initState();
   }
 

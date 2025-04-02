@@ -1,9 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/constant/app_assets.dart';
+import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -22,6 +21,23 @@ class CategorizedDoctors extends StatefulWidget {
 
 class _CategorizedDoctorsState extends State<CategorizedDoctors> {
   List<DoctorModel> doctors = [];
+  List<DoctorModel> searchList = [];
+
+  void _search(String? searchQuery) {
+    searchList.clear();
+    if (searchQuery == null || searchQuery.isEmpty) {
+      setState(() {});
+      return;
+    }
+    for (var doctor in doctors) {
+      if (doctor.city != null &&
+          (doctor.name!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              doctor.city!.toLowerCase().contains(searchQuery.toLowerCase()))) {
+        searchList.add(doctor);
+      }
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +64,10 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            0.01.height.hSpace,
+            CupertinoSearchTextField(
+              onChanged: _search,
+            ),
             0.01.height.hSpace,
             StreamBuilder(
               stream:
@@ -94,7 +114,9 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
                           child: GestureDetector(
                             onTap: () {
                               provider.setSelectedDoctor(
-                                doctors[index],
+                                (searchList.isEmpty)
+                                    ? doctors[index]
+                                    : searchList[index],
                               );
                               slideLeftWidget(
                                 newPage: SelectedDoctor(),
@@ -102,13 +124,17 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
                               );
                             },
                             child: MostDoctorsBooked(
-                              model: doctors[index],
+                              model: (searchList.isEmpty)
+                                  ? doctors[index]
+                                  : searchList[index],
                             ),
                           ),
                         ),
                         separatorBuilder: (context, index) =>
                             0.01.height.hSpace,
-                        itemCount: doctors.length,
+                        itemCount: (searchList.isEmpty)
+                            ? doctors.length
+                            : searchList.length,
                       );
               },
             ),

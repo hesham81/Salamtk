@@ -35,11 +35,11 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
       return;
     }
     for (var doctor in doctors) {
-      if (doctor.city != null &&
-          (doctor.name!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              doctor.city!
-                  .toLowerCase()
-                  .contains(searchQuery.toLowerCase()))) {
+      if (doctor.city.isNotEmpty &&
+          (doctor.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              doctor.city.toLowerCase().contains(
+                    searchQuery.toLowerCase(),
+                  ))) {
         searchList.add(doctor);
       }
     }
