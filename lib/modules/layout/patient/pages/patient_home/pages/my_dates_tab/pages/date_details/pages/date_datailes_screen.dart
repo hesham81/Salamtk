@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/utils/doctors/doctors_collection.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/core/extensions/align.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -25,10 +26,11 @@ class DateDetailsScreen extends StatefulWidget {
 class _DateDetailsScreenState extends State<DateDetailsScreen> {
   DoctorModel? doctor;
   bool isLoading = true;
-
+  bool isOnTheClinic = false;
   Future<void> getDoctor() async {
     doctor = await Provider.of<PatientProvider>(context, listen: false)
         .searchForDoctor(doctorPhoneNumber: widget.model.doctorId);
+      _checkIfDoctorIsOnTheClinicOrNot();
   }
 
   @override
@@ -40,6 +42,18 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
       },
     );
     super.initState();
+  }
+
+
+
+  _checkIfDoctorIsOnTheClinicOrNot() async {
+    var result = await DoctorsCollection.getDoctorData(
+      uid: doctor!.uid!,
+    );
+    print(result!.name);
+    setState(() {
+      isOnTheClinic = result.isInTheClinic ?? false ;
+    });
   }
 
   @override
@@ -129,6 +143,12 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                             ? Colors.red
                             : AppColors.secondaryColor,
                   ),
+                  0.01.height.hSpace,
+                  MixedTextColors(
+                    title: "Is Doctor On Clinic",
+                    value: (isOnTheClinic) ? "Yes" : "No",
+                  ),
+                  0.01.height.hSpace,
                 ],
               ).hPadding(0.03.width),
             ),

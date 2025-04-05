@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '/core/extensions/extensions.dart';
 import '/modules/layout/patient/pages/patient_home/widget/category_widget.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
@@ -36,11 +37,17 @@ class _AllCategoriesState extends State<AllCategories> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            0.01.height.hSpace,
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => CategoryWidget.icon(
-                icon: Icons.abc,
+              itemBuilder: (context, index) => CategoryWidget.child(
+                child: ImageIcon(
+                  AssetImage(
+                    provider.categories[index]["icon"],
+                  ),
+                  color: AppColors.primaryColor,
+                ).allPadding(5),
                 text: provider.categories[index]["text"],
                 color: provider.categories[index]["color"],
               ),

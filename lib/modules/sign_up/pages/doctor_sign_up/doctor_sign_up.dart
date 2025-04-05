@@ -34,14 +34,32 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<String> specialists = [
-    "heart",
-    "general",
-    "Lung",
+    "Obstetrics & Gynecology",
     "Teeth",
+    "Urology",
+    "Lung",
+    "Pediatrics",
+    "Psychiatry",
+    "Ear, Nose & Throat (ENT)",
+    "Dermatology",
+    "Orthopedics",
     "Eye",
+    "Cardiology",
+    "Nutritionist",
+    "Family Medicine & Allergy",
+    "Orthopedic & Spinal Surgery",
+    "Gastroenterology",
+    "Internal Medicine",
     "Surgery",
-    "Nerves",
-    "The interior"
+    "Acupuncture",
+    "Vascular Surgery",
+    "Nephrology",
+    "Radiology",
+    "Endocrinology",
+    "Genetics",
+    "Speech Therapy",
+    "Pain Management",
+    "Cosmetic Surgery"
   ];
   String? selectedSpecialist;
 
