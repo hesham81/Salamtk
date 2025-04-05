@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
+import '/core/providers/app_providers/all_app_providers_db.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/pages/confirm_payment.dart';
@@ -33,6 +33,9 @@ class _ReservationState extends State<Reservation> {
     "05:00 PM",
     "05:30 PM"
   ];
+  final List<DateTime> slots = [
+
+  ];
   DateTime _focusedDay = DateTime.now();
 
   @override
@@ -40,6 +43,10 @@ class _ReservationState extends State<Reservation> {
     var user = FirebaseAuth.instance.currentUser;
     var provider = Provider.of<PatientProvider>(context);
     var dataProvider = Provider.of<AllAppProvidersDb>(context);
+    dataProvider.checkSlots(
+      date: provider.getSelectedDate ?? DateTime.now(),
+      doctor: provider.getDoctor!,
+    );
 
     return Scaffold(
       appBar: AppBar(
