@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
@@ -12,86 +13,81 @@ class PatientProvider extends ChangeNotifier {
   List<Map<String, dynamic>> categories = [
     // First Screen
     {
-      "icon": "assets/icons/womens.svg",
+      "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
       "text": "Obstetrics & Gynecology",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/teeth.png",
-      "text": "Dentistry",
-      "color": Colors.green,
+      "icon": "assets/icons/categorize/dentist.jpg",
+      "text": "Teeth",
+      "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/urologist.jpg", // Assuming this is for Urology
+      "icon": "assets/icons/categorize/Urology.jpg", // Assuming this is for Urology
       "text": "Urology",
-      "color": Colors.green,
+      "color": Colors.red,
     },
     {
       "icon": "assets/icons/lung.png",
-      "text": "Chest & Respiratory System",
+      "text": "Lung",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/pediatrics.jpg", // Assuming this is for Pediatrics
+      "icon": "assets/icons/categorize/Pediatrics.jpg", // Assuming this is for Pediatrics
       "text": "Pediatrics",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/psychologist.jpg",
+      "icon": "assets/icons/categorize/psychologist.jpg",
       "text": "Psychiatry",
-      "color": Colors.green,
+      "color": Colors.blue,
     },
     {
-      "icon": "assets/icons/ent.svg", // Assuming this is for ENT
+      "icon": "assets/icons/categorize/ENT.jpg", // Assuming this is for ENT
       "text": "Ear, Nose & Throat (ENT)",
-      "color": Colors.green,
+      "color": Colors.redAccent,
     },
     {
-      "icon": "assets/icons/dermatologist.jpg",
+      "icon": "assets/icons/categorize/Dermatology.jpg",
       "text": "Dermatology",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
 
     // Second Screen
     {
-      "icon": "assets/icons/orthopedic_doctor.jpg",
+      "icon": "assets/icons/categorize/Orthopedics.jpg",
       "text": "Orthopedics",
+      "color": AppColors.secondaryColor,
+    },
+    {
+      "icon": "assets/icons/categorize/Ophthalmology.jpg",
+      "text": "Eye",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/eye.png",
-      "text": "Ophthalmology",
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/heart.jpg",
+      "icon": "assets/icons/categorize/Cardiology.jpg",
       "text": "Cardiology",
       "color": Colors.red,
     },
     {
-      "icon": "assets/icons/nutritionist.jpg",
+      "icon": "assets/icons/categorize/Nutritionist.jpg",
       "text": "Nutritionist",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/allergy.jpg", // Assuming this is for Family Medicine & Allergy
+      "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg", // Assuming this is for Family Medicine & Allergy
       "text": "Family Medicine & Allergy",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/general_doctor_icon.jpg",
-      "text": "General Practitioner",
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/spine_surgery.jpg", // Assuming this is for Orthopedic & Spinal Surgery
+      "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg", // Assuming this is for Orthopedic & Spinal Surgery
       "text": "Orthopedic & Spinal Surgery",
-      "color": Colors.green,
+      "color": Colors.redAccent,
     },
     {
-      "icon": "assets/icons/gastroenterologist.jpg", // Assuming this is for Gastroenterology
+      "icon": "assets/icons/categorize/Gastroenterology.jpg", // Assuming this is for Gastroenterology
       "text": "Gastroenterology",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
 
     // Third Screen
@@ -102,58 +98,53 @@ class PatientProvider extends ChangeNotifier {
     },
     {
       "icon": "assets/icons/surgery_icon.jpg",
-      "text": "General Surgery",
+      "text": "Surgery",
       "color": Colors.blue,
     },
     {
-      "icon": "assets/icons/acupuncture.jpg", // Assuming this is for Acupuncture
+      "icon": "assets/icons/categorize/Acupuncture.jpg", // Assuming this is for Acupuncture
       "text": "Acupuncture",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/prosthetics.jpg", // Assuming this is for Prosthetics & Assistive Devices
-      "text": "Prosthetics & Assistive Devices",
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/blood_vessels_surgery.jpg", // Assuming this is for Vascular Surgery
+      "icon": "assets/icons/categorize/Vascular Surgery.jpg", // Assuming this is for Vascular Surgery
       "text": "Vascular Surgery",
-      "color": Colors.green,
+      "color": Colors.blueAccent,
     },
     {
-      "icon": "assets/icons/kidney.jpg", // Assuming this is for Nephrology
+      "icon": "assets/icons/categorize/Nephrology.jpg", // Assuming this is for Nephrology
       "text": "Nephrology",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/radiology.jpg", // Assuming this is for Radiology
+      "icon": "assets/icons/categorize/Radiology.jpg", // Assuming this is for Radiology
       "text": "Radiology",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/endocrinology.jpg", // Assuming this is for Endocrinology
+      "icon": "assets/icons/categorize/Endocrinology.jpg", // Assuming this is for Endocrinology
       "text": "Endocrinology",
-      "color": Colors.green,
+      "color": Colors.orangeAccent,
     },
 
     // Fourth Screen
     {
-      "icon": "assets/icons/genetics.jpg", // Assuming this is for Genetics
+      "icon": "assets/icons/categorize/Genetics.jpg", // Assuming this is for Genetics
       "text": "Genetics",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/speech_therapy.jpg", // Assuming this is for Speech Therapy
+      "icon": "assets/icons/categorize/Speech Therapy.jpg", // Assuming this is for Speech Therapy
       "text": "Speech Therapy",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/pain_management.jpg", // Assuming this is for Pain Management
+      "icon": "assets/icons/categorize/Pain Management.jpg", // Assuming this is for Pain Management
       "text": "Pain Management",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/cosmetic_surgery.jpg", // Assuming this is for Cosmetic Surgery
+      "icon": "assets/icons/categorize/Cosmetic Surgery.jpg", // Assuming this is for Cosmetic Surgery
       "text": "Cosmetic Surgery",
       "color": Colors.green,
     },
