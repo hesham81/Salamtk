@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/widget/custom_container.dart';
+import '/core/widget/view_map.dart';
 import '/modules/layout/patient/pages/patient_home/pages/all_reviews/page/all_reviews_page.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/reservation.dart';
 import '/core/extensions/alignment.dart';
@@ -13,7 +16,6 @@ import '/core/widget/custom_text_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class SelectedDoctor extends StatefulWidget {
   const SelectedDoctor({super.key});
@@ -230,6 +232,44 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                       .copyWith(color: Colors.grey),
                 ),
               ],
+            ),
+            0.01.height.hSpace,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewMap(
+                    location: LatLng(
+                      provider.getDoctor!.lat!,
+                      provider.getDoctor!.long!,
+                    ),
+                  ),
+                ),
+              ),
+              child: CustomContainer(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.secondaryColor,
+                        ),
+                        0.02.width.hSpace,
+                        Expanded(
+                          child: Text(
+                            provider.getDoctor!.street,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: AppColors.secondaryColor,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
             0.01.height.hSpace,
             Divider().hPadding(0.1.width),

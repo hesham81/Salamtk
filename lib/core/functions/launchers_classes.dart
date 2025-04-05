@@ -1,15 +1,26 @@
 import 'package:url_launcher/url_launcher.dart';
 
 abstract class LaunchersClasses {
+  static Future<void> convertMoneyByDial({
+    required String code,
+  }) async{
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: code,
+    );
+    await launchUrl(launchUri);
+  }
+
   static Future<void> call({
     required String phoneNumber,
-  }) async{
+  }) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
     );
     await launchUrl(launchUri);
   }
+
   static Future<void> openWhatsApp(String phoneNumber) async {
     final formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
 
@@ -21,6 +32,7 @@ abstract class LaunchersClasses {
       throw 'Could not launch $whatsappUrl';
     }
   }
+
   static Future<void> openFacebook(String facebookId) async {
     // Facebook URL format for profiles/pages
     final facebookUrl = 'https://www.facebook.com/$facebookId';

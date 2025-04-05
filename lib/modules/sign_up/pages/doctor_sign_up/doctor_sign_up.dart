@@ -1,7 +1,11 @@
-import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/core/providers/sign_up_providers/sign_up_providers.dart';
+import '/core/widget/custom_container.dart';
+import '/core/widget/select_map.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
@@ -66,6 +70,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
+    var provider = Provider.of<SignUpProviders>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -198,17 +203,34 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ],
                   ),
                   0.02.height.hSpace,
-                  CountryStateCityPicker(
-                    country: country,
-                    state: state,
-                    city: city,
-                    dialogColor: Colors.grey.shade200,
-                    textFieldDecoration: InputDecoration(
-                      fillColor: Colors.blueGrey.shade100,
-                      filled: true,
-                      suffixIcon: const Icon(Icons.arrow_downward_rounded),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
+                  GestureDetector(
+                    onTap: () => slideLeftWidget(
+                      newPage: SelectMap(),
+                      context: context,
+                    ),
+                    child: CustomContainer(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.map_outlined,
+                            color: AppColors.secondaryColor,
+                          ),
+                          Text(
+                            "Select Clinic Location ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color: AppColors.blackColor,
+                                ),
+                          ),
+                          0.01.width.vSpace,
+                          Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            color: AppColors.secondaryColor,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -218,21 +240,25 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     child: CustomElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate() &&
-                            city.text != "" &&
-                            state.text != "" &&
-                            country.text != "" &&
                             selectedSpecialist != null) {
+                          if (provider.marker == null) {
+                            EasyLoading.showError("Select Location");
+                            return;
+                          }
                           EasyLoading.show();
                           await SignUpAuth.doctorSignUp(
+                            lat: provider.marker!.point.latitude,
+                            long: provider.marker!.point.longitude,
                             email: emailController.text,
                             password: passwordController.text,
                             name: nameController.text,
                             phoneNumber: phoneNumberController.text,
                             specialist: selectedSpecialist!,
                             price: double.tryParse(price.text) ?? 150,
-                            country: country.text,
-                            state: city.text,
-                            city: state.text,
+                            country: provider.country!,
+                            state: provider.state!,
+                            city: provider.city!,
+                            street: provider.street!,
                             description: description.text,
                           ).then(
                             (value) {

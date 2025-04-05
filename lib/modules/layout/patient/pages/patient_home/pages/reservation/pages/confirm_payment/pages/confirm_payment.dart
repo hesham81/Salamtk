@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import '/core/functions/launchers_classes.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
@@ -33,6 +34,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
+    int price = provider.getDoctor!.price.toInt();
     emailController.text = FirebaseAuth.instance.currentUser!.email!;
     String userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
@@ -255,7 +257,33 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ChoosePaymentMethodsWidget(
                 paymentMethod: local.bank,
               ),
-              0.05.height.hSpace,
+              0.01.height.hSpace,
+              (provider.getPaymentMethod == local.electronicWallet)
+                  ? Column(
+                      children: [
+                        Divider(),
+                        CustomContainer(
+                          child: GestureDetector(
+                            onTap: () => LaunchersClasses.convertMoneyByDial(
+                              code: '*9*7*01027002208*${price}#',
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.call_end_outlined,
+                                ),
+                                0.01.width.hSpace,
+                                Text(
+                                  "01027002208",
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : 0.05.height.hSpace,
+              0.03.height.hSpace,
             ],
           ).hPadding(0.03.width),
         ),
