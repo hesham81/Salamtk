@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/patient_home_tab.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/patient_profile_tab.dart';
 import '/core/theme/app_colors.dart';

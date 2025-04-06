@@ -163,6 +163,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

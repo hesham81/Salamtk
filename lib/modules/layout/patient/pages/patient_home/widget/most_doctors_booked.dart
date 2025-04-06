@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+import 'package:salamtk/core/functions/location_services.dart';
+import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
@@ -13,6 +17,7 @@ class MostDoctorsBooked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AllAppProvidersDb>(context);
     return CustomContainer(
       child: Row(
         children: [
@@ -73,7 +78,7 @@ class MostDoctorsBooked extends StatelessWidget {
                     0.01.width.vSpace,
                     Expanded(
                       child: Text(
-                        model.city ?? "No City",
+                        model.state.replaceAll("Governorate", "") ?? "No City",
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!
@@ -82,6 +87,19 @@ class MostDoctorsBooked extends StatelessWidget {
                     ),
                   ],
                 ),
+                Text(
+                  LocationServices.calculateDistance(
+                    provider.lo,
+                    LatLng(
+                      model.lat ?? 0,
+                      model.long ?? 0,
+                    ),
+                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: Colors.grey),
+                )
               ],
             ),
           ),

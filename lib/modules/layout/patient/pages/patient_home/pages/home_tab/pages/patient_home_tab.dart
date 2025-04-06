@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/functions/location_services.dart';
+import '/core/providers/app_providers/all_app_providers_db.dart';
+import '/modules/layout/patient/pages/patient_home/pages/view_all_doctors/pages/view_all_doctors.dart';
 import '/modules/layout/patient/pages/category/pages/all_categories/pages/all_categories.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -50,6 +54,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var provider = Provider.of<PatientProvider>(context);
+    var appProvider = Provider.of<AllAppProvidersDb>(context);
     var local = AppLocalizations.of(context);
     List<Map<String, dynamic>> categories = [
       {
@@ -213,7 +218,19 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
             (searchList.isEmpty)
-                ? Text(local.mostBookedDoctors).alignRight()
+                ? Row(
+                    children: [
+                      CustomTextButton(
+                        text: "See All",
+                        onPressed: () => slideLeftWidget(
+                          newPage: ViewAllDoctors(),
+                          context: context,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(local.mostBookedDoctors).alignRight(),
+                    ],
+                  )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             StreamBuilder(
@@ -227,7 +244,16 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                     ),
                   );
                 }
+                var userLocation = appProvider.lo;
                 doctors = snapshot.data!.docs.map((e) => e.data()).toList();
+                doctors.sort((a, b) {
+                  double distanceA = LocationServices.calculateDistanceNumbers(
+                      LatLng(a.lat!, a.long!), userLocation);
+                  double distanceB = LocationServices.calculateDistanceNumbers(
+                      LatLng(b.lat!, b.long!), userLocation);
+                  return distanceA.compareTo(distanceB);
+                });
+
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -248,8 +274,11 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                     ),
                   ),
                   separatorBuilder: (context, index) => 0.01.height.hSpace,
-                  itemCount:
-                      searchList.isEmpty ? doctors.length : searchList.length,
+                  itemCount: searchList.isEmpty
+                      ? (doctors.length > 3)
+                          ? 3
+                          : doctors.length
+                      : searchList.length,
                 );
               },
             ),

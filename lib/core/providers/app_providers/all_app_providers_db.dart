@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart' as loc;
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -11,14 +14,53 @@ class AllAppProvidersDb extends ChangeNotifier {
   DateTime _date = DateTime.now();
   DoctorModel? _doctor;
   List<ReservationModel> _reservations = [];
+  loc.LocationData? _currentLocation;
+  loc.Location _location = loc.Location();
+
+  String? _city;
+
+  String? _state;
+
+  String? _street;
+
+  String? _country;
+
+  LatLng get lo => LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+
+  String? get city => _city;
+  String? get state => _state;
+  String? get street => _street;
+  String? get country => _country;
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      _currentLocation = await _location.getLocation();
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          _currentLocation!.latitude!, _currentLocation!.longitude!);
+      _city = placemarks[0].locality;
+      _state = placemarks[0].administrativeArea;
+      _street = placemarks[0].thoroughfare;
+      _country = placemarks[0].country;
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Error getting current location: $e');
+    }
+  }
 
   // Getters
   List<String> get getAllCitiesOfDoctors => _citiesOfDoctors;
+
   List<String> get getAllSlots => _slots;
+
   List<DoctorModel> get getAllDoctors => _doctors;
 
   // Constructor
   AllAppProvidersDb() {
+    Future.wait(
+      [
+        _getCurrentLocation(),
+      ],
+    );
     initializeData();
   }
 
@@ -59,8 +101,11 @@ class AllAppProvidersDb extends ChangeNotifier {
     }
 
     // Filter reservations based on the selected date
-    List<ReservationModel> filteredReservations = _reservations.where((element) =>
-        element.date.isAtSameMomentAs(_date) && element.doctorId== _doctor!.uid).toList();
+    List<ReservationModel> filteredReservations = _reservations
+        .where((element) =>
+            element.date.isAtSameMomentAs(_date) &&
+            element.doctorId == _doctor!.uid)
+        .toList();
 
     // Clear existing slots to avoid duplicates
     _slots.clear();
