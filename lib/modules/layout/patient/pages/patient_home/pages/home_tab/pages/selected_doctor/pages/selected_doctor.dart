@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/functions/launchers_classes.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/view_map.dart';
 import '/modules/layout/patient/pages/patient_home/pages/all_reviews/page/all_reviews_page.dart';
@@ -236,17 +237,14 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             ),
             0.01.height.hSpace,
             GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ViewMap(
-                    location: LatLng(
-                      provider.getDoctor!.lat!,
-                      provider.getDoctor!.long!,
-                    ),
+              onTap: () async {
+                await LaunchersClasses.openGoogleMaps(
+                  point: LatLng(
+                    provider.getDoctor?.lat ?? 0,
+                    provider.getDoctor?.long ?? 0,
                   ),
-                ),
-              ),
+                );
+              },
               child: CustomContainer(
                 child: Column(
                   children: [

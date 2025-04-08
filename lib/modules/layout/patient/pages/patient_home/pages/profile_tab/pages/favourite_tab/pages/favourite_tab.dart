@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
+import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -44,7 +48,6 @@ class _FavouriteTabState extends State<FavouriteTab> {
         isLoading = false;
       });
     } catch (e) {
-      // Handle errors gracefully
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load favourites: $e')),
       );
@@ -62,6 +65,7 @@ class _FavouriteTabState extends State<FavouriteTab> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -102,9 +106,20 @@ class _FavouriteTabState extends State<FavouriteTab> {
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => MostDoctorsBooked(
-                          model: doctors[index],
-                          isLiked: true,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            provider.setSelectedDoctor(
+                              doctors[index],
+                            );
+                            slideLeftWidget(
+                              newPage: SelectedDoctor(),
+                              context: context,
+                            );
+                          },
+                          child: MostDoctorsBooked(
+                            model: doctors[index],
+                            isLiked: true,
+                          ),
                         ),
                         separatorBuilder: (context, index) =>
                             0.01.height.hSpace,

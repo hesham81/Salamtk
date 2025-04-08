@@ -1,9 +1,10 @@
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 abstract class LaunchersClasses {
   static Future<void> convertMoneyByDial({
     required String code,
-  }) async{
+  }) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: code,
@@ -53,6 +54,17 @@ abstract class LaunchersClasses {
       await launch(instagramUrl);
     } else {
       throw 'Could not launch $instagramUrl';
+    }
+  }
+
+  static Future<void> openGoogleMaps({
+    required LatLng point,
+  }) async {
+    final String googleMapUrl =
+        "https://www.google.com/maps?q=${point.latitude},${point.longitude}";
+
+    if (await canLaunch(googleMapUrl)) {
+      await launch(googleMapUrl);
     }
   }
 }
