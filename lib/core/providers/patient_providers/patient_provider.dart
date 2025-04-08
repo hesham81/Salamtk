@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:salamtk/core/utils/patients/favoutie_collections.dart';
+import '/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
@@ -11,6 +12,59 @@ class PatientProvider extends ChangeNotifier {
   DoctorModel? _selectedDoctor;
   String? _selectedSlot;
   List<String> favourites = [];
+  String? _selectedPhoneNumber;
+
+  String? _userPhoneNumber;
+
+  bool? isPayValid;
+
+  String? _screenshot;
+
+  File? _image;
+
+  String? get getScreenshot => _screenshot;
+
+  String? appPhoneNumber;
+
+  void setAppPhoneNumber(String? value) {
+    appPhoneNumber = value;
+    notifyListeners();
+  }
+
+  String? get getAppPhoneNumber => appPhoneNumber;
+
+  void setIsPayValid(bool? value) {
+    isPayValid = value;
+    notifyListeners();
+  }
+
+  bool? get getIsPayValid => isPayValid;
+
+  void setScreenshot(String value) {
+    _screenshot = value;
+    notifyListeners();
+  }
+
+  void setUserPhoneNumber(String value) {
+    _userPhoneNumber = value;
+    notifyListeners();
+  }
+
+  String? get getUserPhoneNumber => _userPhoneNumber;
+
+  void setPhoneNumber(String value) {
+    _selectedPhoneNumber = value;
+    notifyListeners();
+  }
+
+  String? get getPhoneNumber => _selectedPhoneNumber;
+
+  void setImage(File? value) {
+    _image = value;
+    notifyListeners();
+  }
+
+  File? get getImage => _image;
 
   List<ReservationModel> _reservations = [];
   List<Map<String, dynamic>> categories = [
@@ -211,7 +265,7 @@ class PatientProvider extends ChangeNotifier {
     await FavouriteCollections.getFavourite(user!.uid).listen(
       (event) {
         for (var element in event.data()?.favouriteDoctors ?? []) {
-          favourites = element ;
+          favourites = element;
         }
       },
     );

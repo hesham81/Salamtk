@@ -33,9 +33,7 @@ class _ReservationState extends State<Reservation> {
     "05:00 PM",
     "05:30 PM"
   ];
-  final List<DateTime> slots = [
-
-  ];
+  final List<DateTime> slots = [];
   DateTime _focusedDay = DateTime.now();
 
   @override
@@ -69,7 +67,8 @@ class _ReservationState extends State<Reservation> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(0.01.height),
         child: CustomElevatedButton(
-          onPressed: (provider.getSelectedSlot == null)
+          onPressed: (provider.getSelectedSlot == null ||
+                  provider.getSelectedDate == null)
               ? null
               : () {
                   if (user == null) {
@@ -98,7 +97,11 @@ class _ReservationState extends State<Reservation> {
             TableCalendar(
               focusedDay: _focusedDay,
               firstDay: DateTime.now(),
-              lastDay: DateTime.now().add(Duration(days: 30)),
+              lastDay: DateTime.now().add(
+                Duration(
+                  days: 30,
+                ),
+              ),
               selectedDayPredicate: (day) =>
                   isSameDay(provider.getSelectedDate, day),
               onDaySelected: (selectedDay, focusedDay) {
@@ -137,10 +140,14 @@ class _ReservationState extends State<Reservation> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: (dataProvider.getAllSlots.contains(timeSlots[index]))
+                  onTap: (dataProvider.getAllSlots.contains(
+                    timeSlots[index],
+                  ))
                       ? null
                       : () {
-                          provider.setSelectedSlot(timeSlots[index]);
+                          provider.setSelectedSlot(
+                            timeSlots[index],
+                          );
                         },
                   child: Container(
                     decoration: BoxDecoration(

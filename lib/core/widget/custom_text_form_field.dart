@@ -14,9 +14,11 @@ class CustomTextFormField extends StatefulWidget {
   final int maxLine;
   final TextInputType keyboardType;
   final bool isReadOnly;
+  final ValidationFunction? onChanged;
 
   const CustomTextFormField({
     super.key,
+    this.onChanged,
     required this.hintText,
     this.borderRadius = 20,
     this.suffixIcon,
@@ -41,6 +43,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     var theme = Theme.of(context).textTheme;
 
     return TextFormField(
+      onChanged: widget.onChanged,
       readOnly: widget.isReadOnly,
       keyboardType: widget.keyboardType,
       minLines: widget.minLine,

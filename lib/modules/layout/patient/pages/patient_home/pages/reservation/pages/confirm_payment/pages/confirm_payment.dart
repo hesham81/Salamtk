@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import '/core/functions/launchers_classes.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/pay_with_electronic_wallet/pages/pay_with_electronic_wallet.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
-import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/confirm_payment/widget/choose_payment_methods_widget.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/theme/app_colors.dart';
@@ -35,7 +35,6 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
-    int price = provider.getDoctor!.price.toInt();
     emailController.text = FirebaseAuth.instance.currentUser!.email!;
     String userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
@@ -57,76 +56,77 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
         ),
       ),
       bottomNavigationBar: CustomElevatedButton(
-        onPressed: () async {
-          if (formKey.currentState!.validate() &&
-              provider.getPaymentMethod != null) {
-            EasyLoading.show();
-            ReservationModel model = ReservationModel(
-              patientPhoneNumber: phoneNumberController.text,
-              reservationId: "",
-              uid: userId,
-              doctorId: provider.getDoctor!.uid!,
-              date: provider.getSelectedDate!,
-              slot: provider.getSelectedSlot!,
-              price: provider.getDoctor!.price,
-              paymentMethod: (provider.getPaymentMethod == local.bank)
-                  ? "Bank"
-                  : "Electronic Wallet",
-              email: emailController.text,
-              patientName: nameController.text,
-            );
-            await ReservationCollection.addReservation(model).then(
-              (value) {
-                if (value) {
-                  EasyLoading.dismiss();
-                  var snackBar = SnackBar(
-                    elevation: 0,
-                    behavior: SnackBarBehavior.floating,
-                    backgroundColor: Colors.transparent,
-                    content: AwesomeSnackbarContent(
-                      inMaterialBanner: true,
-                      color: AppColors.secondaryColor,
-                      title: 'Success',
-                      message:
-                          'Reservation Completed , Waiting For Doctor Approval',
-                      contentType: ContentType.success,
-                    ),
+        onPressed: (nameController.text.isEmpty ||
+                phoneNumberController.text.isEmpty ||
+                provider.getIsPayValid == null)
+            ? null
+            : () async {
+                if (formKey.currentState!.validate()) {
+                  EasyLoading.show();
+                  ReservationModel model = ReservationModel(
+                    patientPhoneNumber: phoneNumberController.text,
+                    reservationId: "",
+                    uid: userId,
+                    doctorId: provider.getDoctor!.uid!,
+                    date: provider.getSelectedDate!,
+                    slot: provider.getSelectedSlot!,
+                    price: provider.getDoctor!.price,
+                    paymentMethod: "Electronic Wallet",
+                    email: emailController.text,
+                    patientName: nameController.text,
                   );
+                  await ReservationCollection.addReservation(model).then(
+                    (value) {
+                      if (value) {
+                        EasyLoading.dismiss();
+                        var snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            inMaterialBanner: true,
+                            color: AppColors.secondaryColor,
+                            title: 'Success',
+                            message:
+                                'Reservation Completed , Waiting For Doctor Approval',
+                            contentType: ContentType.success,
+                          ),
+                        );
 
-                  // ScaffoldMessenger.of(context)..hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(snackBar);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PatientHome(),
-                    ),
-                    (route) => false,
-                  );
-                } else {
-                  EasyLoading.dismiss();
-                  var snackBar = SnackBar(
-                    elevation: 0,
-                    behavior: SnackBarBehavior.floating,
-                    backgroundColor: Colors.transparent,
-                    content: AwesomeSnackbarContent(
-                      inMaterialBanner: true,
-                      color: AppColors.secondaryColor,
-                      title: 'Error',
-                      message:"Error While Reserve Doctor",
-                      contentType: ContentType.failure,
-                    ),
-                  );
+                        // ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PatientHome(),
+                          ),
+                          (route) => false,
+                        );
+                      } else {
+                        EasyLoading.dismiss();
+                        var snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            inMaterialBanner: true,
+                            color: AppColors.secondaryColor,
+                            title: 'Error',
+                            message: "Error While Reserve Doctor",
+                            contentType: ContentType.failure,
+                          ),
+                        );
 
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(snackBar);
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackBar);
+                      }
+                    },
+                  );
                 }
               },
-            );
-          }
-        },
         child: Text(
           local.pay,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -283,39 +283,37 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 style: Theme.of(context).textTheme.titleSmall!,
               ),
               0.01.height.hSpace,
-              ChoosePaymentMethodsWidget(
-                paymentMethod: local.electronicWallet,
-              ),
-              0.01.height.hSpace,
-              ChoosePaymentMethodsWidget(
-                paymentMethod: local.bank,
-              ),
-              0.01.height.hSpace,
-              (provider.getPaymentMethod == local.electronicWallet)
-                  ? Column(
-                      children: [
-                        Divider(),
-                        CustomContainer(
-                          child: GestureDetector(
-                            onTap: () => LaunchersClasses.convertMoneyByDial(
-                              code: '*9*7*01027002208*${price}#',
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.call_end_outlined,
-                                ),
-                                0.01.width.hSpace,
-                                Text(
-                                  "01027002208",
-                                ),
-                              ],
-                            ),
-                          ),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: PayWithElectronicWallet(),
+                  context: context,
+                ),
+                child: CustomContainer(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.payments_outlined,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Expanded(
+                        child: Text(
+                          "Electronic Wallet",
+                          style: Theme.of(context).textTheme.titleSmall!,
                         ),
-                      ],
-                    )
-                  : 0.05.height.hSpace,
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // 0.01.height.hSpace,
+              // ChoosePaymentMethodsWidget(
+              //   paymentMethod: local.bank,
+              // ),
               0.03.height.hSpace,
             ],
           ).hPadding(0.03.width),
