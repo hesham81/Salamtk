@@ -14,13 +14,14 @@ class DoctorModel {
   final double? lat;
   final double? long;
   final String street;
-
+  final String area ;
   final String imagePath;
   final DateTime createdAt;
   bool isInTheClinic;
 
   DoctorModel({
     this.uid,
+    required this.area,
     required this.street,
     required this.name,
     required this.price,
@@ -43,6 +44,7 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      area: json['area'],
       street: json['street'],
       uid: json['uid'],
       name: json['name'] ?? 'Unknown Doctor',
@@ -74,6 +76,7 @@ class DoctorModel {
   // Method for serializing to JSON
   Map<String, dynamic> toJson() {
     return {
+      'area': area,
       'street': street,
       'uid': uid,
       'name': name,

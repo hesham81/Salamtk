@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:salamtk/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
@@ -9,6 +10,8 @@ import '/models/doctors_models/doctor_model.dart';
 class PatientProvider extends ChangeNotifier {
   DoctorModel? _selectedDoctor;
   String? _selectedSlot;
+  List<String> favourites = [];
+
   List<ReservationModel> _reservations = [];
   List<Map<String, dynamic>> categories = [
     // First Screen
@@ -23,7 +26,8 @@ class PatientProvider extends ChangeNotifier {
       "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/categorize/Urology.jpg", // Assuming this is for Urology
+      "icon": "assets/icons/categorize/Urology.jpg",
+      // Assuming this is for Urology
       "text": "Urology",
       "color": Colors.red,
     },
@@ -33,7 +37,8 @@ class PatientProvider extends ChangeNotifier {
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Pediatrics.jpg", // Assuming this is for Pediatrics
+      "icon": "assets/icons/categorize/Pediatrics.jpg",
+      // Assuming this is for Pediatrics
       "text": "Pediatrics",
       "color": Colors.green,
     },
@@ -75,17 +80,20 @@ class PatientProvider extends ChangeNotifier {
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg", // Assuming this is for Family Medicine & Allergy
+      "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
+      // Assuming this is for Family Medicine & Allergy
       "text": "Family Medicine & Allergy",
       "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg", // Assuming this is for Orthopedic & Spinal Surgery
+      "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
+      // Assuming this is for Orthopedic & Spinal Surgery
       "text": "Orthopedic & Spinal Surgery",
       "color": Colors.redAccent,
     },
     {
-      "icon": "assets/icons/categorize/Gastroenterology.jpg", // Assuming this is for Gastroenterology
+      "icon": "assets/icons/categorize/Gastroenterology.jpg",
+      // Assuming this is for Gastroenterology
       "text": "Gastroenterology",
       "color": Colors.orangeAccent,
     },
@@ -102,49 +110,58 @@ class PatientProvider extends ChangeNotifier {
       "color": Colors.blue,
     },
     {
-      "icon": "assets/icons/categorize/Acupuncture.jpg", // Assuming this is for Acupuncture
+      "icon": "assets/icons/categorize/Acupuncture.jpg",
+      // Assuming this is for Acupuncture
       "text": "Acupuncture",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Vascular Surgery.jpg", // Assuming this is for Vascular Surgery
+      "icon": "assets/icons/categorize/Vascular Surgery.jpg",
+      // Assuming this is for Vascular Surgery
       "text": "Vascular Surgery",
       "color": Colors.blueAccent,
     },
     {
-      "icon": "assets/icons/categorize/Nephrology.jpg", // Assuming this is for Nephrology
+      "icon": "assets/icons/categorize/Nephrology.jpg",
+      // Assuming this is for Nephrology
       "text": "Nephrology",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Radiology.jpg", // Assuming this is for Radiology
+      "icon": "assets/icons/categorize/Radiology.jpg",
+      // Assuming this is for Radiology
       "text": "Radiology",
       "color": Colors.orangeAccent,
     },
     {
-      "icon": "assets/icons/categorize/Endocrinology.jpg", // Assuming this is for Endocrinology
+      "icon": "assets/icons/categorize/Endocrinology.jpg",
+      // Assuming this is for Endocrinology
       "text": "Endocrinology",
       "color": Colors.orangeAccent,
     },
 
     // Fourth Screen
     {
-      "icon": "assets/icons/categorize/Genetics.jpg", // Assuming this is for Genetics
+      "icon": "assets/icons/categorize/Genetics.jpg",
+      // Assuming this is for Genetics
       "text": "Genetics",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Speech Therapy.jpg", // Assuming this is for Speech Therapy
+      "icon": "assets/icons/categorize/Speech Therapy.jpg",
+      // Assuming this is for Speech Therapy
       "text": "Speech Therapy",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Pain Management.jpg", // Assuming this is for Pain Management
+      "icon": "assets/icons/categorize/Pain Management.jpg",
+      // Assuming this is for Pain Management
       "text": "Pain Management",
       "color": Colors.green,
     },
     {
-      "icon": "assets/icons/categorize/Cosmetic Surgery.jpg", // Assuming this is for Cosmetic Surgery
+      "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
+      // Assuming this is for Cosmetic Surgery
       "text": "Cosmetic Surgery",
       "color": Colors.green,
     },
@@ -188,6 +205,17 @@ class PatientProvider extends ChangeNotifier {
   }
 
   //setters
+
+  _initFavourites() async {
+    User? user = await FirebaseAuth.instance.currentUser;
+    await FavouriteCollections.getFavourite(user!.uid).listen(
+      (event) {
+        for (var element in event.data()?.favouriteDoctors ?? []) {
+          favourites = element ;
+        }
+      },
+    );
+  }
 
   void setSelectedPaymentMethod(String paymentMethod) {
     _selectedPaymentMethod = paymentMethod;

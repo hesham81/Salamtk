@@ -12,10 +12,12 @@ class SignUpProviders extends ChangeNotifier {
   String? _state ;
   String? _city ;
   String? _street;
-
+  String? _area ;
   Marker? get marker => _marker;
 
   LatLng get userLocation => _userLocation;
+
+  String? get area => _area;
 
 
   void setMarker(Marker marker) {
@@ -35,6 +37,8 @@ class SignUpProviders extends ChangeNotifier {
     _state = placemark.first.administrativeArea ?? "Not Located";
     _city = placemark.first.locality ?? "Not Located";
     _street = placemark.first.street ?? "Not Located";
+    _area = placemark.first.subAdministrativeArea ?? "Not Located";
+
     notifyListeners();
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/favourite_tab/pages/favourite_tab.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/my_account.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/un_login_profile/pages/un_login_patient_profile.dart';
 import '/core/utils/auth/login_auth.dart';
@@ -85,12 +86,14 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                   context: context,
                 ),
                 child: Container(
+                  width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
                   child: Text(local!.myAccount),
                 ),
               ),
               Divider(),
               Container(
+                width: double.maxFinite,
                 padding: EdgeInsets.symmetric(vertical: 0.013.height),
                 child: Text(local.privacy),
               ),
@@ -101,8 +104,21 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                   context: context,
                 ),
                 child: Container(
+                  width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
                   child: Text(local.callUs),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: FavouriteTab(),
+                  context: context,
+                ),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text("Favourites"),
                 ),
               ),
               Divider(),

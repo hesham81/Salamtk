@@ -33,6 +33,7 @@ abstract class SignUpAuth {
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
+    return null;
   }
 
   static Future<String?> doctorSignUp({
@@ -47,6 +48,7 @@ abstract class SignUpAuth {
     required String city,
     required String description,
     required String street ,
+    required String area,
     double? lat,
     double? long,
   }) async {
@@ -79,6 +81,7 @@ abstract class SignUpAuth {
         rate: 2.5,
         lat: lat,
         long: long,
+        area: area,
       );
       await DoctorsCollection.setDoctor(doctor).then(
         (value) {

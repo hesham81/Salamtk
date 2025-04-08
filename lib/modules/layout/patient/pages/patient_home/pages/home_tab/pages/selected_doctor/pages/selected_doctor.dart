@@ -163,10 +163,11 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          provider.getDoctor!.name!,
+          provider.getDoctor!.name,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -225,7 +226,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 ),
                 0.01.height.hSpace,
                 Text(
-                  provider.getDoctor!.description!,
+                  provider.getDoctor!.description,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!

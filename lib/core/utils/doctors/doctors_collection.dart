@@ -78,4 +78,11 @@ abstract class DoctorsCollection {
       rethrow;
     }
   }
+
+  static Future<DoctorModel> searchForDoctorUsingDoctorId({
+    required String doctorId,
+  }) async{
+    var res = await _collectionReference().doc(doctorId).get();
+    return res.data()!;
+  }
 }

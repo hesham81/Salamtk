@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -78,7 +79,24 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               (value) {
                 if (value) {
                   EasyLoading.dismiss();
-                  EasyLoading.showSuccess("Doctor has been reserved");
+                  var snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      inMaterialBanner: true,
+                      color: AppColors.secondaryColor,
+                      title: 'Success',
+                      message:
+                          'Reservation Completed , Waiting For Doctor Approval',
+                      contentType: ContentType.success,
+                    ),
+                  );
+
+                  // ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -88,7 +106,22 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                   );
                 } else {
                   EasyLoading.dismiss();
-                  EasyLoading.showError("Error While Reserve Doctor");
+                  var snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      inMaterialBanner: true,
+                      color: AppColors.secondaryColor,
+                      title: 'Error',
+                      message:"Error While Reserve Doctor",
+                      contentType: ContentType.failure,
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
                 }
               },
             );
@@ -124,7 +157,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                         ),
                         Spacer(),
                         Text(
-                          provider.getDoctor!.name!,
+                          provider.getDoctor!.name,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!

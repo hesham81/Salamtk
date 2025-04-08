@@ -19,6 +19,7 @@ abstract class LoginAuth {
       }
       return _role;
     } on FirebaseAuthException catch (e) {
+      e.toString();
       return null;
     }
   }
@@ -39,6 +40,7 @@ abstract class LoginAuth {
       await _firebase.signOut();
       return true;
     } on FirebaseAuthException catch (e) {
+      e.toString();
       return false;
     }
   }

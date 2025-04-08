@@ -29,6 +29,7 @@ class _PatientHomeState extends State<PatientHome> {
         backgroundColor: AppColors.primaryColor,
         showUnselectedLabels: false,
         currentIndex: selectedIndex,
+
         onTap: (value) => setState(() => selectedIndex = value),
         items: [
           BottomNavigationBarItem(

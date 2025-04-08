@@ -1,5 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:salamtk/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
@@ -8,10 +11,12 @@ import '/core/widget/custom_container.dart';
 
 class PatientsList extends StatefulWidget {
   final ReservationModel model;
+  final ReservationModel reservation;
 
   const PatientsList({
     super.key,
     required this.model,
+    required this.reservation,
   });
 
   @override
@@ -40,9 +45,10 @@ class _PatientsListState extends State<PatientsList> {
                 ),
                 0.01.height.hSpace,
                 Text(
-                      () {
+                  () {
                     // Calculate the difference in hours and days
-                    final difference = widget.model.date.difference(DateTime.now());
+                    final difference =
+                        widget.model.date.difference(DateTime.now());
                     final differenceInHours = difference.inHours;
                     final differenceInDays = difference.inDays;
 
@@ -55,7 +61,8 @@ class _PatientsListState extends State<PatientsList> {
                     } else if (differenceInHours == 0) {
                       // Reservation is happening now
                       return "Now";
-                    } else if (differenceInHours < 0 && differenceInDays >= -1) {
+                    } else if (differenceInHours < 0 &&
+                        differenceInDays >= -1) {
                       // Reservation was within the last 24 hours
                       return "${differenceInHours.abs()} Hour${differenceInHours.abs() > 1 ? 's' : ''} Ago";
                     } else if (differenceInDays < -1) {
@@ -104,14 +111,60 @@ class _PatientsListState extends State<PatientsList> {
                     ),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  EasyLoading.show();
+                  widget.reservation.status = "Completed";
+
+                  await ReservationCollection.updateReservation(
+                    reservation: widget.reservation,
+                  );
+                  EasyLoading.dismiss();
+                  var snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      inMaterialBanner: true,
+                      color: AppColors.secondaryColor,
+                      title: 'Success',
+                      message: 'Patient Is Completed',
+                      contentType: ContentType.success,
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
+
+                  EasyLoading.showSuccess("Login Successfully");
+                },
               ),
             ),
             0.01.width.vSpace,
             Expanded(
               child: CustomElevatedButton(
                 btnColor: Colors.red,
-                onPressed: () {},
+                onPressed: () {
+                  EasyLoading.show();
+                  widget.reservation.status = "Cancelled";
+
+                  ReservationCollection.updateReservation(
+                    reservation: widget.reservation,
+                  );
+                  EasyLoading.dismiss();
+                  var snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      inMaterialBanner: true,
+                      color: AppColors.secondaryColor,
+                      title: 'Success',
+                      message: 'Patient Is Canceled',
+                      contentType: ContentType.success,
+                    ),
+                  );
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
