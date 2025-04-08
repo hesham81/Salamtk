@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/extensions/align.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/categoriezed_doctors/pages/categorized_doctors.dart';
 import '/core/extensions/extensions.dart';

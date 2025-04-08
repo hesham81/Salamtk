@@ -1,19 +1,72 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:salamtk/core/functions/location_services.dart';
-import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
+import '/core/functions/favourites.dart';
+import '/core/utils/patients/favoutie_collections.dart';
+import '/core/extensions/align.dart';
+import '/core/theme/app_colors.dart';
+import '/core/functions/location_services.dart';
+import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
 
-class MostDoctorsBooked extends StatelessWidget {
+class MostDoctorsBooked extends StatefulWidget {
   final DoctorModel model;
+  bool isLiked;
 
-  const MostDoctorsBooked({
+  MostDoctorsBooked({
     super.key,
     required this.model,
+    this.isLiked = false,
   });
+
+  @override
+  State<MostDoctorsBooked> createState() => _MostDoctorsBookedState();
+}
+
+class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
+  Favourite fav = Favourite.init();
+
+  Future<void> _checkFav() async {
+    widget.isLiked =
+        await fav.checkIfDoctorIsLikedOrNot(doctorId: widget.model.uid!) ??
+            false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFav();
+  }
+
+  Future<void> _toggleFavorite() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      if (widget.isLiked) {
+        await FavouriteCollections.deleteFavourite(
+          uid: user.uid,
+          doctorId: widget.model.uid!,
+        );
+      } else {
+        await FavouriteCollections.addFavourite(
+          uid: user.uid,
+          doctorId: widget.model.uid!,
+        );
+      }
+      widget.isLiked = !widget.isLiked;
+      setState(() {});
+    } catch (e) {
+      // Handle errors gracefully (e.g., show a snackbar or log the error)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorites: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,31 +79,22 @@ class MostDoctorsBooked extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    (DateTime.now().difference(model.createdAt).inDays < 7)
-                        ? Text(
-                            "New",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall!
-                                .copyWith(
-                                  color: Colors.blue,
-                                ),
-                          )
-                        : SizedBox(),
-                    Text(
-                      model.name ?? "No Dr Name",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ],
-                ),
-                VerticalDivider(
-                  thickness: 1,
-                ),
+                if (DateTime.now().difference(widget.model.createdAt).inDays <
+                    7)
+                  Text(
+                    "New",
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall!
+                        .copyWith(color: Colors.blue),
+                  ),
                 Text(
-                  model.specialist ?? " No Specialist",
+                  widget.model.name,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const VerticalDivider(thickness: 1),
+                Text(
+                  widget.model.specialist,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
@@ -58,27 +102,22 @@ class MostDoctorsBooked extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text("${model.rate ?? 2.5}",
-                        style: Theme.of(context).textTheme.titleSmall!),
-                    0.01.width.vSpace,
-                    Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                      size: 15,
+                    Text(
+                      "${widget.model.rate ?? 2.5}",
+                      style: Theme.of(context).textTheme.titleSmall!,
                     ),
+                    0.01.width.vSpace,
+                    const Icon(Icons.star, color: Colors.amber, size: 15),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.grey,
-                      size: 15,
-                    ),
+                    const Icon(Icons.location_on_outlined,
+                        color: Colors.grey, size: 15),
                     0.01.width.vSpace,
                     Expanded(
                       child: Text(
-                        model.state.replaceAll("Governorate", "") ?? "No City",
+                        widget.model.state.replaceAll("Governorate", ""),
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!
@@ -91,34 +130,34 @@ class MostDoctorsBooked extends StatelessWidget {
                   LocationServices.calculateDistance(
                     provider.lo,
                     LatLng(
-                      model.lat ?? 0,
-                      model.long ?? 0,
+                      widget.model.lat ?? 0,
+                      widget.model.long ?? 0,
                     ),
                   ),
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
                       .copyWith(color: Colors.grey),
-                )
+                ),
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Expanded(
             flex: 1,
             child: Stack(
               children: [
                 Image.asset(
-                  model.imagePath ?? "assets/images/doctor_sample.jpg",
+                  widget.model.imagePath,
                   height: 0.12.height,
                 ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(
-                //     Icons.favorite_outline,
-                //     color: AppColors.secondaryColor,
-                //   ),
-                // ).alignTopRight()
+                IconButton(
+                  onPressed: _toggleFavorite,
+                  icon: Icon(
+                    widget.isLiked ? Icons.favorite : Icons.favorite_outline,
+                    color: AppColors.secondaryColor,
+                  ),
+                ).alignTopRight(),
               ],
             ),
           ),

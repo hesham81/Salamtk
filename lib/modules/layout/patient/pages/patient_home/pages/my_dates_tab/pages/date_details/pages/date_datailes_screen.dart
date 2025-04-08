@@ -27,10 +27,11 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
   DoctorModel? doctor;
   bool isLoading = true;
   bool isOnTheClinic = false;
+
   Future<void> getDoctor() async {
     doctor = await Provider.of<PatientProvider>(context, listen: false)
         .searchForDoctor(doctorPhoneNumber: widget.model.doctorId);
-      _checkIfDoctorIsOnTheClinicOrNot();
+    _checkIfDoctorIsOnTheClinicOrNot();
   }
 
   @override
@@ -44,15 +45,13 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
     super.initState();
   }
 
-
-
   _checkIfDoctorIsOnTheClinicOrNot() async {
     var result = await DoctorsCollection.getDoctorData(
       uid: doctor!.uid!,
     );
     print(result!.name);
     setState(() {
-      isOnTheClinic = result.isInTheClinic ?? false ;
+      isOnTheClinic = result.isInTheClinic;
     });
   }
 
@@ -141,7 +140,9 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                         ? Colors.yellow
                         : (widget.model.status == "Cancelled")
                             ? Colors.red
-                            : AppColors.secondaryColor,
+                            : (widget.model.status == "Approved")
+                                ? Colors.blue
+                                : AppColors.secondaryColor,
                   ),
                   0.01.height.hSpace,
                   MixedTextColors(

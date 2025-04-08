@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -127,23 +128,69 @@ class _SignInState extends State<SignIn> {
                               );
                               if (user == null) {
                                 EasyLoading.dismiss();
-                                EasyLoading.showError(
-                                  "Email Or Password is incorrect",
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  content: AwesomeSnackbarContent(
+                                    inMaterialBanner: true,
+                                    color: Colors.red,
+                                    title: 'Error',
+                                    message: "Email Or Password is incorrect",
+                                    contentType: ContentType.failure,
+                                  ),
                                 );
+
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(snackBar);
+
                               } else if (user == "doctor") {
                                 EasyLoading.dismiss();
                                 await SharedPreference.setString(
                                   SharedPreferenceKey.role,
                                   "doctor",
                                 );
-                                EasyLoading.showSuccess("Login Successfully");
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  content: AwesomeSnackbarContent(
+                                    inMaterialBanner: true,
+                                    color: AppColors.secondaryColor,
+                                    title: 'Success',
+                                    message: 'Welcome Back ${usernameController.text}',
+                                    contentType: ContentType.success,
+                                  ),
+                                );
+
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(snackBar);
+
                                 slideLeftWidget(
                                   newPage: DoctorHome(),
                                   context: context,
                                 );
                               } else {
                                 EasyLoading.dismiss();
-                                EasyLoading.showSuccess("Login Successfully");
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  content: AwesomeSnackbarContent(
+                                    inMaterialBanner: true,
+                                    color: AppColors.secondaryColor,
+                                    title: 'Success',
+                                    message: 'Welcome Back ${usernameController.text}',
+                                    contentType: ContentType.success,
+                                  ),
+                                );
+
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(snackBar);
+
                                 slideLeftWidget(
                                   newPage: PatientHome(),
                                   context: context,

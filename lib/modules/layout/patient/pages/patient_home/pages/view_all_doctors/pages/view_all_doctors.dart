@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/extensions.dart';
-import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';

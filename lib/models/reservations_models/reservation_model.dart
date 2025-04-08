@@ -20,7 +20,7 @@ class ReservationModel {
   final String patientPhoneNumber;
 
 
-  final String status;
+   String status;
 
   ReservationModel({
     required this.patientPhoneNumber,

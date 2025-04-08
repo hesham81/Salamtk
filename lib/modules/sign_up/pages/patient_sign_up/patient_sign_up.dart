@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -93,12 +94,41 @@ class _PatientSignUpState extends State<PatientSignUp> {
                           if (value == null) {
                             Navigator.pop(context);
                             EasyLoading.dismiss();
-                            EasyLoading.showSuccess(
-                              "Account Created Successfully",
+                            var snackBar = SnackBar(
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.transparent,
+                              content: AwesomeSnackbarContent(
+                                inMaterialBanner: true,
+                                color: AppColors.secondaryColor,
+                                title: 'Success',
+                                message: 'Account Created Successfully',
+                                contentType: ContentType.success,
+                              ),
                             );
+
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(snackBar);
+
                           } else {
                             EasyLoading.dismiss();
-                            EasyLoading.showError(value);
+                            var snackBar = SnackBar(
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.transparent,
+                              content: AwesomeSnackbarContent(
+                                inMaterialBanner: true,
+                                color: AppColors.secondaryColor,
+                                title: 'Error',
+                                message: value,
+                                contentType: ContentType.failure,
+                              ),
+                            );
+
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(snackBar);
                           }
                         },
                       );

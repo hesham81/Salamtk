@@ -70,4 +70,10 @@ abstract class ReservationCollection {
       return [];
     }
   }
+
+  static Future<void> updateReservation({
+    required ReservationModel reservation,
+  }) async {
+    await _colRef().doc(reservation.reservationId).set(reservation);
+  }
 }

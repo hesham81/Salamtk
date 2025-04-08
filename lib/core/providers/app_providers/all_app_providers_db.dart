@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 import '/core/utils/doctors/doctors_collection.dart';
@@ -25,18 +26,46 @@ class AllAppProvidersDb extends ChangeNotifier {
 
   String? _country;
 
-  LatLng get lo => LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+  LatLng get lo => LatLng(
+        _currentLocation?.latitude ?? 0,
+        _currentLocation?.longitude ?? 0,
+      );
 
   String? get city => _city;
+
+  List<String> _cities = [];
+  List<String> _areas = [];
+
   String? get state => _state;
+
   String? get street => _street;
+
   String? get country => _country;
+  bool _serviceEnabled = false;
 
   Future<void> _getCurrentLocation() async {
     try {
+      LocationPermission permission;
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return;
+        }
+      }
+      _serviceEnabled = await _location.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await _location.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
       _currentLocation = await _location.getLocation();
       List<Placemark> placemarks = await placemarkFromCoordinates(
-          _currentLocation!.latitude!, _currentLocation!.longitude!);
+        _currentLocation?.latitude ?? 0,
+        _currentLocation?.longitude ?? 0,
+      );
       _city = placemarks[0].locality;
       _state = placemarks[0].administrativeArea;
       _street = placemarks[0].thoroughfare;

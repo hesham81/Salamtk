@@ -2,8 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
-import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/services/local_storage/shared_preference.dart';
@@ -55,7 +53,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<AllAppProvidersDb>(context);
 
     return Scaffold(
       body: Stack(
