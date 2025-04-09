@@ -19,10 +19,18 @@ class ReservationModel {
 
   final String patientPhoneNumber;
 
+  final String screenshotUrl;
 
-   String status;
+  final String cashedPhoneNumber;
+
+  final String selectedPhoneNumber;
+
+  String status;
 
   ReservationModel({
+    required this.cashedPhoneNumber,
+    required this.selectedPhoneNumber,
+    required this.screenshotUrl,
     required this.patientPhoneNumber,
     required this.reservationId,
     required this.uid,
@@ -49,6 +57,9 @@ class ReservationModel {
       email: json['email'],
       patientPhoneNumber: json['patientPhoneNumber'],
       status: json['status'],
+      screenshotUrl: json['screenshotUrl'],
+      cashedPhoneNumber: json['cashedPhoneNumber'],
+      selectedPhoneNumber: json['selectedPhoneNumber'],
     );
   }
 
@@ -65,6 +76,9 @@ class ReservationModel {
       'patientPhoneNumber': patientPhoneNumber,
       'patientName': patientName,
       'status': status,
+      'screenshotUrl': screenshotUrl,
+      'cashedPhoneNumber': cashedPhoneNumber,
+      'selectedPhoneNumber': selectedPhoneNumber,
     };
   }
 }

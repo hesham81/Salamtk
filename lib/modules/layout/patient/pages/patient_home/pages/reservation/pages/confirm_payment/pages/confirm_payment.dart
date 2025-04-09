@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/utils/storage/screenshots.dart';
+import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/pay_with_electronic_wallet/pages/pay_with_electronic_wallet.dart';
-import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -63,7 +64,22 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
             : () async {
                 if (formKey.currentState!.validate()) {
                   EasyLoading.show();
+                  await ScreenShotsStorageManager.uploadScreenShot(
+                    uid: userId,
+                    fileName: provider.getAppPhoneNumber!,
+                    file: provider.getImage!,
+                  );
+                  await ScreenShotsStorageManager.getScreenShotUrl(
+                    uid: userId,
+                    fileName: provider.getAppPhoneNumber!,
+                  ).then((value) {
+                    provider.setScreenshot(value!);
+                  });
+
                   ReservationModel model = ReservationModel(
+                    screenshotUrl: provider.getScreenshot ?? "",
+                    cashedPhoneNumber: provider.getAppPhoneNumber!,
+                    selectedPhoneNumber: provider.getPhoneNumber!,
                     patientPhoneNumber: phoneNumberController.text,
                     reservationId: "",
                     uid: userId,
@@ -75,6 +91,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                     email: emailController.text,
                     patientName: nameController.text,
                   );
+
                   await ReservationCollection.addReservation(model).then(
                     (value) {
                       if (value) {
@@ -93,16 +110,15 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                           ),
                         );
 
-                        // ScaffoldMessenger.of(context)..hideCurrentSnackBar();
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
                           ..showSnackBar(snackBar);
-                        Navigator.pushAndRemoveUntil(
+                        provider.disposeData();
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PatientHome(),
+                            builder: (context) => SelectedDoctor(),
                           ),
-                          (route) => false,
                         );
                       } else {
                         EasyLoading.dismiss();

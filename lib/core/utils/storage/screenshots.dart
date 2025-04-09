@@ -20,4 +20,16 @@ abstract class ScreenShotsStorageManager {
       return error.toString();
     }
   }
+
+  static Future<String?> getScreenShotUrl({
+    required String uid,
+    required String fileName,
+  }) async {
+    try {
+      var res = await _supabase.getPublicUrl("${uid}/${fileName}");
+      return res;
+    } catch (error) {
+      return null;
+    }
+  }
 }

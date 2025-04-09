@@ -1,35 +1,57 @@
 class ReviewsModels {
-   String? id;
   final String? doctorId;
-  final String? userId;
-  final String? review;
-  final String? rating;
-  final DateTime? date;
+  List<Review>? reviews;
 
   ReviewsModels({
-    required this.id,
     required this.doctorId,
-    required this.userId,
+    required this.reviews,
+  });
+
+  factory ReviewsModels.fromJson(Map<String, dynamic> json) => ReviewsModels(
+        doctorId: json["doctorId"],
+        reviews: (json["reviews"] as List<dynamic>?)
+                ?.map(
+                  (e) => Review.fromJson(e),
+                )
+                .toList() ??
+            null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "doctorId": doctorId,
+        "reviews": reviews?.map(
+          (e) => e.toJson(),
+        ),
+      };
+}
+
+class Review {
+  final String name;
+
+  final String review;
+
+  final double rating;
+
+  final DateTime date;
+
+  Review({
+    required this.name,
     required this.review,
     required this.rating,
     required this.date,
   });
 
-  factory ReviewsModels.fromJson(Map<String, dynamic> json) => ReviewsModels(
-        id: json["id"],
-        doctorId: json["doctorId"],
-        userId: json["userId"],
+  factory Review.fromJson(Map<String, dynamic> json) => Review(
+        name: json["name"],
         review: json["review"],
         rating: json["rating"],
-        date: json["date"],
+        date: DateTime.parse(json["date"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "doctorId": doctorId,
-        "userId": userId,
+        "name": name,
         "review": review,
         "rating": rating,
-        "date": date,
+        "date": date.toIso8601String(),
       };
 }
