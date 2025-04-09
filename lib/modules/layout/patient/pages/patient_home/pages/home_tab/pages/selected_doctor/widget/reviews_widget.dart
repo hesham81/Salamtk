@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:salamtk/core/extensions/alignment.dart';
+import 'package:salamtk/core/theme/app_colors.dart';
+import 'package:salamtk/core/validations/date_from.dart';
 import '/core/widget/custom_container.dart';
 
 class ReviewsWidget extends StatefulWidget {
@@ -24,6 +27,7 @@ class _ReviewsWidgetState extends State<ReviewsWidget> {
   Widget build(BuildContext context) {
     return CustomContainer(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -42,6 +46,14 @@ class _ReviewsWidgetState extends State<ReviewsWidget> {
                 ),
               ),
             ],
+          ),
+          Text(
+            DateFrom.handleDateFrom(
+              date: widget.date,
+            ),
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: AppColors.slateBlueColor,
+            ),
           ),
           Divider(),
           Text(
