@@ -4,7 +4,7 @@ import '/core/widget/custom_container.dart';
 class ReviewsWidget extends StatefulWidget {
   final String name;
   final double rate;
-  final String date;
+  final DateTime date;
   final String review;
 
   const ReviewsWidget({

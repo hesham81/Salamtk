@@ -16,7 +16,7 @@ class PatientProvider extends ChangeNotifier {
 
   String? _userPhoneNumber;
 
-  bool? isPayValid;
+  bool? _isPayValid;
 
   String? _screenshot;
 
@@ -34,11 +34,23 @@ class PatientProvider extends ChangeNotifier {
   String? get getAppPhoneNumber => appPhoneNumber;
 
   void setIsPayValid(bool? value) {
-    isPayValid = value;
+    _isPayValid = value;
     notifyListeners();
   }
 
-  bool? get getIsPayValid => isPayValid;
+  void disposeData() {
+    _image = null;
+    _screenshot = null;
+    _userPhoneNumber = null;
+    _selectedPhoneNumber = null;
+    _isPayValid = null;
+    _selectedPhoneNumber = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    notifyListeners();
+  }
+
+  bool? get getIsPayValid => _isPayValid;
 
   void setScreenshot(String value) {
     _screenshot = value;
