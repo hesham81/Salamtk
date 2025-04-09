@@ -59,21 +59,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
-    // var userId = FirebaseAuth.instance.currentUser!.displayName;
-    // List<Review> re = [
-    //   Review(
-    //     name: userId!,
-    //     review: "Very Good Doctor",
-    //     rating: 4.5,
-    //     date: DateTime.now(),
-    //   ),
-    // ];
-    // ReviewsCollection.addReview(
-    //   model: ReviewsModels(
-    //     doctorId: provider.getDoctor!.uid,
-    //     reviews: re,
-    //   ),
-    // );
     return Scaffold(
       appBar: AppBar(
         title: Text(
