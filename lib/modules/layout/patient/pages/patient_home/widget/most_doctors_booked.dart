@@ -103,7 +103,7 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                 Row(
                   children: [
                     Text(
-                      "${widget.model.rate ?? 2.5}",
+                      "${widget.model.rate.toString().substring(0, 3) ?? 2.5}",
                       style: Theme.of(context).textTheme.titleSmall!,
                     ),
                     0.01.width.vSpace,

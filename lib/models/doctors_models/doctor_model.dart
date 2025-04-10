@@ -10,7 +10,7 @@ class DoctorModel {
   final String city;
   final String specialist;
   final String phoneNumber;
-  final double? rate;
+   double? rate;
   final double? lat;
   final double? long;
   final String street;
