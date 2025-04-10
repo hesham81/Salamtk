@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -32,9 +34,10 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   bool isLoading = true;
 
   Future<void> _getAllReviews() async {
+    String doctorId =
+        Provider.of<PatientProvider>(context, listen: false).getDoctor!.uid!;
     await ReviewsCollection.getReviews(
-      doctorId:
-          Provider.of<PatientProvider>(context, listen: false).getDoctor!.uid!,
+      doctorId: doctorId,
     ).then(
       (value) {
         value.fold(
@@ -50,10 +53,13 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   @override
   void initState() {
     Future.wait(
-      [_getAllReviews()],
+      [
+        _getAllReviews(),
+      ],
     );
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +179,9 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ).leftBottomWidget(),
                 Spacer(),
-                (_reviews != null && _reviews!.reviews!.isNotEmpty && _reviews!.reviews!.length > 3)
+                (_reviews != null &&
+                        _reviews!.reviews!.isNotEmpty &&
+                        _reviews!.reviews!.length > 3)
                     ? CustomTextButton(
                         text: local.seeAll,
                         onPressed: () => slideLeftWidget(

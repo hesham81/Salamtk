@@ -4,9 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:salamtk/core/extensions/align.dart';
+import '/core/extensions/align.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '/core/widget/loading_image.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/services/storage/prescription_storage_services.dart';
 import '/core/extensions/extensions.dart';
@@ -355,6 +354,7 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                                   child: CachedNetworkImage(
                                     imageUrl: model!.rumor[index],
                                     placeholder: (context, url) => Skeletonizer(
+                                      enabled: true,
                                       child: SizedBox(
                                         height: 0.15.height,
                                         width: 0.15.width,

@@ -28,6 +28,8 @@ class ReviewsModels {
 class Review {
   final String name;
 
+  final String patientId;
+
   final String review;
 
   final double rating;
@@ -39,19 +41,22 @@ class Review {
     required this.review,
     required this.rating,
     required this.date,
+    required this.patientId,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
         name: json["name"],
         review: json["review"],
         rating: json["rating"],
-        date: DateTime.parse(json["date"]),
+        date: DateTime.fromMillisecondsSinceEpoch(json["date"]),
+        patientId: json["patientId"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "review": review,
         "rating": rating,
-        "date": date.toIso8601String(),
+        "date": date.millisecondsSinceEpoch,
+        "patientId": patientId,
       };
 }
