@@ -264,6 +264,8 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
       model.rumor = urls;
     }
     await PrescriptionCollection.addPrescription(model: model);
+    await _getPrescription(uid);
+    setState(() {});
   }
 
   @override
@@ -308,32 +310,32 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                     0.01.height.hSpace,
                     (model != null && model!.prescriptions.isNotEmpty)
                         ? SizedBox(
-                      height: 0.5.height,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: SizedBox(
-                            child: CachedNetworkImage(
-                              imageUrl: model!.prescriptions[index],
-                              placeholder: (context, url) => Skeletonizer(
+                            height: 0.5.height,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
                                 child: SizedBox(
-                                  height: 0.15.height,
-                                  width: 0.15.width,
+                                  child: CachedNetworkImage(
+                                    imageUrl: model!.prescriptions[index],
+                                    placeholder: (context, url) => Skeletonizer(
+                                      child: SizedBox(
+                                        height: 0.15.height,
+                                        width: 0.15.width,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.error,
+                                      color: Colors.grey,
+                                    ).center,
+                                  ),
                                 ),
                               ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error,
-                                color: Colors.grey,
-                              ).center,
+                              separatorBuilder: (context, index) =>
+                                  0.01.width.vSpace,
+                              itemCount: model!.prescriptions.length,
                             ),
-                          ),
-                        ),
-                        separatorBuilder: (context, index) =>
-                        0.01.width.vSpace,
-                        itemCount: model!.prescriptions.length,
-                      ),
-                    )
+                          )
                         : SizedBox(),
                     SizedBox(height: 0.01.height),
                     _buildSection(
@@ -344,32 +346,32 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                     0.01.height.hSpace,
                     (model != null && model!.rumor.isNotEmpty)
                         ? SizedBox(
-                      height: 0.5.height,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: SizedBox(
-                            child: CachedNetworkImage(
-                              imageUrl: model!.rumor[index],
-                              placeholder: (context, url) => Skeletonizer(
+                            height: 0.5.height,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
                                 child: SizedBox(
-                                  height: 0.15.height,
-                                  width: 0.15.width,
+                                  child: CachedNetworkImage(
+                                    imageUrl: model!.rumor[index],
+                                    placeholder: (context, url) => Skeletonizer(
+                                      child: SizedBox(
+                                        height: 0.15.height,
+                                        width: 0.15.width,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.error,
+                                      color: Colors.grey,
+                                    ).center,
+                                  ),
                                 ),
                               ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error,
-                                color: Colors.grey,
-                              ).center,
+                              separatorBuilder: (context, index) =>
+                                  0.01.width.vSpace,
+                              itemCount: model!.rumor.length,
                             ),
-                          ),
-                        ),
-                        separatorBuilder: (context, index) =>
-                        0.01.width.vSpace,
-                        itemCount: model!.rumor.length,
-                      ),
-                    )
+                          )
                         : SizedBox(),
                     SizedBox(height: 0.01.height),
                     _buildSection(
