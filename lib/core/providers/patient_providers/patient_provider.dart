@@ -18,6 +18,9 @@ class PatientProvider extends ChangeNotifier {
 
   bool? _isPayValid;
 
+  String? _selectedCity;
+  String? _selectedZone;
+
   String? _screenshot;
 
   File? _image;
@@ -25,6 +28,20 @@ class PatientProvider extends ChangeNotifier {
   String? get getScreenshot => _screenshot;
 
   String? appPhoneNumber;
+
+  String? get getSelectedCity => _selectedCity;
+
+  String? get getSelectedZone => _selectedZone;
+
+  void setSelectedCity(String? value) {
+    _selectedCity = value;
+    notifyListeners();
+  }
+
+  void setSelectedZone(String? value) {
+    _selectedZone = value;
+    notifyListeners();
+  }
 
   void setAppPhoneNumber(String? value) {
     appPhoneNumber = value;

@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:salamtk/core/constant/app_assets.dart';
-import 'package:salamtk/core/extensions/align.dart';
-import 'package:salamtk/core/extensions/extensions.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/core/theme/app_colors.dart';
-import 'package:salamtk/core/utils/doctors/reviews/reviews_collection.dart';
-import 'package:salamtk/models/doctors_models/reviews_models.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
+import '/core/constant/app_assets.dart';
+import '/core/extensions/align.dart';
+import '/core/extensions/extensions.dart';
+import '/core/services/snack_bar_services.dart';
+import '/core/theme/app_colors.dart';
+import '/core/utils/doctors/reviews/reviews_collection.dart';
+import '/models/doctors_models/reviews_models.dart';
+import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 
 class MyReviewsTab extends StatefulWidget {
   const MyReviewsTab({super.key});
@@ -51,6 +51,21 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "My Reviews",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: AppColors.primaryColor,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.primaryColor,
+          ),
+        ),
+      ),
       body: (isLoading)
           ? CircularProgressIndicator(
               color: AppColors.secondaryColor,
@@ -58,6 +73,7 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
           : SingleChildScrollView(
               child: Column(
                 children: [
+                  0.01.height.hSpace,
                   (_myReviews.isEmpty)
                       ? Column(
                           children: [

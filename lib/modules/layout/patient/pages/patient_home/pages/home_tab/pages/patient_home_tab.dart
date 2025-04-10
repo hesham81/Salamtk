@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/location_services.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/filtered_doctors/pages/filtered_cities/pages/filtered_cities.dart';
 import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/modules/layout/patient/pages/patient_home/pages/view_all_doctors/pages/view_all_doctors.dart';
 import '/modules/layout/patient/pages/category/pages/all_categories/pages/all_categories.dart';
@@ -223,7 +224,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                       CustomTextButton(
                         text: "See All",
                         onPressed: () => slideLeftWidget(
-                          newPage: ViewAllDoctors(),
+                          newPage: FilteredCities(),
                           context: context,
                         ),
                       ),
