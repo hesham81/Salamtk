@@ -6,16 +6,26 @@ import '/core/widget/custom_container.dart';
 class MixedTextColors extends StatelessWidget {
   final String title;
 
-  final String value;
+  final String? value;
 
   final Color? valueColor;
+
+  final Widget? child;
 
   const MixedTextColors({
     super.key,
     required this.title,
     required this.value,
     this.valueColor,
+    this.child = null,
   });
+
+  const MixedTextColors.widget(
+      {super.key,
+      required this.title,
+      this.value = null,
+      this.valueColor,
+      required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +34,20 @@ class MixedTextColors extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "$title : ",
+            (child == null) ? "$title : " : title,
             style: theme.textTheme.titleSmall,
           ),
-          0.01.width.vSpace,
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.titleSmall!.copyWith(
-                color: valueColor ?? AppColors.secondaryColor,
-              ),
-            ),
-          ),
+          (child == null) ? 0.01.width.vSpace : Spacer(),
+          (child != null)
+              ? child!
+              : Expanded(
+                  child: Text(
+                    value!,
+                    style: theme.textTheme.titleSmall!.copyWith(
+                      color: valueColor ?? AppColors.secondaryColor,
+                    ),
+                  ),
+                ),
         ],
       ),
     );
