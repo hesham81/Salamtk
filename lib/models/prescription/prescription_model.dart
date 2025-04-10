@@ -2,12 +2,16 @@ class PrescriptionModel {
   final String uid;
   DateTime lastUpdate;
 
-  String imageUrl;
+  List<String> prescriptions;
+  List<String> analysis;
+  List<String> rumor;
 
   PrescriptionModel({
     required this.uid,
     required this.lastUpdate,
-    required this.imageUrl,
+    required this.prescriptions,
+    required this.analysis,
+    required this.rumor,
   });
 
   factory PrescriptionModel.fromJson(Map<String, dynamic> json) {
@@ -16,8 +20,9 @@ class PrescriptionModel {
       lastUpdate: json['lastUpdate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['lastUpdate'] as int)
           : DateTime.now(),
-      imageUrl: json['imageUrl'] ??
-          'default_image_url',
+      prescriptions: List<String>.from(json['prescriptions'] ?? []),
+      analysis: List<String>.from(json['analysis'] ?? []),
+      rumor: List<String>.from(json['rumor'] ?? []),
     );
   }
 
@@ -25,7 +30,9 @@ class PrescriptionModel {
     return {
       'uid': uid,
       'lastUpdate': lastUpdate.millisecondsSinceEpoch,
-      'imageUrl': imageUrl,
+      'prescriptions': prescriptions,
+      'analysis': analysis,
+      'rumor': rumor,
     };
   }
 }

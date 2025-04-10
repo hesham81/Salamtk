@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '/core/theme/app_colors.dart';
 
 abstract class SnackBarServices {
-  void showSuccessMessage(
+  static void showSuccessMessage(
     BuildContext context, {
     required String message,
     String? title,
@@ -27,7 +27,7 @@ abstract class SnackBarServices {
       ..showSnackBar(snackBar);
   }
 
-  void showErrorMessage(
+  static void showErrorMessage(
     BuildContext context, {
     required String message,
     String? title,
@@ -39,7 +39,7 @@ abstract class SnackBarServices {
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
         inMaterialBanner: true,
-        color: color ?? AppColors.secondaryColor,
+        color: color ?? Colors.red,
         title: title ?? 'Error',
         message: message,
         contentType: ContentType.failure,

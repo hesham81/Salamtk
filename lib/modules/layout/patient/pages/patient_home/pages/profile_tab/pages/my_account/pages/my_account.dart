@@ -1,16 +1,12 @@
-import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/medicals_prescriptions.dart';
 import '/core/extensions/align.dart';
-import '/core/utils/storage/prescription_collection.dart';
 import '/models/prescription/prescription_model.dart';
 import '/core/utils/auth/delete_account.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
-import '/core/services/storage/prescription_storage_services.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
@@ -24,62 +20,10 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountState extends State<MyAccount> {
-  File? _image;
-  bool isLoading = true;
   late PrescriptionModel? model;
-
-  _pickImage(String uid, BuildContext context) async {
-    bool isValid = true;
-    final ImagePicker picker = ImagePicker();
-    final XFile? selectedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-
-    if (selectedImage != null) {
-      this._image = File(selectedImage.path);
-    }
-    EasyLoading.show();
-    setState(
-      () {},
-    );
-    await PrescriptionStorageServices.updateFile(uid, _image!).then(
-      (value) {
-        if (value != null) {
-          EasyLoading.dismiss();
-          isValid = false;
-          EasyLoading.showError(value);
-        }
-      },
-    );
-    isValid = true;
-    await _checkIfPrescription();
-
-    if (isValid) {
-      String imageUrl = PrescriptionStorageServices.getUrl(uid);
-      PrescriptionModel model = PrescriptionModel(
-        uid: uid,
-        lastUpdate: DateTime.now(),
-        imageUrl: imageUrl,
-      );
-      await PrescriptionCollection.addPrescription(model: model);
-      EasyLoading.dismiss();
-      EasyLoading.showSuccess("Prescription Uploaded");
-    }
-  }
-
-  Future<void> _checkIfPrescription() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    await PrescriptionCollection.getPrescription(uid: uid).then(
-      (value) => model = value,
-    );
-    print("model is ${model?.uid ?? "No"}");
-    setState(() {
-      isLoading = false;
-    });
-  }
 
   @override
   void initState() {
-    _checkIfPrescription();
     super.initState();
   }
 
@@ -104,13 +48,9 @@ class _MyAccountState extends State<MyAccount> {
           ),
         ),
       ),
-      body: (isLoading)
-          ? CircularProgressIndicator(
-              color: AppColors.secondaryColor,
-            ).center
-          : RefreshIndicator(
+      body: RefreshIndicator(
               onRefresh: () async {
-                _checkIfPrescription();
+                setState(() {});
               },
               color: AppColors.secondaryColor,
               child: SingleChildScrollView(
@@ -136,33 +76,19 @@ class _MyAccountState extends State<MyAccount> {
                     0.01.height.hSpace,
                     GestureDetector(
                       onTap: () async {
-                        _pickImage(user.uid, context);
-                        setState(() {});
+                        slideLeftWidget(
+                          newPage: MedicalsPrescriptions(),
+                          context: context,
+                        );
                       },
-                      child: MixedTextColors(
+                      child: MixedTextColors.widget(
                         title: "Medical prescription",
-                        value: (model == null)
-                            ? "No Prescription Uploaded"
-                            : "${model!.lastUpdate.day} / ${model!.lastUpdate.month} / ${model!.lastUpdate.year}",
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: AppColors.secondaryColor,
+                        ),
                       ),
                     ),
-                    0.01.height.hSpace,
-                    (model == null)
-                        ? SizedBox()
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: CachedNetworkImage(
-                              imageUrl: model!.imageUrl,
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(
-                                color: AppColors.secondaryColor,
-                              ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error_outline,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
                     0.05.height.hSpace,
                     CustomElevatedButton(
                       child: Text(

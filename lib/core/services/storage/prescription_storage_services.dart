@@ -4,7 +4,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class PrescriptionStorageServices {
   static final _supabase = Supabase.instance.client.storage.from("images");
 
-  static Future<String?> uploadPrescription(String path, File fileName) async {
+  static Future<String?> uploadPrescription(
+    String path,
+    File fileName,
+    String uid,
+  ) async {
     try {
       await checkIfExists(path).then(
         (value) async {
@@ -13,7 +17,7 @@ abstract class PrescriptionStorageServices {
           }
         },
       );
-      await _supabase.upload(path, fileName,
+      await _supabase.upload("${uid}/$path", fileName,
           fileOptions: const FileOptions(upsert: true), retryAttempts: 3);
       return null;
     } catch (e) {
@@ -42,9 +46,7 @@ abstract class PrescriptionStorageServices {
   static Future<String?> deleteFile(String path) async {
     try {
       print("Removing The File ");
-      await _supabase.remove(
-        [path],
-      );
+      await _supabase.remove([path]);
       print("The File Removed");
       return null;
     } catch (e) {
@@ -62,6 +64,18 @@ abstract class PrescriptionStorageServices {
       return null;
     } catch (e) {
       return e.toString();
+    }
+  }
+
+  static Future<List<String>?> listOfAllFiles({
+    required String path,
+  }) async {
+    try {
+      return await _supabase.list(path: path).then(
+            (value) => value.map((e) => e.name).toList(),
+          );
+    } catch (error) {
+      return null;
     }
   }
 }
