@@ -54,7 +54,8 @@ class _PatientDatesTabState extends State<PatientDatesTab> {
                     ),
                     separatorBuilder: (context, index) => 0.01.height.hSpace,
                     itemCount: provider.getReservations.length,
-                  )
+                  ),
+                  0.01.height.hSpace,
                 ],
               ).hPadding(0.03.width),
             ),

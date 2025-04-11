@@ -104,11 +104,15 @@ class _ReservationState extends State<Reservation> {
               ),
               selectedDayPredicate: (day) =>
                   isSameDay(provider.getSelectedDate, day),
-              onDaySelected: (selectedDay, focusedDay) {
+              onDaySelected: (selectedDay, focusedDay) async{
                 setState(() {
                   _focusedDay = focusedDay;
                 });
                 provider.setSelectedDate(selectedDay);
+                await dataProvider.checkSlots(
+                  date: provider.getSelectedDate!,
+                  doctor: provider.getDoctor!,
+                );
               },
               startingDayOfWeek: StartingDayOfWeek.saturday,
               daysOfWeekHeight: 0.05.height,

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/constant/app_assets.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
@@ -75,7 +77,8 @@ class _DoctorHomeState extends State<DoctorHome> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await DoctorsCollection.updateDoctor(
-              doctor); // Save changes to Firestore
+            doctor,
+          ); // Save changes to Firestore
           setState(() {
             isInTheClinic = !isInTheClinic; // Toggle the state
             doctor.isInTheClinic = isInTheClinic; // Update the doctor model
@@ -89,6 +92,16 @@ class _DoctorHomeState extends State<DoctorHome> {
           color: AppColors.primaryColor,
         ),
       ),
+      appBar: AppBar(
+        title: Text(
+          "Home",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: AppColors.primaryColor,
+              ),
+        ),
+      ),
+      drawer: DoctorDrawer(),
+      drawerEdgeDragWidth: 0.4.width,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -121,19 +134,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                                 .copyWith(color: AppColors.secondaryColor),
                           ),
                           Spacer(),
-                          IconButton(
-                            onPressed: () async {
-                              await FirebaseAuth.instance.signOut();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignIn(),
-                                ),
-                                (route) => false,
-                              );
-                            },
-                            icon: Icon(Icons.logout),
-                          ),
                         ],
                       ),
                     ),
@@ -203,7 +203,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                         List<ReservationModel> dateReservations = reservations
                             .where((element) =>
                                 element.date.day == dateTime!.day &&
-                                element.date.month == dateTime!.month && element.status == "Approved")
+                                element.date.month == dateTime!.month &&
+                                element.status == "Approved")
                             .toList();
 
                         provider.setTotalReservations(dateReservations.length);

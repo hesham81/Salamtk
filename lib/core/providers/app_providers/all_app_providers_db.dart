@@ -100,7 +100,11 @@ class AllAppProvidersDb extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Fetch all cities of doctors
+  Future<void> _getAllReservations() async {
+    _reservations = await ReservationCollection.getAllReservations();
+    notifyListeners();
+  }
+
   Future<void> _getAllCitiesOfDoctors() async {
     _doctors = await DoctorsCollection.doctors();
     _citiesOfDoctors.clear(); // Clear existing cities to avoid duplicates
@@ -111,41 +115,32 @@ class AllAppProvidersDb extends ChangeNotifier {
     }
   }
 
-  // Check slots for a specific date and doctor
-  void checkSlots({
+  Future<void> checkSlots({
     required DateTime date,
     required DoctorModel doctor,
-  }) {
+  }) async {
     _date = date;
     _doctor = doctor;
-    _slots.clear(); // Clear existing slots before fetching new ones
+    await _getAllReservations();
+    await _getAllSlots();
     notifyListeners();
-    _getAllSlots();
   }
 
-  // Fetch all slots for the selected date
   Future<void> _getAllSlots() async {
     if (_reservations.isEmpty) {
       _reservations = await ReservationCollection.getAllReservations();
     }
 
-    // Filter reservations based on the selected date
     List<ReservationModel> filteredReservations = _reservations
         .where((element) =>
             element.date.isAtSameMomentAs(_date) &&
             element.doctorId == _doctor!.uid)
         .toList();
 
-    // Clear existing slots to avoid duplicates
     _slots.clear();
 
-    // Add slots from filtered reservations
     for (var reservation in filteredReservations) {
       _slots.add(reservation.slot);
     }
-
-    // Print debug information
-    print('Filtered Reservations Count: ${filteredReservations.length}');
-    print('Slots: $_slots');
   }
 }

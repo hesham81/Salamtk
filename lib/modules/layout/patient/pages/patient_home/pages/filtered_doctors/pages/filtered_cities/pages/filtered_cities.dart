@@ -22,14 +22,17 @@ class _FilteredCitiesState extends State<FilteredCities> {
 
   _getAllCitiesData() {
     var provider = Provider.of<AllAppProvidersDb>(context, listen: false);
-    _getAllCities = provider.getAllDoctors
-        .map(
-          (e) => e.state.replaceAll(
-            "Governorate",
-            "",
-          ),
-        )
-        .toList();
+
+    Set<String> uniqueCities = {};
+
+    for (var doctor in provider.getAllDoctors) {
+      String state = doctor.state.replaceAll("Governorate", "");
+      if (!uniqueCities.contains(state)) {
+        uniqueCities.add(state);
+      }
+    }
+
+    _getAllCities = uniqueCities.toList();
   }
 
   @override
@@ -98,7 +101,9 @@ class _FilteredCitiesState extends State<FilteredCities> {
               ),
               separatorBuilder: (context, index) =>
                   Divider().hPadding(0.1.width),
-              itemCount: (_searchList.isEmpty) ? _getAllCities.length : _searchList.length,
+              itemCount: (_searchList.isEmpty)
+                  ? _getAllCities.length
+                  : _searchList.length,
             )
           ],
         ).hPadding(0.03.width),

@@ -92,7 +92,15 @@ class _ViewAllDoctorsState extends State<ViewAllDoctors> {
                     ),
                   );
                 }
-                doctors = snapshot.data!.docs.map((e) => e.data()).toList();
+                List<DoctorModel> newDoctors =
+                    snapshot.data!.docs.map((e) => e.data()).toList();
+
+                doctors = newDoctors.where((doctor) {
+                  return doctor.state.contains(provider.getSelectedCity!) &&
+                      (doctor.city.contains(provider.getSelectedZone!) ||
+                          doctor.area.contains(provider.getSelectedZone!));
+                }).toList();
+                ;
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),

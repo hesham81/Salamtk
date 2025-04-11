@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:salamtk/core/extensions/dimensions.dart';
-import 'package:salamtk/core/extensions/extensions.dart';
-import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
-import 'package:salamtk/core/providers/patient_providers/patient_provider.dart';
-import 'package:salamtk/core/theme/app_colors.dart';
+import 'package:route_transitions/route_transitions.dart';
+import '/core/extensions/extensions.dart';
+import '/core/providers/app_providers/all_app_providers_db.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
+import '/core/theme/app_colors.dart';
+import '/modules/layout/patient/pages/patient_home/pages/view_all_doctors/pages/view_all_doctors.dart';
 
 class FilteredZones extends StatefulWidget {
   const FilteredZones({super.key});
@@ -26,13 +27,25 @@ class _FilteredZonesState extends State<FilteredZones> {
       context,
       listen: false,
     ).getSelectedCity!;
+
+    List<String> zones = [];
+
     for (var doctor in _doctors) {
-      if (doctor.state.replaceAll("Governorate", "") == city) {
-        _getAllZones.add(doctor.city);
+      if (doctor.state.replaceAll("Governorate", "").trim() == city.trim()) {
+        if (!zones.contains(doctor.city)) {
+          (doctor.city.isNotEmpty)
+              ? zones.add(doctor.city)
+              : zones.add(doctor.area);
+        }
       }
     }
+
+    // Assign the unique zones to _getAllZones
+    _getAllZones = zones;
+
     setState(() {});
   }
+
   @override
   void initState() {
     _getAllZonesData();
@@ -88,13 +101,13 @@ class _FilteredZonesState extends State<FilteredZones> {
                 onTap: () {
                   var provider =
                       Provider.of<PatientProvider>(context, listen: false);
-                  provider.setSelectedCity((_searchList.isEmpty)
+                  provider.setSelectedZone((_searchList.isEmpty)
                       ? _getAllZones[index]
                       : _searchList[index]);
-                  // slideLeftWidget(
-                  //   newPage: FilteredZones(),
-                  //   context: context,
-                  // );
+                  slideLeftWidget(
+                    newPage: ViewAllDoctors(),
+                    context: context,
+                  );
                 },
               ),
               separatorBuilder: (context, index) =>
