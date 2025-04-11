@@ -188,7 +188,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                     date: (isLoading)
                         ? DateTime.now()
                         : _reservations[index].date,
-                    color: (_reservations[index] == "Cancelled")
+                    color: (_reservations[index].status == "Cancelled")
                         ? Colors.red
                         : Colors.green,
                   ),

@@ -14,5 +14,5 @@ void configLoading() {
     ..indicatorColor = AppColors.secondaryColor
     ..userInteractions = false
     ..dismissOnTap = false
-    ..dismissOnTap = true;
+    ..indicatorColor = AppColors.secondaryColor;
 }
