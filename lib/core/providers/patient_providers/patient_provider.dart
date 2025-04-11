@@ -307,6 +307,7 @@ class PatientProvider extends ChangeNotifier {
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
+
     notifyListeners();
   }
 
