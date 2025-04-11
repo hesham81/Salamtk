@@ -9,10 +9,11 @@ import '/core/constant/storage/storage_keys.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
-import '/core/services/loading_indicator.dart';
 import '/core/route/on_generate_route.dart';
 import '/core/theme/app_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'core/services/loading_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
