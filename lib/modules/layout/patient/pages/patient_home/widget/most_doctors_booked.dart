@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import '/core/services/snack_bar_services.dart';
 import '/core/functions/favourites.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/core/extensions/align.dart';
@@ -61,9 +62,9 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
       widget.isLiked = !widget.isLiked;
       setState(() {});
     } catch (e) {
-      // Handle errors gracefully (e.g., show a snackbar or log the error)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update favorites: $e')),
+      SnackBarServices.showErrorMessage(
+        context,
+        message: "Failed To Change Favourite",
       );
     }
   }
@@ -112,12 +113,18 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined,
-                        color: Colors.grey, size: 15),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      color: Colors.grey,
+                      size: 15,
+                    ),
                     0.01.width.vSpace,
                     Expanded(
                       child: Text(
-                        widget.model.state.replaceAll("Governorate", ""),
+                        widget.model.state.replaceAll(
+                          "Governorate",
+                          "",
+                        ),
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!

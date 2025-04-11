@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:salamtk/core/constant/app_constants.dart';
 import 'package:salamtk/core/functions/launchers_classes.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
@@ -35,7 +36,9 @@ class CallUs extends StatelessWidget {
             0.01.height.hSpace,
             GestureDetector(
               onTap: () async {
-                await LaunchersClasses.call(phoneNumber: "01027002208");
+                await LaunchersClasses.call(
+                  phoneNumber: AppConstants.phoneNumber2,
+                );
               },
               child: CustomContainer(
                 child: Row(
@@ -46,7 +49,31 @@ class CallUs extends StatelessWidget {
                     ),
                     0.01.width.vSpace,
                     Text(
-                      "01027002208",
+                      AppConstants.phoneNumber2,
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: AppColors.blackColor,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            0.01.height.hSpace,
+            GestureDetector(
+              onTap: () async {
+                await LaunchersClasses.call(
+                    phoneNumber: AppConstants.phoneNumber1);
+              },
+              child: CustomContainer(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.call,
+                      color: AppColors.secondaryColor,
+                    ),
+                    0.01.width.vSpace,
+                    Text(
+                      AppConstants.phoneNumber1,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.blackColor,
                           ),
