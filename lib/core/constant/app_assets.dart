@@ -12,6 +12,7 @@ abstract class AppAssets{
   static const String teethICN = 'assets/icons/teeeth.svg';
   static const String heartICN = 'assets/icons/heart.svg';
   static const String womenICN = 'assets/icons/womens.svg';
+  static const String balance = 'assets/images/balance.svg';
   static const String eyeICN = 'assets/icons/eye.svg';
 
 
