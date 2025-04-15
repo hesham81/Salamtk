@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:salamtk/core/constant/app_assets.dart';
-import 'package:salamtk/core/extensions/align.dart';
-import 'package:salamtk/core/extensions/extensions.dart';
-import 'package:salamtk/core/theme/app_colors.dart';
-import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
-import 'package:salamtk/models/doctors_models/doctor_model.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/widget/doctor_profile_component.dart';
+import '/core/constant/app_assets.dart';
+import '/core/extensions/align.dart';
+import '/core/extensions/extensions.dart';
+import '/core/theme/app_colors.dart';
+import '/core/utils/doctors/doctors_collection.dart';
+import '/models/doctors_models/doctor_model.dart';
+import '/modules/layout/doctor/pages/doctor_profile/widget/doctor_profile_component.dart';
 
 class DoctorProfile extends StatefulWidget {
   const DoctorProfile({super.key});

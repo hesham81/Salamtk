@@ -16,11 +16,13 @@ import '/core/widget/custom_container.dart';
 class MostDoctorsBooked extends StatefulWidget {
   final DoctorModel model;
   bool isLiked;
+  bool displayFavouriteIcon;
 
   MostDoctorsBooked({
     super.key,
     required this.model,
     this.isLiked = false,
+    this.displayFavouriteIcon = false,
   });
 
   @override
@@ -158,13 +160,17 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                   widget.model.imagePath,
                   height: 0.12.height,
                 ),
-                IconButton(
-                  onPressed: _toggleFavorite,
-                  icon: Icon(
-                    widget.isLiked ? Icons.favorite : Icons.favorite_outline,
-                    color: AppColors.secondaryColor,
-                  ),
-                ).alignTopRight(),
+                (widget.displayFavouriteIcon)
+                    ? IconButton(
+                        onPressed: _toggleFavorite,
+                        icon: Icon(
+                          widget.isLiked
+                              ? Icons.favorite
+                              : Icons.favorite_outline,
+                          color: AppColors.secondaryColor,
+                        ),
+                      ).alignTopRight()
+                    : SizedBox(),
               ],
             ),
           ),

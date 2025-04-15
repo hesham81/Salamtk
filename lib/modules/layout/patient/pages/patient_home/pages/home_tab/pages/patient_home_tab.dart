@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/functions/location_services.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/filtered_doctors/pages/filtered_cities/pages/filtered_cities.dart';
+import '/core/functions/location_services.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/modules/layout/patient/pages/patient_home/pages/filtered_doctors/pages/filtered_cities/pages/filtered_cities.dart';
+import '/modules/sign_up/pages/doctor_sign_up/doctor_sign_up.dart';
 import '/core/providers/app_providers/all_app_providers_db.dart';
-import '/modules/layout/patient/pages/patient_home/pages/view_all_doctors/pages/view_all_doctors.dart';
 import '/modules/layout/patient/pages/category/pages/all_categories/pages/all_categories.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -143,10 +144,12 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CategoryWidget.child(
-                        text: categories[0]["text"],
-                        color: categories[0]["color"],
+                        text: provider.categories[10]["text"],
+                        color: provider.categories[10]["color"],
                         child: ImageIcon(
-                          AssetImage(categories[0]["icon"]),
+                          AssetImage(
+                            provider.categories[10]["icon"],
+                          ),
                           color: AppColors.primaryColor,
                         ),
                       ),
@@ -154,23 +157,25 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                         text: categories[1]["text"],
                         color: categories[1]["color"],
                         child: ImageIcon(
-                          AssetImage(categories[1]["icon"]),
+                          AssetImage(
+                            categories[1]["icon"],
+                          ),
                           color: AppColors.primaryColor,
                         ).allPadding(15),
                       ),
                       CategoryWidget.child(
-                        text: categories[2]["text"],
-                        color: categories[2]["color"],
+                        text: provider.categories[1]["text"],
+                        color: provider.categories[1]["color"],
                         child: ImageIcon(
-                          AssetImage(categories[2]["icon"]),
+                          AssetImage(provider.categories[1]["icon"]),
                           color: AppColors.primaryColor,
                         ),
                       ),
                       CategoryWidget.child(
-                        text: categories[3]["text"],
-                        color: categories[3]["color"],
+                        text: provider.categories[9]["text"],
+                        color: provider.categories[9]["color"],
                         child: ImageIcon(
-                          AssetImage(categories[3]["icon"]),
+                          AssetImage(provider.categories[9]["icon"]),
                           color: AppColors.primaryColor,
                         ).allPadding(15),
                       ),
@@ -218,6 +223,34 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
+            SizedBox(
+              width: double.maxFinite,
+              child: CustomElevatedButton(
+                child: Row(
+                  children: [
+                    0.01.width.vSpace,
+                    Text(
+                      "Join Us",
+                      style: theme.textTheme.labelLarge!.copyWith(
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.primaryColor,
+                    ),
+                    0.03.width.vSpace,
+                  ],
+                ),
+                onPressed: () {
+                  slideLeftWidget(
+                    newPage: DoctorSignUp(),
+                    context: context,
+                  );
+                },
+              ),
+            ),
             (searchList.isEmpty)
                 ? Row(
                     children: [
@@ -249,9 +282,13 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 doctors = snapshot.data!.docs.map((e) => e.data()).toList();
                 doctors.sort((a, b) {
                   double distanceA = LocationServices.calculateDistanceNumbers(
-                      LatLng(a.lat!, a.long!), userLocation);
+                    LatLng(a.lat!, a.long!),
+                    userLocation,
+                  );
                   double distanceB = LocationServices.calculateDistanceNumbers(
-                      LatLng(b.lat!, b.long!), userLocation);
+                    LatLng(b.lat!, b.long!),
+                    userLocation,
+                  );
                   return distanceA.compareTo(distanceB);
                 });
 
@@ -269,6 +306,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                       );
                     },
                     child: MostDoctorsBooked(
+                      displayFavouriteIcon: true,
                       model: searchList.isEmpty
                           ? doctors[index]
                           : searchList[index],

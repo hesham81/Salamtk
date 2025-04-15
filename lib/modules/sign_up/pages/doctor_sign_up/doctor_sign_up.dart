@@ -4,6 +4,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
 import '/core/providers/sign_up_providers/sign_up_providers.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/select_map.dart';
@@ -39,7 +41,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<String> specialists = [
-    "Obstetrics & Gynecology",
+    "Obstetrics",
     "Teeth",
     "Urology",
     "Lung",
@@ -49,10 +51,10 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
     "Dermatology",
     "Orthopedics",
     "Eye",
-    "Cardiology",
+    "Heart",
     "Nutritionist",
     "Family Medicine & Allergy",
-    "Orthopedic & Spinal Surgery",
+    "Orthopedic",
     "Gastroenterology",
     "Internal Medicine",
     "Surgery",
@@ -154,7 +156,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     suffixIcon: Icons.attach_money_rounded,
                     validate: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Enter Price";
+                        return "Please Enter Price";
                       }
                       return null;
                     },
@@ -243,66 +245,24 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                         if (formKey.currentState!.validate() &&
                             selectedSpecialist != null) {
                           if (provider.marker == null) {
-                            EasyLoading.showError("Select Location");
+                            SnackBarServices.showErrorMessage(
+                              context,
+                              message: "Select Location",
+                            );
                             return;
                           }
-                          EasyLoading.show();
-                          await SignUpAuth.doctorSignUp(
-                            lat: provider.marker!.point.latitude,
-                            long: provider.marker!.point.longitude,
+                          provider.setDoctorData(
+                            name: nameController.text,
+                            description: description.text,
                             email: emailController.text,
                             password: passwordController.text,
-                            name: nameController.text,
                             phoneNumber: phoneNumberController.text,
+                            price: double.tryParse(price.text) ?? 0.0,
                             specialist: selectedSpecialist!,
-                            price: double.tryParse(price.text) ?? 150,
-                            country: provider.country!,
-                            state: provider.state!,
-                            city: provider.city!,
-                            street: provider.street!,
-                            description: description.text,
-                            area: provider.area!,
-                          ).then(
-                            (value) {
-                              if (value == null) {
-                                EasyLoading.dismiss();
-                                Navigator.pop(context);
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    inMaterialBanner: true,
-                                    color: AppColors.secondaryColor,
-                                    title: 'Success',
-                                    message: 'Account Created Successfully',
-                                    contentType: ContentType.success,
-                                  ),
-                                );
-
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-                              } else {
-                                EasyLoading.dismiss();
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    inMaterialBanner: true,
-                                    color: AppColors.secondaryColor,
-                                    title: 'Error',
-                                    message: value,
-                                    contentType: ContentType.failure,
-                                  ),
-                                );
-
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-                              }
-                            },
+                          );
+                          slideLeftWidget(
+                            newPage: AdditionalSignUpDoctorData(),
+                            context: context,
                           );
                         }
                       },

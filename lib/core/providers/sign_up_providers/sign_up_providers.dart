@@ -1,38 +1,193 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:salamtk/core/services/local_storage/shared_preference.dart';
+import '../../constant/shared_preference_key.dart';
+import '/core/utils/doctors/doctors_collection.dart';
+import '/core/utils/storage/doctors_storage.dart';
+import '/models/doctors_models/doctor_model.dart';
+
+import '../../utils/auth/auth_collections.dart';
 
 class SignUpProviders extends ChangeNotifier {
   late LatLng _userLocation;
 
+  String? _workingFrom;
+
+  String? _workingTo;
+
   Marker? _marker;
 
-  String? _country ;
-  String? _state ;
-  String? _city ;
+  String? _country;
+
+  String? _state;
+
+  String? _city;
+
   String? _street;
-  String? _area ;
+  String? _area;
+  String? _specialist;
+
   Marker? get marker => _marker;
+  String? _name;
+
+  String? _description;
+
+  String? _email;
+
+  String? _password;
+
+  String? _phoneNumber;
+
+  File? _image;
+
+  File? _certificate;
+
+  double? _price;
+  final List<String> timeSlots = [
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "03:00 PM",
+    "03:30 PM",
+    "04:00 PM",
+    "04:30 PM",
+    "05:00 PM",
+    "05:30 PM"
+  ];
+
+  String? get name => _name;
+
+  String? get workingFrom => this._workingFrom;
+
+  String? get workingTo => this._workingTo;
+
+  String? get description => _description;
+
+  String? get email => _email;
+
+  String? get password => _password;
+
+  String? get phoneNumber => _phoneNumber;
+
+  double? get price => _price;
+
+  String? get specialist => _specialist;
+
+  File? get image => _image;
+
+  File? get certificate => _certificate;
+
+  Future<void> uploadImage() async {
+    final ImagePicker picker = ImagePicker();
+    XFile? selectedImage;
+
+    selectedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      _image = File(selectedImage.path);
+      notifyListeners();
+    }
+  }
+
+  Future<void> uploadCertificateImage() async {
+    final ImagePicker picker = ImagePicker();
+    XFile? selectedImage;
+
+    selectedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      _certificate = File(selectedImage.path);
+      notifyListeners();
+    }
+  }
+
+  void setWorkingFrom(String value) {
+    workingToList = [];
+    _workingFrom = value;
+    int index = timeSlots.indexOf(value);
+    for (var i = index + 1; i < timeSlots.length; i++) {
+      workingToList.add(timeSlots[i]);
+    }
+    notifyListeners();
+  }
+
+  List<String> workingToList = [];
+
+  void setWorkingTo(String value) {
+    _workingTo = value;
+    notifyListeners();
+  }
+
+  void setDoctorData({
+    required String name,
+    required String description,
+    required String email,
+    required String password,
+    required String phoneNumber,
+    required double price,
+    required String specialist,
+  }) {
+    _name = name;
+    _description = description;
+    _email = email;
+    _password = password;
+    _phoneNumber = phoneNumber;
+    _price = price;
+    _specialist = specialist;
+    notifyListeners();
+  }
+
+  void resetDoctorData() {
+    _name = null;
+    _description = null;
+    _email = null;
+    _password = null;
+    _phoneNumber = null;
+    _price = null;
+    _specialist = null;
+    _image = null;
+    _certificate = null;
+    _marker = null;
+    _workingFrom = null;
+    _workingTo = null;
+    _country = null;
+    _state = null;
+    _city = null;
+    _street = null;
+
+    notifyListeners();
+  }
 
   LatLng get userLocation => _userLocation;
 
   String? get area => _area;
-
 
   void setMarker(Marker marker) {
     _marker = marker;
     notifyListeners();
     _analyseMarkerLocation();
   }
+
   String? get country => _country;
+
   String? get state => _state;
+
   String? get city => _city;
+
   String? get street => _street;
 
   Future<void> _analyseMarkerLocation() async {
     LatLng point = _marker!.point;
-    List<Placemark> placemark = await placemarkFromCoordinates(point.latitude, point.longitude);
+    List<Placemark> placemark =
+        await placemarkFromCoordinates(point.latitude, point.longitude);
     _country = placemark.first.country ?? "Not Located";
     _state = placemark.first.administrativeArea ?? "Not Located";
     _city = placemark.first.locality ?? "Not Located";
@@ -40,5 +195,75 @@ class SignUpProviders extends ChangeNotifier {
     _area = placemark.first.subAdministrativeArea ?? "Not Located";
 
     notifyListeners();
+  }
+
+  Future<bool> confirm(BuildContext context) async {
+    try {
+      EasyLoading.show();
+      UserCredential? user =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      );
+
+      String uid = user.user!.uid;
+      user.user?.updateDisplayName(name!);
+      await DoctorsStorage.uploadDoctorCertificate(
+        certificate: _certificate!,
+        doctorId: user.user!.uid,
+      );
+      await DoctorsStorage.uploadProfileImage(
+        profileImage: _image!,
+        doctorId: user.user!.uid,
+      );
+      String certificateUrl = DoctorsStorage.getDoctorCertificateUrl(
+        doctorId: user.user!.uid,
+      );
+      String imageUrl = DoctorsStorage.getDoctorProfileImageUrl(
+        doctorId: user.user!.uid,
+      );
+      user.user?.updatePhotoURL(imageUrl);
+      await AuthCollections.insertRole(
+        uid: user.user!.uid,
+        phoneNumber: phoneNumber,
+        role: "doctor",
+      ).then(
+        (value) {
+          return value;
+        },
+      );
+      await DoctorsCollection.setDoctor(
+        DoctorModel(
+          workingFrom: workingFrom!,
+          workingTo: workingTo!,
+          certificateUrl: certificateUrl,
+          imageUrl: imageUrl,
+          area: area!,
+          rate: 2.5,
+          uid: uid,
+          lat: _marker?.point.latitude ?? 0,
+          long: _marker?.point.longitude ?? 0,
+          street: street!,
+          name: name!,
+          price: price!,
+          description: description!,
+          country: country!,
+          state: state!,
+          city: city!,
+          specialist: specialist!,
+          phoneNumber: phoneNumber!,
+        ),
+      );
+      await SharedPreference.setString(
+        SharedPreferenceKey.role,
+        "doctor",
+      );
+      EasyLoading.dismiss();
+      resetDoctorData();
+      return true;
+    } catch (error) {
+      EasyLoading.dismiss();
+      return false;
+    }
   }
 }
