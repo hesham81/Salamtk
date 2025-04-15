@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   String? role;
   String? token;
 
-  getRole() async {
+  Future<void> getRole() async {
     role = await SharedPreference.getString(SharedPreferenceKey.role).then(
       (value) => value,
     );
@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    print("Account From Splash is $role");
     getRole();
     getToken();
     super.initState();
@@ -53,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,

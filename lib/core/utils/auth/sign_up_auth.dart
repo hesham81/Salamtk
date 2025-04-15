@@ -47,8 +47,12 @@ abstract class SignUpAuth {
     required String state,
     required String city,
     required String description,
-    required String street ,
+    required String street,
     required String area,
+    required String imageUrl,
+    required String workingFrom,
+    required String workingTo,
+    required String certificateUrl,
     double? lat,
     double? long,
   }) async {
@@ -68,6 +72,10 @@ abstract class SignUpAuth {
       );
       var user = _firebase.currentUser!.uid;
       var doctor = DoctorModel(
+        workingFrom: workingFrom,
+        workingTo: workingTo,
+        certificateUrl: certificateUrl,
+        imageUrl: imageUrl,
         street: street,
         uid: user,
         name: name,

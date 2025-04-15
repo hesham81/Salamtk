@@ -4,13 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/constant/app_assets.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
+import '/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
-import '/modules/sign_in/pages/sign_in.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doctor_patient_reservation_check.dart';
 import '/modules/layout/doctor/widget/patients_list.dart';
@@ -101,7 +99,7 @@ class _DoctorHomeState extends State<DoctorHome> {
         ),
       ),
       drawer: DoctorDrawer(),
-      drawerEdgeDragWidth: 0.4.width,
+      drawerEdgeDragWidth: 0.03.width,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -112,58 +110,7 @@ class _DoctorHomeState extends State<DoctorHome> {
               child: SafeArea(
                 child: Column(
                   children: [
-                    // Welcome Message
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Welcome Dr :",
-                            style: (1.width < 600)
-                                ? Theme.of(context).textTheme.labelLarge
-                                : Theme.of(context).textTheme.titleSmall,
-                          ),
-                          0.01.width.vSpace,
-                          Text(
-                            user!.displayName?.replaceFirst(
-                                    RegExp(r'^(dr|Dr|DR|dR)\s+'), "") ??
-                                "Doctor",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(color: AppColors.secondaryColor),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                    ),
                     0.01.height.hSpace,
-
-                    // Total Patients
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Total Day Patients : ",
-                            style: (1.width < 600)
-                                ? Theme.of(context).textTheme.labelLarge
-                                : Theme.of(context).textTheme.titleSmall,
-                          ),
-                          0.01.width.vSpace,
-                          Text(
-                            provider.getTotalReservations.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(color: AppColors.secondaryColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                    0.03.height.hSpace,
-
-                    // Calendar Timeline
                     CalendarTimeline(
                       initialDate: dateTime ?? DateTime.now(),
                       firstDate: DateTime.now(),
@@ -230,7 +177,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                     ),
                     0.01.height.hSpace,
                   ],
-                ).hPadding(0.03.width),
+                ).hPadding(0.01.width),
               ),
             ),
     );

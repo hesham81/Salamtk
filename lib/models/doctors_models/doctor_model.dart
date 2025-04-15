@@ -10,17 +10,31 @@ class DoctorModel {
   final String city;
   final String specialist;
   final String phoneNumber;
-   double? rate;
+  double? rate;
   final double? lat;
   final double? long;
   final String street;
-  final String area ;
+  final String area;
+
   final String imagePath;
   final DateTime createdAt;
   bool isInTheClinic;
+  String? imageUrl;
+  String workingFrom;
+
+  String workingTo;
+
+  String certificateUrl;
+
+  bool isVerified;
 
   DoctorModel({
+    this.isVerified = false,
     this.uid,
+    required this.workingFrom,
+    required this.workingTo,
+    required this.certificateUrl,
+    required this.imageUrl,
     required this.area,
     required this.street,
     required this.name,
@@ -44,6 +58,11 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      isVerified: json['isVerified'],
+      workingFrom: json['workingFrom'],
+      workingTo: json['workingTo'],
+      certificateUrl: json['certificateUrl'],
+      imageUrl: json['imageUrl'],
       area: json['area'],
       street: json['street'],
       uid: json['uid'],
@@ -76,6 +95,11 @@ class DoctorModel {
   // Method for serializing to JSON
   Map<String, dynamic> toJson() {
     return {
+      'isVerified': isVerified,
+      'workingFrom': workingFrom,
+      'workingTo': workingTo,
+      'certificateUrl': certificateUrl,
+      'imageUrl': imageUrl,
       'area': area,
       'street': street,
       'uid': uid,

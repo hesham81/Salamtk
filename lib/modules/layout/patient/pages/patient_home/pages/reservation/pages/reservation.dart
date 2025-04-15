@@ -33,8 +33,28 @@ class _ReservationState extends State<Reservation> {
     "05:00 PM",
     "05:30 PM"
   ];
+
   final List<DateTime> slots = [];
   DateTime _focusedDay = DateTime.now();
+
+  Future<void> _checkSlots() async {
+    var provider = Provider.of<PatientProvider>(context, listen: false);
+    var dataProvider = Provider.of<AllAppProvidersDb>(context, listen: false);
+    await dataProvider.checkSlots(
+      date: provider.getSelectedDate ?? DateTime.now(),
+      doctor: provider.getDoctor!,
+    );
+  }
+
+  @override
+  void initState() {
+    Future.wait(
+      [
+        _checkSlots(),
+      ],
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,15 +124,12 @@ class _ReservationState extends State<Reservation> {
               ),
               selectedDayPredicate: (day) =>
                   isSameDay(provider.getSelectedDate, day),
-              onDaySelected: (selectedDay, focusedDay) async{
+              onDaySelected: (selectedDay, focusedDay) async {
                 setState(() {
                   _focusedDay = focusedDay;
                 });
                 provider.setSelectedDate(selectedDay);
-                await dataProvider.checkSlots(
-                  date: provider.getSelectedDate!,
-                  doctor: provider.getDoctor!,
-                );
+                await _checkSlots();
               },
               startingDayOfWeek: StartingDayOfWeek.saturday,
               daysOfWeekHeight: 0.05.height,

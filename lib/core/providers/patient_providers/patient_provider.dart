@@ -100,7 +100,7 @@ class PatientProvider extends ChangeNotifier {
     // First Screen
     {
       "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
-      "text": "Obstetrics & Gynecology",
+      "text": "Obstetrics",
       "color": Colors.orangeAccent,
     },
     {
@@ -154,7 +154,7 @@ class PatientProvider extends ChangeNotifier {
     },
     {
       "icon": "assets/icons/categorize/Cardiology.jpg",
-      "text": "Cardiology",
+      "text": "Heart",
       "color": Colors.red,
     },
     {
@@ -171,7 +171,7 @@ class PatientProvider extends ChangeNotifier {
     {
       "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
       // Assuming this is for Orthopedic & Spinal Surgery
-      "text": "Orthopedic & Spinal Surgery",
+      "text": "Orthopedic ",
       "color": Colors.redAccent,
     },
     {
@@ -308,7 +308,9 @@ class PatientProvider extends ChangeNotifier {
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
 
+
     notifyListeners();
+
   }
 
   void setSelectedSlot(String slot) {
