@@ -5,16 +5,18 @@ import 'package:salamtk/core/functions/launchers_classes.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
 import '/core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CallUs extends StatelessWidget {
   const CallUs({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Call Us",
+          local!.callUs,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

@@ -119,7 +119,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                 child: Container(
                   width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
-                  child: Text("My Reviews"),
+                  child: Text(local.myReviews),
                 ),
               ),
               Divider(),
@@ -131,7 +131,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                 child: Container(
                   width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
-                  child: Text("Favourites"),
+                  child: Text(local.favourites),
                 ),
               ),
               Divider(),

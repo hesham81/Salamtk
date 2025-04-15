@@ -63,9 +63,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 children: [
                   0.01.height.hSpace,
                   CircleAvatar(
-                    backgroundImage: AssetImage(
-                      AppAssets.doctorAvatar,
-                    ),
+                    backgroundImage: NetworkImage(user?.photoURL ?? ""),
                     radius: 80,
                   ).center,
                   0.01.height.hSpace,

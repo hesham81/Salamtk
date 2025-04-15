@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:salamtk/core/widget/loading_image.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/functions/favourites.dart';
 import '/core/utils/patients/favoutie_collections.dart';
@@ -12,6 +14,7 @@ import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MostDoctorsBooked extends StatefulWidget {
   final DoctorModel model;
@@ -74,7 +77,10 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AllAppProvidersDb>(context);
+    var local = AppLocalizations.of(context);
+
     return CustomContainer(
+      padding: EdgeInsets.zero,
       child: Row(
         children: [
           Expanded(
@@ -85,7 +91,7 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                 if (DateTime.now().difference(widget.model.createdAt).inDays <
                     7)
                   Text(
-                    "New",
+                    local!.newWord,
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!
@@ -95,7 +101,6 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                   widget.model.name,
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
-                const VerticalDivider(thickness: 1),
                 Text(
                   widget.model.specialist,
                   style: Theme.of(context)
@@ -149,16 +154,21 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                       .copyWith(color: Colors.grey),
                 ),
               ],
-            ),
+            ).allPadding(10),
           ),
           const Spacer(),
           Expanded(
             flex: 1,
             child: Stack(
               children: [
-                Image.asset(
-                  widget.model.imagePath,
-                  height: 0.12.height,
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.model.imageUrl!,
+                  ),
                 ),
                 (widget.displayFavouriteIcon)
                     ? IconButton(

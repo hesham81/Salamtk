@@ -201,7 +201,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                     : Row(
                         children: [
                           Text(
-                            "No Reviews Yet",
+                            local.noReviewsYet,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],

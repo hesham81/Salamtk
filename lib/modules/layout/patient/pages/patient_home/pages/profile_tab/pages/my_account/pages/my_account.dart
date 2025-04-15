@@ -11,6 +11,7 @@ import '/core/widget/custom_elevated_button.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyAccount extends StatefulWidget {
   const MyAccount({super.key});
@@ -30,10 +31,11 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "My Account",
+          local!.myAccount,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -60,18 +62,18 @@ class _MyAccountState extends State<MyAccount> {
                   children: [
                     0.01.height.hSpace,
                     MixedTextColors(
-                      title: "Name",
+                      title: local.name,
                       value: user!.displayName.toString(),
                     ),
                     0.01.height.hSpace,
                     MixedTextColors(
-                      title: "Email",
+                      title: local.email,
                       value: user.email!,
                     ),
                     0.01.height.hSpace,
                     MixedTextColors(
-                      title: "Phone Number",
-                      value: user.phoneNumber ?? "No Number Set",
+                      title: local.phoneNumber,
+                      value: user.phoneNumber ?? local.noPhoneNumberSet,
                     ),
                     0.01.height.hSpace,
                     GestureDetector(
@@ -82,7 +84,7 @@ class _MyAccountState extends State<MyAccount> {
                         );
                       },
                       child: MixedTextColors.widget(
-                        title: "Medical prescription",
+                        title: local.medicalPrescription,
                         child: Icon(
                           Icons.arrow_forward_ios_rounded,
                           color: AppColors.secondaryColor,
@@ -92,7 +94,7 @@ class _MyAccountState extends State<MyAccount> {
                     0.05.height.hSpace,
                     CustomElevatedButton(
                       child: Text(
-                        "Delete Account",
+                        local.deleteAccount,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.primaryColor,
                             ),

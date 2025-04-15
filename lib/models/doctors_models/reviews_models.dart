@@ -26,6 +26,8 @@ class ReviewsModels {
 }
 
 class Review {
+  final String reservationId;
+
   final String name;
 
   final String patientId;
@@ -37,6 +39,7 @@ class Review {
   final DateTime date;
 
   Review({
+    required this.reservationId,
     required this.name,
     required this.review,
     required this.rating,
@@ -45,6 +48,7 @@ class Review {
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
+        reservationId: json["reservationId"],
         name: json["name"],
         review: json["review"],
         rating: json["rating"],
@@ -53,6 +57,7 @@ class Review {
       );
 
   Map<String, dynamic> toJson() => {
+        "reservationId": reservationId,
         "name": name,
         "review": review,
         "rating": rating,

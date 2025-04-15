@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:salamtk/core/extensions/extensions.dart';
 import 'package:salamtk/core/theme/app_colors.dart';
@@ -31,7 +32,9 @@ class ProfileImageContainer extends StatelessWidget {
         children: [
           0.05.height.hSpace,
           CircleAvatar(
-            backgroundImage: AssetImage(imageUrl),
+            backgroundImage: CachedNetworkImageProvider(
+              imageUrl,
+            ),
             radius: 60,
           ),
           0.01.height.hSpace,

@@ -11,6 +11,7 @@ import '/core/theme/app_colors.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_form_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PayWithElectronicWallet extends StatefulWidget {
   const PayWithElectronicWallet({super.key});
@@ -120,6 +121,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -127,7 +129,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
           icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
         ),
         title: Text(
-          "Confirm Payment",
+          local!.electronicWallet,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -135,7 +137,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
       ),
       bottomNavigationBar: CustomElevatedButton(
         child: Text(
-          "Confirm",
+          local.confirm,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -170,7 +172,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                       ),
                       0.02.width.vSpace,
                       Text(
-                        "From",
+                        local.from,
                         style: Theme.of(context).textTheme.titleSmall!,
                       ),
                     ],
@@ -190,7 +192,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                           Expanded(
                             child: Text(
                               phoneNumber.text.isEmpty
-                                  ? "Your Number"
+                                  ? local.yourNumber
                                   : phoneNumber.text,
                               style: Theme.of(context).textTheme.titleSmall!,
                             ),
@@ -207,7 +209,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                   AppConstants.phoneNumber1,
                   AppConstants.phoneNumber2,
                 ],
-                hintText: selectedPhoneNumber ?? "Select Number",
+                hintText: selectedPhoneNumber ?? local.selectNumber,
                 onChanged: (p0) {
                   setState(() {
                     selectedPhoneNumber = p0;
@@ -216,7 +218,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
               ),
               0.01.height.hSpace,
               CustomTextFormField(
-                hintText: "Your Phone Number",
+                hintText: local.yourNumber,
                 controller: phoneNumber,
                 onChanged: (value) {
                   updateOperator(value!);
@@ -224,11 +226,11 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                 keyboardType: TextInputType.number,
                 validate: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please Enter Your Phone Number";
+                    return local.phoneError;
                   }
                   final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
                   if (!egyptPhoneRegex.hasMatch(value)) {
-                    return "Please Enter A Valid Phone Number";
+                    return local.emptyPhone;
                   }
                   return null;
                 },
@@ -240,7 +242,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                   child: Row(
                     children: [
                       Text(
-                        "Upload Screenshot",
+                        local.uploadScreenshot,
                         style: Theme.of(context).textTheme.titleSmall!,
                       ),
                       Spacer(),

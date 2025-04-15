@@ -12,6 +12,8 @@ class AllAppProvidersDb extends ChangeNotifier {
   List<String> _citiesOfDoctors = [];
   List<DoctorModel> _doctors = [];
   List<String> _slots = [];
+  List<String> doctorsSlots = [];
+
   DateTime _date = DateTime.now();
   DoctorModel? _doctor;
   List<ReservationModel> _reservations = [];
@@ -42,6 +44,7 @@ class AllAppProvidersDb extends ChangeNotifier {
 
   String? get country => _country;
   bool _serviceEnabled = false;
+
 
   Future<void> _getCurrentLocation() async {
     try {

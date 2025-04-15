@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:route_transitions/route_transitions.dart';
 import '/modules/layout/doctor/pages/doctors_money/widget/money_status_widget.dart';
 import '/modules/layout/doctor/pages/doctors_money/widget/transaction_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -134,7 +135,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                                     color: AppColors.secondaryColor,
                                   ),
                         ),
-                        onPressed: () {},
+                        onPressed: () => {},
                       ),
                     ],
                   ).hPadding(0.07.width),
@@ -145,29 +146,6 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                 color: AppColors.secondaryColor,
               ).hPadding(
                 0.15.width,
-              ),
-              0.02.height.hSpace,
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: MoneyStatusWidget(
-                        svgLocation: "assets/images/added_money.svg",
-                        text: "${totalMoney.toStringAsFixed(1)} EGP",
-                        textColor: Colors.green,
-                      ),
-                    ),
-                    0.01.width.vSpace,
-                    Expanded(
-                      child: MoneyStatusWidget(
-                        svgLocation: "assets/images/app_money.svg",
-                        text: "${lossMoney.toStringAsFixed(1)} EGP",
-                        textColor: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
               ),
               0.01.height.hSpace,
               Text(

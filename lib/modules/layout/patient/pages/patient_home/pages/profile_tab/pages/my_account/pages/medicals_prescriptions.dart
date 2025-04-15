@@ -13,6 +13,7 @@ import '/core/theme/app_colors.dart';
 import '/core/utils/storage/prescription_collection.dart';
 import '/models/prescription/prescription_model.dart';
 import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MedicalsPrescriptions extends StatefulWidget {
   const MedicalsPrescriptions({super.key});
@@ -269,10 +270,11 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Medicals",
+          local!.medicals,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -302,7 +304,7 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                       height: 0.01.height,
                     ), // Use SizedBox instead of hSpace
                     _buildSection(
-                      title: "Medical Prescription",
+                      title: local.medicalPrescription,
                       type: "prescription",
                       uid: uid,
                     ),
@@ -338,7 +340,7 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                         : SizedBox(),
                     SizedBox(height: 0.01.height),
                     _buildSection(
-                      title: "Medical Rumor",
+                      title: local.medicalRumor,
                       type: "rumor",
                       uid: uid,
                     ),
@@ -375,7 +377,7 @@ class _MedicalsPrescriptionsState extends State<MedicalsPrescriptions> {
                         : SizedBox(),
                     SizedBox(height: 0.01.height),
                     _buildSection(
-                      title: "Medical Analysis",
+                      title: local.medicalAnalysis,
                       type: "analysis",
                       uid: uid,
                     ),

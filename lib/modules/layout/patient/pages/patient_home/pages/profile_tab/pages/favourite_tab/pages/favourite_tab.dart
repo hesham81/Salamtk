@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/extensions/align.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/core/extensions/extensions.dart';
@@ -10,6 +11,7 @@ import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavouriteTab extends StatefulWidget {
   const FavouriteTab({super.key});
@@ -66,10 +68,11 @@ class _FavouriteTabState extends State<FavouriteTab> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Favourites",
+          local!.favourites,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -83,12 +86,11 @@ class _FavouriteTabState extends State<FavouriteTab> {
             color: AppColors.primaryColor,
           ),
         ),
-        centerTitle: true,
       ),
       body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
-            )
+          ? CircularProgressIndicator(
+              color: AppColors.secondaryColor,
+            ).center
           : doctors.isEmpty
               ? Center(
                   child: Text(

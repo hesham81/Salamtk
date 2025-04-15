@@ -131,7 +131,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: local!.phonNumber,
+                    hintText: local!.phoneNumber,
                     controller: phoneNumberController,
                     suffixIcon: Icons.phone_android_outlined,
                     keyboardType: TextInputType.number,

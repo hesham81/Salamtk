@@ -56,7 +56,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
             (isLoading)
                 ? ProfileImageContainer(
                     name: doctor?.name ?? "No Name",
-                    imageUrl: doctor?.imagePath ?? AppAssets.doctorAvatar,
+                    imageUrl: doctor?.imageUrl ?? AppAssets.doctorAvatar,
                     email: FirebaseAuth.instance.currentUser?.email ??
                         "doctor@gmail.com",
                   )

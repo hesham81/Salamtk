@@ -10,7 +10,7 @@ import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/theme/app_colors.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class Reservation extends StatefulWidget {
   const Reservation({super.key});
 
@@ -19,19 +19,70 @@ class Reservation extends StatefulWidget {
 }
 
 class _ReservationState extends State<Reservation> {
-  final List<String> timeSlots = [
+  int slotIndex = 0;
+
+  _checkUnAvailableSlots() {
+    var provider = Provider.of<PatientProvider>(context, listen: false);
+    var doctor = provider.getDoctor!;
+    int startIndex = allSlots.indexOf(doctor.workingFrom);
+    int endIndex = allSlots.indexOf(doctor.workingTo);
+    for (var index = startIndex; index <= endIndex; index++) {
+      timeSlots.add(allSlots[index]);
+    }
+    setState(() {});
+  }
+
+  final List<String> timeSlots = [];
+
+  final List<String> allSlots = [
+    "12:00 AM",
+    "12:30 AM",
+    "01:00 AM",
+    "01:30 AM",
+    "02:00 AM",
+    "02:30 AM",
+    "03:00 AM",
+    "03:30 AM",
+    "04:00 AM",
+    "04:30 AM",
+    "05:00 AM",
+    "05:30 AM",
+    "06:00 AM",
+    "06:30 AM",
+    "07:00 AM",
+    "07:30 AM",
+    "08:00 AM",
+    "08:30 AM",
     "09:00 AM",
     "09:30 AM",
     "10:00 AM",
     "10:30 AM",
     "11:00 AM",
     "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
     "03:00 PM",
     "03:30 PM",
     "04:00 PM",
     "04:30 PM",
     "05:00 PM",
-    "05:30 PM"
+    "05:30 PM",
+    "06:00 PM",
+    "06:30 PM",
+    "07:00 PM",
+    "07:30 PM",
+    "08:00 PM",
+    "08:30 PM",
+    "09:00 PM",
+    "09:30 PM",
+    "10:00 PM",
+    "10:30 PM",
+    "11:00 PM",
+    "11:30 PM"
   ];
 
   final List<DateTime> slots = [];
@@ -48,6 +99,7 @@ class _ReservationState extends State<Reservation> {
 
   @override
   void initState() {
+    _checkUnAvailableSlots();
     Future.wait(
       [
         _checkSlots(),
@@ -60,6 +112,7 @@ class _ReservationState extends State<Reservation> {
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
     var dataProvider = Provider.of<AllAppProvidersDb>(context);
     dataProvider.checkSlots(
       date: provider.getSelectedDate ?? DateTime.now(),
@@ -69,7 +122,7 @@ class _ReservationState extends State<Reservation> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Reserve Day",
+          local!.confirm,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -104,7 +157,7 @@ class _ReservationState extends State<Reservation> {
                   }
                 },
           child: Text(
-            "Confirm",
+            local.confirm,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppColors.primaryColor,
                 ),

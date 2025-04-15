@@ -212,7 +212,7 @@ class _SignInState extends State<SignIn> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         CustomTextFormField(
-                          hintText: local!.phonNumber,
+                          hintText: local!.phoneNumber,
                           controller: phoneNumberController,
                           suffixIcon: Icons.phone_android_outlined,
                           validate: (value) {

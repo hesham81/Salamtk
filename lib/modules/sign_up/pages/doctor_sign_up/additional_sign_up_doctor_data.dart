@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/widget/custom_elevated_button.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_home.dart';
 import 'package:salamtk/modules/sign_in/pages/sign_in.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
@@ -187,11 +188,10 @@ class _AdditionalSignUpDoctorDataState
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SignIn(),
+                              builder: (context) => DoctorHome(),
                             ),
                             (route) => false,
                           );
-
                         } else {
                           SnackBarServices.showErrorMessage(
                             context,

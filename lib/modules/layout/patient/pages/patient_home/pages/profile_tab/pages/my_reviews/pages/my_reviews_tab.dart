@@ -8,6 +8,7 @@ import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/reviews/reviews_collection.dart';
 import '/models/doctors_models/reviews_models.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyReviewsTab extends StatefulWidget {
   const MyReviewsTab({super.key});
@@ -50,10 +51,11 @@ class _MyReviewsTabState extends State<MyReviewsTab> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "My Reviews",
+          local!.myReviews,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: AppColors.primaryColor,
           ),

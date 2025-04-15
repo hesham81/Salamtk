@@ -254,12 +254,12 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ),
               0.01.height.hSpace,
               Text(
-                local.phonNumber,
+                local.phoneNumber,
                 style: Theme.of(context).textTheme.titleSmall!,
               ),
               0.01.height.hSpace,
               CustomTextFormField(
-                hintText: local.phonNumber,
+                hintText: local.phoneNumber,
                 controller: phoneNumberController,
                 suffixIcon: Icons.phone_android_outlined,
                 validate: (value) {
@@ -314,7 +314,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                       0.01.width.vSpace,
                       Expanded(
                         child: Text(
-                          "Electronic Wallet",
+                          local.electronicWallet,
                           style: Theme.of(context).textTheme.titleSmall!,
                         ),
                       ),

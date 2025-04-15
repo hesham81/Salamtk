@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 class CustomContainer extends StatelessWidget {
   final Widget child;
   final double? width;
+  final EdgeInsets? padding;
 
   const CustomContainer({
     super.key,
     required this.child,
     this.width,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      padding: const EdgeInsets.all(16.0),
+      padding: padding ?? const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),

@@ -230,7 +230,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   children: [
                     0.01.width.vSpace,
                     Text(
-                      "Join Us",
+                      local.joinUs,
                       style: theme.textTheme.labelLarge!.copyWith(
                         color: AppColors.primaryColor,
                       ),
@@ -255,7 +255,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 ? Row(
                     children: [
                       CustomTextButton(
-                        text: "See All",
+                        text: local.seeAll,
                         onPressed: () => slideLeftWidget(
                           newPage: FilteredCities(),
                           context: context,

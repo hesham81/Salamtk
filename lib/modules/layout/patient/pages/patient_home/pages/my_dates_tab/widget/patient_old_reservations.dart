@@ -7,6 +7,7 @@ import '/core/theme/app_colors.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_container.dart';
 import '/models/reservations_models/reservation_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientOldReservations extends StatefulWidget {
   final ReservationModel model;
@@ -41,13 +42,14 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     var difference = DateTime.now().difference(widget.model.date).inDays;
     print(difference);
     return CustomContainer(
       child: Column(
         children: [
           Text(
-            doctor?.name ?? "No Name",
+            doctor?.name ?? local!.noName,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: AppColors.secondaryColor,
                 ),
