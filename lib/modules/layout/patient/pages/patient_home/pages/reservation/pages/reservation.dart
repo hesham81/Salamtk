@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/providers/app_providers/language_provider.dart';
 import '/core/providers/app_providers/all_app_providers_db.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '/modules/sign_in/pages/sign_in.dart';
@@ -11,6 +12,7 @@ import '/core/extensions/extensions.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class Reservation extends StatefulWidget {
   const Reservation({super.key});
 
@@ -20,14 +22,30 @@ class Reservation extends StatefulWidget {
 
 class _ReservationState extends State<Reservation> {
   int slotIndex = 0;
+  int clinicStart = 0;
+
+  int clinicEnd = 0;
+  List<String> dayIndexes = [];
+  bool isNotWorking = false;
 
   _checkUnAvailableSlots() {
+    dayIndexes.clear();
     var provider = Provider.of<PatientProvider>(context, listen: false);
     var doctor = provider.getDoctor!;
     int startIndex = allSlots.indexOf(doctor.workingFrom);
     int endIndex = allSlots.indexOf(doctor.workingTo);
     for (var index = startIndex; index <= endIndex; index++) {
       timeSlots.add(allSlots[index]);
+    }
+    int startClinicIndex = provider.days.indexOf(doctor.clinicWorkingFrom);
+    int endClinicIndex = provider.days.indexOf(doctor.clinicWorkingTo);
+    if (startClinicIndex > endClinicIndex) {
+      int temp = startClinicIndex;
+      startClinicIndex = endClinicIndex;
+      endClinicIndex = temp;
+    }
+    for (var index = startClinicIndex; index <= endClinicIndex; index++) {
+      dayIndexes.add(provider.days[index]);
     }
     setState(() {});
   }
@@ -86,6 +104,7 @@ class _ReservationState extends State<Reservation> {
   ];
 
   final List<DateTime> slots = [];
+  final List<String> emptySlots = [];
   DateTime _focusedDay = DateTime.now();
 
   Future<void> _checkSlots() async {
@@ -141,7 +160,8 @@ class _ReservationState extends State<Reservation> {
         padding: EdgeInsets.all(0.01.height),
         child: CustomElevatedButton(
           onPressed: (provider.getSelectedSlot == null ||
-                  provider.getSelectedDate == null)
+                  provider.getSelectedDate == null ||
+                  isNotWorking)
               ? null
               : () {
                   if (user == null) {
@@ -168,11 +188,12 @@ class _ReservationState extends State<Reservation> {
         child: Column(
           children: [
             TableCalendar(
+              locale: Provider.of<LanguageProvider>(context).getLanguage,
               focusedDay: _focusedDay,
               firstDay: DateTime.now(),
               lastDay: DateTime.now().add(
                 Duration(
-                  days: 30,
+                  days: 90,
                 ),
               ),
               selectedDayPredicate: (day) =>
@@ -182,6 +203,7 @@ class _ReservationState extends State<Reservation> {
                   _focusedDay = focusedDay;
                 });
                 provider.setSelectedDate(selectedDay);
+                isNotWorking = provider.handleDoctorDayIndex();
                 await _checkSlots();
               },
               startingDayOfWeek: StartingDayOfWeek.saturday,
@@ -196,7 +218,7 @@ class _ReservationState extends State<Reservation> {
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
+                  color: (isNotWorking) ? Colors.red : AppColors.secondaryColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -205,7 +227,7 @@ class _ReservationState extends State<Reservation> {
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: timeSlots.length,
+              itemCount: (isNotWorking) ? emptySlots.length : timeSlots.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
@@ -214,40 +236,45 @@ class _ReservationState extends State<Reservation> {
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: (dataProvider.getAllSlots.contains(
-                    timeSlots[index],
-                  ))
+                  onTap: (isNotWorking)
                       ? null
-                      : () {
-                          provider.setSelectedSlot(
-                            timeSlots[index],
-                          );
-                        },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color:
-                          (dataProvider.getAllSlots.contains(timeSlots[index]))
-                              ? Colors.red
-                              : (provider.getSelectedSlot == timeSlots[index])
-                                  ? AppColors.secondaryColor
-                                  : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        timeSlots[index],
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: (provider.getSelectedSlot == timeSlots[index])
-                              ? Colors.white
-                              : (dataProvider.getAllSlots
-                                      .contains(timeSlots[index]))
-                                  ? AppColors.primaryColor
-                                  : Colors.black,
+                      : (dataProvider.getAllSlots.contains(
+                          timeSlots[index],
+                        ))
+                          ? null
+                          : () {
+                              provider.setSelectedSlot(
+                                timeSlots[index],
+                              );
+                            },
+                  child: (isNotWorking)
+                      ? SizedBox()
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: (dataProvider.getAllSlots
+                                    .contains(timeSlots[index]))
+                                ? Colors.red
+                                : (provider.getSelectedSlot == timeSlots[index])
+                                    ? AppColors.secondaryColor
+                                    : Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              timeSlots[index],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: (provider.getSelectedSlot ==
+                                        timeSlots[index])
+                                    ? Colors.white
+                                    : (dataProvider.getAllSlots
+                                            .contains(timeSlots[index]))
+                                        ? AppColors.primaryColor
+                                        : Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 );
               },
             ),

@@ -1,14 +1,16 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/core/widget/custom_elevated_button.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctor_home.dart';
-import 'package:salamtk/modules/sign_in/pages/sign_in.dart';
+import '/core/widget/custom_text_form_field.dart';
+import '/core/widget/dividers_word.dart';
+import '/core/services/snack_bar_services.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/sign_up_providers/sign_up_providers.dart';
 import '/core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdditionalSignUpDoctorData extends StatefulWidget {
   const AdditionalSignUpDoctorData({super.key});
@@ -24,6 +26,7 @@ class _AdditionalSignUpDoctorDataState
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
     var provider = Provider.of<SignUpProviders>(context);
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -145,6 +148,70 @@ class _AdditionalSignUpDoctorDataState
                     borderRadius: BorderRadius.circular(10),
                     child: Image.file(provider.certificate!),
                   ),
+            0.01.height.hSpace,
+            DividersWord(
+              text: "Clinic Info",
+            ),
+            0.02.height.hSpace,
+            CustomTextFormField(
+              hintText: local!.phoneNumber,
+              controller: provider.phoneNumberController,
+              suffixIcon: Icons.phone_android_outlined,
+              keyboardType: TextInputType.number,
+              validate: (value) {
+                if (value == null || value.isEmpty) {
+                  return local.emptyPhone;
+                }
+
+                final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                if (!egyptPhoneRegex.hasMatch(value)) {
+                  return local.phoneError;
+                }
+
+                return null;
+              },
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "From : ",
+                  style: theme.labelLarge!.copyWith(
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                Expanded(
+                  child: CustomDropdown(
+                    hintText:
+                        provider.clinicWorkingFrom ?? "Clinic Working From",
+                    items: provider.days,
+                    onChanged: (p0) {
+                      provider.setClinicWorkingFrom(p0!);
+                    },
+                  ),
+                )
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "To : ",
+                  style: theme.labelLarge!.copyWith(
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                Expanded(
+                  child: CustomDropdown(
+                    hintText: provider.clinicWorkingTo ?? "Clinic Working To",
+                    items: provider.days,
+                    onChanged: (p0) {
+                      provider.setClinicWorkingTo(p0!);
+                    },
+                  ),
+                )
+              ],
+            ),
             0.02.height.hSpace,
             SizedBox(
               width: 1.width,
@@ -176,6 +243,12 @@ class _AdditionalSignUpDoctorDataState
                     SnackBarServices.showErrorMessage(
                       context,
                       message: "Please Select Working To",
+                    );
+                  } else if (provider.clinicWorkingTo == null ||
+                      provider.clinicWorkingFrom == null) {
+                    SnackBarServices.showErrorMessage(
+                      context,
+                      message: "Please Check Clinic Info",
                     );
                   } else {
                     provider.confirm(context).then(
