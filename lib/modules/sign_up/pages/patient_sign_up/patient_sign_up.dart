@@ -11,6 +11,7 @@ import '/core/theme/app_colors.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_button.dart';
 import '/core/widget/custom_text_form_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientSignUp extends StatefulWidget {
   const PatientSignUp({super.key});
@@ -24,10 +25,12 @@ class _PatientSignUpState extends State<PatientSignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
@@ -54,9 +57,28 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   CustomTextFormField(
                     hintText: "Email",
                     suffixIcon: Icons.email_outlined,
-                    validate: (value) => Validations.isEmailValid(value ?? ""),
                     controller: emailController,
                   ),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local!.phoneNumber,
+                    controller: phoneNumberController,
+                    suffixIcon: Icons.phone_android_outlined,
+                    validate: (value) {
+                      if (value == null || value.isEmpty) {
+                        return local.emptyPhone;
+                      }
+
+                      final egyptPhoneRegex =
+                      RegExp(r'^0(10|11|12|15)\d{8}$');
+                      if (!egyptPhoneRegex.hasMatch(value)) {
+                        return local.phoneError;
+                      }
+
+                      return null;
+                    },
+                  ),
+
                   0.02.height.hSpace,
                   CustomTextFormField(
                     hintText: "Password",
@@ -89,6 +111,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
                         email: emailController.text,
                         password: passwordController.text,
                         name: nameController.text,
+
                       ).then(
                         (value) {
                           if (value == null) {

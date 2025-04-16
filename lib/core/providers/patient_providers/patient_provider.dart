@@ -308,9 +308,43 @@ class PatientProvider extends ChangeNotifier {
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
 
-
     notifyListeners();
+  }
 
+  List<String> days = [
+    "Monday", // 0
+    "Tuesday", //1
+    "Wednesday", //2
+    "Thursday", // 3
+    "Friday", // 4
+    "Saturday", // 5
+    "Sunday", //6
+    ///Saturday to Tuesday
+    /// 6 -- 1
+  ];
+  List<String> _sortedDays = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+
+  int getDayIndex(int index) {
+    return _sortedDays.indexOf(days[index]);
+  }
+
+  bool checkIsAllow(DateTime date) {
+    int startIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingFrom);
+    int endIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingTo);
+    for (int index = startIndex; index <= endIndex; index++) {
+      if (days[index] == date.weekday.toString()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void setSelectedSlot(String slot) {
@@ -362,5 +396,30 @@ class PatientProvider extends ChangeNotifier {
       uid: doctorPhoneNumber,
     );
     return doctor;
+  }
+
+  bool handleDoctorDayIndex() {
+    List<String> daysData = [];
+    int index = _selectedDate!.weekday;
+    String day = days[index - 1];
+    String startDay = _selectedDoctor!.clinicWorkingFrom;
+    String endDay = _selectedDoctor!.clinicWorkingTo;
+    int startIndex = days.indexOf(startDay);
+    int endIndex = days.indexOf(endDay);
+
+    if (startIndex <= endIndex) {
+      for (var i = startIndex; i <= endIndex; i++) {
+        daysData.add(days[i]);
+      }
+    } else {
+      for (var i = startIndex; i < days.length; i++) {
+        daysData.add(days[i]);
+      }
+      for (var i = 0; i <= endIndex; i++) {
+        daysData.add(days[i]);
+      }
+    }
+
+    return !daysData.contains(day);
   }
 }

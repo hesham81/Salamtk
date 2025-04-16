@@ -8,11 +8,11 @@ import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
-import '../../constant/shared_preference_key.dart';
+
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/storage/doctors_storage.dart';
 import '/models/doctors_models/doctor_model.dart';
-
+import '../../constant/shared_preference_key.dart';
 import '../../utils/auth/auth_collections.dart';
 
 class SignUpProviders extends ChangeNotifier {
@@ -101,7 +101,25 @@ class SignUpProviders extends ChangeNotifier {
     "11:30 PM"
   ];
 
+  final List<String> days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
+
+  String? _clinicWorkingFrom;
+
+  String? _clinicWorkingTo;
+
   String? get name => _name;
+
+  String? get clinicWorkingFrom => _clinicWorkingFrom;
+
+  String? get clinicWorkingTo => _clinicWorkingTo;
 
   String? get workingFrom => this._workingFrom;
 
@@ -220,6 +238,16 @@ class SignUpProviders extends ChangeNotifier {
 
   String? get street => _street;
 
+  void setClinicWorkingFrom(String value) {
+    _clinicWorkingFrom = value;
+    notifyListeners();
+  }
+
+  void setClinicWorkingTo(String value) {
+    _clinicWorkingTo = value;
+    notifyListeners();
+  }
+
   Future<void> _analyseMarkerLocation() async {
     LatLng point = _marker!.point;
     List<Placemark> placemark =
@@ -232,6 +260,8 @@ class SignUpProviders extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  TextEditingController phoneNumberController = TextEditingController();
 
   Future<bool> confirm(BuildContext context) async {
     try {
@@ -270,6 +300,9 @@ class SignUpProviders extends ChangeNotifier {
       );
       await DoctorsCollection.setDoctor(
         DoctorModel(
+          clinicWorkingFrom: clinicWorkingFrom!,
+          clinicWorkingTo: clinicWorkingTo!,
+          clinicPhoneNumber: phoneNumber!,
           workingFrom: workingFrom!,
           workingTo: workingTo!,
           certificateUrl: certificateUrl,

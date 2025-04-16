@@ -28,7 +28,16 @@ class DoctorModel {
 
   bool isVerified;
 
+  String clinicWorkingFrom ;
+
+  String clinicWorkingTo ;
+
+  String clinicPhoneNumber ;
+
   DoctorModel({
+    required this.clinicWorkingFrom,
+    required this.clinicWorkingTo,
+    required this.clinicPhoneNumber,
     this.isVerified = false,
     this.uid,
     required this.workingFrom,
@@ -58,6 +67,9 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      clinicWorkingFrom: json['clinicWorkingFrom'],
+      clinicWorkingTo: json['clinicWorkingTo'],
+      clinicPhoneNumber: json['clinicPhoneNumber'],
       isVerified: json['isVerified'],
       workingFrom: json['workingFrom'],
       workingTo: json['workingTo'],
@@ -95,6 +107,9 @@ class DoctorModel {
   // Method for serializing to JSON
   Map<String, dynamic> toJson() {
     return {
+      'clinicWorkingFrom': clinicWorkingFrom,
+      'clinicWorkingTo': clinicWorkingTo,
+      'clinicPhoneNumber': clinicPhoneNumber,
       'isVerified': isVerified,
       'workingFrom': workingFrom,
       'workingTo': workingTo,
