@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:route_transitions/route_transitions.dart';
-import '/modules/layout/doctor/pages/doctors_money/widget/money_status_widget.dart';
 import '/modules/layout/doctor/pages/doctors_money/widget/transaction_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '/core/constant/app_assets.dart';

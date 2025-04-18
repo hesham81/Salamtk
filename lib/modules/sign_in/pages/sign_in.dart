@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
 import '/core/utils/auth/social_auth.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/extensions/alignment.dart';
@@ -33,26 +36,28 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  void startPhoneVerification() {
-    String phoneNumber = "+201027002208";
-
-    PhoneAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      onCodeSent: (verificationId) {
-        print("Verification ID: $verificationId");
+  Future<void> startPhoneVerification(BuildContext context) async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: '+201027002208',
+      verificationCompleted: (PhoneAuthCredential credential) {
+        SnackBarServices.showSuccessMessage(context,
+            message: 'Verification completed');
       },
-      onVerificationFailed: (error) {
-        print("Verification failed: ${error.message}");
-        // Show an error message to the user.
+      verificationFailed: (FirebaseAuthException e) {
+        SnackBarServices.showErrorMessage(context,
+            message: 'Verification failed');
       },
-      onVerificationCompleted: (credential) {
-        print("Verification completed automatically.");
-        // Sign in the user automatically using the credential.
-        FirebaseAuth.instance.signInWithCredential(credential);
+      codeSent: (String verificationId, int? resendToken) async {
+        SnackBarServices.showSuccessMessage(context, message: "Code Sent");
+        log("Code Will Sent");
+         PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: "123456",
+        );
+        log("Code  Sent");
       },
-      onCodeAutoRetrievalTimeout: (verificationId) {
-        print("Auto-retrieval timed out. Verification ID: $verificationId");
-        // Handle timeout (e.g., prompt the user to enter the OTP manually).
+      codeAutoRetrievalTimeout: (String verificationId) {
+        SnackBarServices.showErrorMessage(context, message: "Timeout");
       },
     );
   }
@@ -144,7 +149,6 @@ class _SignInState extends State<SignIn> {
                                 ScaffoldMessenger.of(context)
                                   ..hideCurrentSnackBar()
                                   ..showSnackBar(snackBar);
-
                               } else if (user == "doctor") {
                                 EasyLoading.dismiss();
                                 await SharedPreference.setString(
@@ -159,7 +163,8 @@ class _SignInState extends State<SignIn> {
                                     inMaterialBanner: true,
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
-                                    message: 'Welcome Back ${usernameController.text}',
+                                    message:
+                                        'Welcome Back ${usernameController.text}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -182,7 +187,8 @@ class _SignInState extends State<SignIn> {
                                     inMaterialBanner: true,
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
-                                    message: 'Welcome Back ${usernameController.text}',
+                                    message:
+                                        'Welcome Back ${usernameController.text}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -258,7 +264,7 @@ class _SignInState extends State<SignIn> {
                           onPressed: () async {
                             if (formNumberKey.currentState!.validate()) {
                               EasyLoading.show();
-                              startPhoneVerification();
+                              await startPhoneVerification(context);
                               EasyLoading.dismiss();
                             }
                           },
@@ -287,9 +293,10 @@ class _SignInState extends State<SignIn> {
                         0.02.width.vSpace,
                         Text(
                           local.loginWithGoogle,
-                          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                color: AppColors.slateBlueColor,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: AppColors.slateBlueColor,
+                                  ),
                         )
                       ],
                     ),

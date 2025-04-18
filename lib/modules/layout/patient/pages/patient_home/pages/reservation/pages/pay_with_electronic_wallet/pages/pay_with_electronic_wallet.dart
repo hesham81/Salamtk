@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/reservation/revision_page/page/revision_page.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/constant/app_constants.dart';
 import '/core/extensions/extensions.dart';
@@ -28,6 +30,11 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
     "assets/icons/etisalat.jpg",
     "assets/icons/orange.jpg",
     "assets/icons/vodafone.jpg",
+  ];
+  final List<String> providerDataString = [
+    "Etisalat Cash",
+    "Orange Cash",
+    "Vodafone Cash",
   ];
 
   void updateOperator(String value) {
@@ -148,11 +155,17 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
             ? null
             : () async {
                 if (formKey.currentState!.validate()) {
+                  provider.setProviderPath(companiesLogos[selectedIndex]);
+                  provider.setProviderName(providerDataString[selectedIndex]);
                   provider.setAppPhoneNumber(selectedPhoneNumber);
                   provider.setUserPhoneNumber(phoneNumber.text);
                   provider.setPhoneNumber(selectedPhoneNumber!);
                   provider.setIsPayValid(true);
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RevisionPage(),
+                      ));
                 }
               },
       ).allPadding(10),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import '/core/utils/auth/auth_collections.dart';
 
@@ -21,6 +23,19 @@ abstract class LoginAuth {
     } on FirebaseAuthException catch (e) {
       e.toString();
       return null;
+    }
+  }
+
+  static Future<String?> loginWithPhoneNumber({
+    required String phoneNumber,
+  }) async {
+    try {
+      var user = await _firebase.signInWithPhoneNumber(
+        phoneNumber,
+      );
+      log("Phone Number $phoneNumber sent ");
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
     }
   }
 
