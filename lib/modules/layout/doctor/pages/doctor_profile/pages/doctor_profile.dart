@@ -106,8 +106,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
-                    icon: Icons.star_border_sharp,
-                    content: doctor!.specialist,
+                    icon: Icons.folder_special_outlined,
+                    content: "${doctor!.specialist} Department",
                   ),
                 ],
               ).hPadding(0.03.width),

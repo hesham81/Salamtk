@@ -24,11 +24,13 @@ class DoctorProfileComponent extends StatelessWidget {
             color: AppColors.secondaryColor,
           ),
           0.03.width.vSpace,
-          Text(
-            content,
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.blackColor ,
-                ),
+          Expanded(
+            child: Text(
+              content,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: AppColors.blackColor ,
+                  ),
+            ),
           ),
         ],
       ),

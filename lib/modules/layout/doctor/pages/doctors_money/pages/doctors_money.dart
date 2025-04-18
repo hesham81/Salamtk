@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctors_money/pages/money_request_model_sheet.dart';
 import '/modules/layout/doctor/pages/doctors_money/widget/transaction_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '/core/constant/app_assets.dart';
@@ -56,6 +57,13 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  _bottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => MoneyRequestModelSheet(totalAmount: doctorsMoney,),
+    );
   }
 
   @override
@@ -133,7 +141,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                                     color: AppColors.secondaryColor,
                                   ),
                         ),
-                        onPressed: () => {},
+                        onPressed: () => _bottomSheet(),
                       ),
                     ],
                   ).hPadding(0.07.width),
