@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '/core/services/snack_bar_services.dart';
 import '/core/utils/storage/screenshots.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/pay_with_electronic_wallet/pages/pay_with_electronic_wallet.dart';
@@ -31,6 +32,10 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? phoneNumber;
   String? selectedPaymentMethod;
+
+  bool reserveToYourSelf = false;
+  bool isConfirm = false;
+  bool pay = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +68,15 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
             ? null
             : () async {
                 if (formKey.currentState!.validate()) {
+                  if (reserveToYourSelf &&
+                      phoneNumberController.text == local.noPhoneNumberSet) {
+                    return SnackBarServices.showErrorMessage(context,
+                        message: local.noPhoneNumberSet);
+                  } else if (reserveToYourSelf &&
+                      nameController.text == local.noName) {
+                    return SnackBarServices.showErrorMessage(context,
+                        message: local.noName);
+                  }
                   EasyLoading.show();
                   await ScreenShotsStorageManager.uploadScreenShot(
                     uid: userId,
@@ -144,7 +158,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 }
               },
         child: Text(
-          local.pay,
+          (!pay) ? "Confirm" : local.pay,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -232,10 +246,61 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                         ),
                       ],
                     ),
+                    0.01.height.hSpace,
+                    Row(
+                      children: [
+                        Text(
+                          local.price,
+                          style: Theme.of(context).textTheme.titleSmall!,
+                        ),
+                        Spacer(),
+                        Text(
+                          "${provider.getDoctor!.price} ${local.egp}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(color: AppColors.secondaryColor),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              0.03.height.hSpace,
+              0.01.height.hSpace,
+              SizedBox(
+                width: double.maxFinite,
+                child: CustomElevatedButton(
+                  child: Text(
+                    "Reserve To ${(!reserveToYourSelf) ? "Your Self" : "Another Patient"}",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: (reserveToYourSelf)
+                              ? AppColors.primaryColor
+                              : AppColors.secondaryColor,
+                        ),
+                  ),
+                  borderColor: AppColors.secondaryColor,
+                  onPressed: () {
+                    setState(() {
+                      reserveToYourSelf = !reserveToYourSelf;
+                      if (reserveToYourSelf) {
+                        nameController.text =
+                            FirebaseAuth.instance.currentUser?.displayName ??
+                                local.noName;
+                        phoneNumberController.text =
+                            FirebaseAuth.instance.currentUser?.phoneNumber ??
+                                local.noPhoneNumberSet;
+                      } else {
+                        nameController.text = "";
+                        phoneNumberController.text = "";
+                      }
+                    });
+                  },
+                  btnColor: (reserveToYourSelf)
+                      ? AppColors.secondaryColor
+                      : AppColors.primaryColor,
+                ),
+              ),
+              0.02.height.hSpace,
               Text(
                 local.name,
                 style: Theme.of(context).textTheme.titleSmall!,
@@ -243,6 +308,9 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               0.01.height.hSpace,
               CustomTextFormField(
                 hintText: local.name,
+                isReadOnly: (nameController.text == local.noName)
+                    ? false
+                    : reserveToYourSelf,
                 controller: nameController,
                 validate: (value) {
                   if (value == null || value.isEmpty) {
@@ -260,6 +328,11 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               0.01.height.hSpace,
               CustomTextFormField(
                 hintText: local.phoneNumber,
+                isReadOnly:
+                    (phoneNumberController.text == local.noPhoneNumberSet ||
+                            phoneNumberController.text == "")
+                        ? false
+                        : reserveToYourSelf,
                 controller: phoneNumberController,
                 suffixIcon: Icons.phone_android_outlined,
                 validate: (value) {

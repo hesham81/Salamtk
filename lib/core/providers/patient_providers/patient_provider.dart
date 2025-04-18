@@ -14,6 +14,23 @@ class PatientProvider extends ChangeNotifier {
   List<String> favourites = [];
   String? _selectedPhoneNumber;
 
+  String _providerPath = "";
+
+  String _providerName = "";
+
+  String get getProviderName => _providerName;
+
+  void setProviderName(String value) {
+    _providerName = value;
+    notifyListeners();
+  }
+
+  void setProviderPath(String value) {
+    _providerPath = value;
+    notifyListeners();
+  }
+
+  String get getProviderPath => _providerPath;
   String? _userPhoneNumber;
 
   bool? _isPayValid;
