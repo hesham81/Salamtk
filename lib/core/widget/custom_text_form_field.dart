@@ -15,6 +15,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final bool isReadOnly;
   final ValidationFunction? onChanged;
+  final ValidationFunction? onSubmit;
 
   const CustomTextFormField({
     super.key,
@@ -28,7 +29,8 @@ class CustomTextFormField extends StatefulWidget {
     this.minLine = 1,
     this.maxLine = 1,
     this.keyboardType = TextInputType.text,
-     this.isReadOnly = false ,
+    this.isReadOnly = false,
+    this.onSubmit,
   });
 
   @override
@@ -43,6 +45,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     var theme = Theme.of(context).textTheme;
 
     return TextFormField(
+      onSaved: widget.onSubmit,
       onChanged: widget.onChanged,
       readOnly: widget.isReadOnly,
       keyboardType: widget.keyboardType,

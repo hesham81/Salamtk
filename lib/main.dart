@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -18,6 +19,14 @@ import 'core/services/loading_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  EmailOTP.config(
+    appName: 'Salamtk',
+    otpType: OTPType.numeric,
+    expiry: 1000000,
+    emailTheme: EmailTheme.v2,
+    appEmail: 'techSupport@salamtk.com',
+    otpLength: 6,
+  );
   configLoading();
   await Supabase.initialize(
     url: StorageKeys.projectUrl,
