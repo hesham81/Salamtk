@@ -1,36 +1,42 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:salamtk/models/doctors_models/money_request.dart';
+import '../../../models/money/money_request_model.dart';
 
 abstract class RequestsCollections {
   static final _firestore = FirebaseFirestore.instance.collection("Requests");
   static final String doctorId = FirebaseAuth.instance.currentUser!.uid;
 
-  static CollectionReference<MoneyRequest> _collectionReference() {
+  static CollectionReference<MoneyRequestModel> _collectionReference() {
     return _firestore.withConverter(
       fromFirestore: (snapshot, options) =>
-          MoneyRequest.fromJson(snapshot.data()!),
+          MoneyRequestModel.fromJson(snapshot.data()!),
       toFirestore: (value, options) => value.toJson(),
     );
   }
 
   static Future<String?> requestAmount({
     required double amount,
+    required String phoneNumber,
   }) async {
     try {
-      MoneyRequest model = MoneyRequest(
+      MoneyRequestModel model = MoneyRequestModel(
         doctorId: doctorId,
-        date: DateTime.now(),
+        phoneNumber: phoneNumber,
         amount: amount,
+        date: DateTime.now(),
+        isVerified: true,
+        requestId: "",
       );
-      await _collectionReference().doc(doctorId).set(model);
+      await _collectionReference().doc(model.requestId).set(model);
     } catch (error) {
       return error.toString();
     }
     return null;
   }
 
-  static Future<MoneyRequest?> getCurrentRequestRunning() async {
+  static Future<MoneyRequestModel?> getCurrentRequestRunning() async {
     try {
       var querySnapshot = await _collectionReference()
           .where("doctorId", isEqualTo: doctorId)
@@ -40,6 +46,27 @@ abstract class RequestsCollections {
       return null;
     } catch (error) {
       return null;
+    }
+  }
+
+  static Future<List<MoneyRequestModel>> getAllRequests() async {
+    try {
+      List<MoneyRequestModel> requests =
+          await _collectionReference().get().then(
+                (value) => value.docs
+                    .map(
+                      (e) => e.data(),
+                    )
+                    .toList(),
+              );
+      List<MoneyRequestModel> doctorsRequests = requests
+          .where(
+            (element) => element.doctorId == FirebaseAuth.instance.currentUser!.uid,
+          )
+          .toList();
+      return doctorsRequests;
+    } catch (error) {
+      return [];
     }
   }
 }

@@ -57,6 +57,7 @@ dependencies:
   flutter_otp_text_field: ^1.5.1+1
   email_otp: ^3.0.2
   otp_timer_button: ^1.1.1
+  readmore: ^3.0.0
 #  linear_calendar:
 
 dev_dependencies:

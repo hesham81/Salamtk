@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salamtk/core/utils/doctors/requests_collections.dart';
+import 'package:salamtk/models/money/money_request_model.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctors_money/pages/money_request_model_sheet.dart';
 import '/modules/layout/doctor/pages/doctors_money/widget/transaction_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -25,16 +29,29 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
   double lossMoney = 0.0;
   List<ReservationModel> _reservations = [];
   bool isLoading = true;
+  List<MoneyRequestModel> _requests = [];
+
+  Future<void> _getAllRequests() async {
+    _requests = await RequestsCollections.getAllRequests();
+    setState(() {});
+  }
 
   Future<void> _calcMoney() async {
+    await _getAllRequests();
     var userId = FirebaseAuth.instance.currentUser!.uid;
+    _requests.forEach(
+      (element) =>
+          (element.status == "Completed") ? lossMoney += element.amount : 0,
+    );
     List<ReservationModel> _reservations =
         await ReservationCollection.getAllReservations();
     for (var reserve in _reservations) {
-      if (reserve.doctorId == userId) {
+      if (reserve.doctorId == userId && reserve.status == "Completed") {
         totalMoney += reserve.price;
       }
     }
+
+    totalMoney -= lossMoney;
 
     lossMoney = totalMoney * 0.15;
     for (var reserve in _reservations) {
@@ -62,7 +79,9 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
   _bottomSheet() {
     showModalBottomSheet(
       context: context,
-      builder: (context) => MoneyRequestModelSheet(totalAmount: doctorsMoney,),
+      builder: (context) => MoneyRequestModelSheet(
+        totalAmount: doctorsMoney,
+      ),
     );
   }
 
@@ -161,25 +180,36 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                     ),
               ),
               0.01.height.hSpace,
-              Skeletonizer(
-                enabled: isLoading,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => TransactionWidget(
-                    name: (isLoading) ? "" : _reservations[index].patientName,
-                    price: (isLoading) ? 0.0 : _reservations[index].price,
-                    date: (isLoading)
-                        ? DateTime.now()
-                        : _reservations[index].date,
-                    color: (_reservations[index].status == "Cancelled")
-                        ? Colors.red
-                        : Colors.green,
-                  ),
-                  separatorBuilder: (context, index) => 0.01.height.hSpace,
-                  itemCount: (isLoading) ? 20 : _reservations.length,
-                ),
-              ),
+              (isLoading)
+                  ? Skeletonizer(
+                      enabled: isLoading,
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => TransactionWidget(
+                          model: MoneyRequestModel(
+                            doctorId: "doctorId",
+                            phoneNumber: "phoneNumber",
+                            amount: 200,
+                            date: DateTime.now(),
+                            isVerified: true,
+                            requestId: "requestId",
+                          ),
+                        ),
+                        separatorBuilder: (context, index) =>
+                            0.01.height.hSpace,
+                        itemCount: 20,
+                      ),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => TransactionWidget(
+                        model: _requests[index],
+                      ),
+                      separatorBuilder: (context, index) => 0.01.height.hSpace,
+                      itemCount: (isLoading) ? 20 : _requests.length,
+                    ),
               0.03.height.hSpace,
             ],
           ).hPadding(0.03.width),

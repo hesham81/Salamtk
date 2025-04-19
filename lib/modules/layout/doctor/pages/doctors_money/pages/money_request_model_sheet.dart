@@ -1,15 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
-import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/services/otp_services.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctors_money/pages/verify_account_to_withdraw_money.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import '/core/services/otp_services.dart';
+import '/modules/layout/doctor/pages/doctors_money/pages/verify_account_to_withdraw_money.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_form_field.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MoneyRequestModelSheet extends StatefulWidget {
@@ -149,7 +147,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                       ),
                 ),
                 Text(
-                  "${(withDrawAmount != 0) ? withDrawAmount.toStringAsFixed(1) : widget.totalAmount} EGP",
+                  "${(amountController.text.isEmpty) ? widget.totalAmount.toStringAsFixed(1) : afterWithDrawAmount} EGP",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.slateBlueColor,
                       ),
@@ -174,8 +172,12 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                VerifyAccountToWithdrawMoney(),
+                            builder: (context) => VerifyAccountToWithdrawMoney(
+                              amount: double.parse(
+                                amountController.text,
+                              ),
+                              phoneNumber: phoneNumberController.text,
+                            ),
                           ),
                         );
                       }

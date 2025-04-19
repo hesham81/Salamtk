@@ -48,7 +48,7 @@ class MoneyRequestModel {
         'doctorId': doctorId,
         'phoneNumber': phoneNumber,
         'amount': amount,
-        'date': date.millisecondsSinceEpoch.toString(),
+        'date': date.millisecondsSinceEpoch,
         'status': status,
         'isVerified': isVerified,
         'screenShot': screenShot,
@@ -62,6 +62,6 @@ class MoneyRequestModel {
   }) {
     var randomNumber = Random().nextInt(1000000);
     this.requestId =
-        phoneNumber + dateTime + doctorId + randomNumber.toString();
+        "$phoneNumber$dateTime$doctorId${randomNumber.toString()}";
   }
 }
