@@ -26,7 +26,8 @@ class LoadingImage extends StatelessWidget {
       placeholder: (context, url) => CircularProgressIndicator(
         color: AppColors.secondaryColor,
       ).center,
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      errorWidget: (context, url, error) => Icon(Icons.error).center,
+
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
+import '/core/utils/doctors/requests_collections.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
 import '/core/services/otp_services.dart';
@@ -9,7 +10,14 @@ import '/core/services/snack_bar_services.dart';
 import '/core/theme/app_colors.dart';
 
 class VerifyAccountToWithdrawMoney extends StatefulWidget {
-  const VerifyAccountToWithdrawMoney({super.key});
+  final double amount;
+  final String phoneNumber;
+
+  const VerifyAccountToWithdrawMoney({
+    super.key,
+    required this.amount,
+    required this.phoneNumber,
+  });
 
   @override
   State<VerifyAccountToWithdrawMoney> createState() =>
@@ -37,16 +45,27 @@ class _VerifyAccountToWithdrawMoneyState
               onSubmit: (value) async {
                 bool? response = await OtpServices.verifyOtp(value);
                 if (response == null) {
-                  SnackBarServices.showErrorMessage(context,
-                      message: "OTP Expired New Code Sent");
+                  SnackBarServices.showErrorMessage(
+                    context,
+                    message: "OTP Expired New Code Sent",
+                  );
                 } else if (response) {
-                  SnackBarServices.showSuccessMessage(context,
-                      message: "OTP Verified Successfully");
+                  EasyLoading.show();
+                  await RequestsCollections.requestAmount(
+                    amount: widget.amount,
+                    phoneNumber: widget.phoneNumber,
+                  );
+                  EasyLoading.dismiss();
+                  SnackBarServices.showSuccessMessage(
+                    context,
+                    message: "Request Sent Successfully",
+                  );
                   Navigator.pop(context);
                 } else {
-                  SnackBarServices.showErrorMessage(context,
-                      message: "OTP Verification Failed");
-                  Navigator.pop(context);
+                  SnackBarServices.showErrorMessage(
+                    context,
+                    message: "OTP Verification Failed",
+                  );
                 }
               },
               keyboardType: TextInputType.number,
@@ -58,7 +77,7 @@ class _VerifyAccountToWithdrawMoneyState
             ),
             0.03.height.hSpace,
             OtpTimerButton(
-              onPressed: () async{
+              onPressed: () async {
                 EasyLoading.show();
                 await OtpServices.sendOtp();
                 EasyLoading.dismiss();
@@ -69,7 +88,7 @@ class _VerifyAccountToWithdrawMoneyState
                 "Resend Code",
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primaryColor,
-                ),
+                    ),
               ),
               duration: 30,
             ),

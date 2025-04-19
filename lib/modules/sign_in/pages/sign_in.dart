@@ -1,17 +1,15 @@
 import 'dart:developer';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
+import '/core/services/snack_bar_services.dart';
 import '/core/utils/auth/social_auth.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/extensions/alignment.dart';
 import '/core/services/local_storage/shared_preference.dart';
-import '/core/utils/auth/phone_auth.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/utils/auth/login_auth.dart';

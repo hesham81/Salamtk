@@ -23,7 +23,7 @@ void main() async {
     appName: 'Salamtk',
     otpType: OTPType.numeric,
     expiry: 1000000,
-    emailTheme: EmailTheme.v2,
+    emailTheme: EmailTheme.v6,
     appEmail: 'techSupport@salamtk.com',
     otpLength: 6,
   );
