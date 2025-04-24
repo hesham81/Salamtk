@@ -27,7 +27,7 @@ class ReservationModel {
 
   String status;
 
-  ReservationModel({
+   ReservationModel({
     required this.cashedPhoneNumber,
     required this.selectedPhoneNumber,
     required this.screenshotUrl,

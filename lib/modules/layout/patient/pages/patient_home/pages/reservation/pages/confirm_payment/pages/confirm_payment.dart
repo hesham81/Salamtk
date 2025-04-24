@@ -1,15 +1,8 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import '/core/services/snack_bar_services.dart';
-import '/core/utils/storage/screenshots.dart';
-import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/pay_with_electronic_wallet/pages/pay_with_electronic_wallet.dart';
-import '/core/utils/reservations/reservation_collection.dart';
-import '/models/reservations_models/reservation_model.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -62,103 +55,19 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
         ),
       ),
       bottomNavigationBar: CustomElevatedButton(
-        onPressed: (nameController.text.isEmpty ||
-                phoneNumberController.text.isEmpty ||
-                provider.getIsPayValid == null)
-            ? null
-            : () async {
-                if (formKey.currentState!.validate()) {
-                  if (reserveToYourSelf &&
-                      phoneNumberController.text == local.noPhoneNumberSet) {
-                    return SnackBarServices.showErrorMessage(context,
-                        message: local.noPhoneNumberSet);
-                  } else if (reserveToYourSelf &&
-                      nameController.text == local.noName) {
-                    return SnackBarServices.showErrorMessage(context,
-                        message: local.noName);
-                  }
-                  EasyLoading.show();
-                  await ScreenShotsStorageManager.uploadScreenShot(
-                    uid: userId,
-                    fileName: provider.getAppPhoneNumber!,
-                    file: provider.getImage!,
-                  );
-                  await ScreenShotsStorageManager.getScreenShotUrl(
-                    uid: userId,
-                    fileName: provider.getAppPhoneNumber!,
-                  ).then((value) {
-                    provider.setScreenshot(value!);
-                  });
-
-                  ReservationModel model = ReservationModel(
-                    screenshotUrl: provider.getScreenshot ?? "",
-                    cashedPhoneNumber: provider.getAppPhoneNumber!,
-                    selectedPhoneNumber: provider.getPhoneNumber!,
-                    patientPhoneNumber: phoneNumberController.text,
-                    reservationId: "",
-                    uid: userId,
-                    doctorId: provider.getDoctor!.uid!,
-                    date: provider.getSelectedDate!,
-                    slot: provider.getSelectedSlot!,
-                    price: provider.getDoctor!.price,
-                    paymentMethod: "Electronic Wallet",
-                    email: emailController.text,
-                    patientName: nameController.text,
-                  );
-
-                  await ReservationCollection.addReservation(model).then(
-                    (value) {
-                      if (value) {
-                        EasyLoading.dismiss();
-                        var snackBar = SnackBar(
-                          elevation: 0,
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          content: AwesomeSnackbarContent(
-                            inMaterialBanner: true,
-                            color: AppColors.secondaryColor,
-                            title: 'Success',
-                            message:
-                                'Reservation Completed , Waiting For Doctor Approval',
-                            contentType: ContentType.success,
-                          ),
-                        );
-
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(snackBar);
-                        provider.disposeData();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectedDoctor(),
-                          ),
-                        );
-                      } else {
-                        EasyLoading.dismiss();
-                        var snackBar = SnackBar(
-                          elevation: 0,
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.transparent,
-                          content: AwesomeSnackbarContent(
-                            inMaterialBanner: true,
-                            color: AppColors.secondaryColor,
-                            title: 'Error',
-                            message: "Error While Reserve Doctor",
-                            contentType: ContentType.failure,
-                          ),
-                        );
-
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(snackBar);
-                      }
-                    },
-                  );
-                }
-              },
+        onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            provider.setReservationPhoneNumber(phoneNumberController.text);
+            provider.setReservationName(nameController.text);
+            provider.setReservationEmail(emailController.text);
+            slideLeftWidget(
+              newPage: PayWithElectronicWallet(),
+              context: context,
+            );
+          }
+        },
         child: Text(
-          (!pay) ? "Confirm" : local.pay,
+          "Next",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -271,7 +180,9 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 width: double.maxFinite,
                 child: CustomElevatedButton(
                   child: Text(
-                    "Reserve To ${(!reserveToYourSelf) ? "Your Self" : "Another Patient"}",
+                    (!reserveToYourSelf)
+                        ? local.reserveToYourSelf
+                        : local.reserveToAnotherPatient,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: (reserveToYourSelf)
                               ? AppColors.primaryColor
@@ -355,7 +266,9 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ),
               0.01.height.hSpace,
               CustomTextFormField(
-                isReadOnly: true,
+                isReadOnly: (FirebaseAuth.instance.currentUser!.email != null)
+                    ? true
+                    : false,
                 hintText: local.email,
                 controller: emailController,
                 suffixIcon: Icons.email_outlined,
@@ -367,43 +280,6 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 },
               ),
               0.01.height.hSpace,
-              Text(
-                local.choosePaymentMethod,
-                style: Theme.of(context).textTheme.titleSmall!,
-              ),
-              0.01.height.hSpace,
-              GestureDetector(
-                onTap: () => slideLeftWidget(
-                  newPage: PayWithElectronicWallet(),
-                  context: context,
-                ),
-                child: CustomContainer(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.payments_outlined,
-                        color: AppColors.secondaryColor,
-                      ),
-                      0.01.width.vSpace,
-                      Expanded(
-                        child: Text(
-                          local.electronicWallet,
-                          style: Theme.of(context).textTheme.titleSmall!,
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: AppColors.secondaryColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // 0.01.height.hSpace,
-              // ChoosePaymentMethodsWidget(
-              //   paymentMethod: local.bank,
-              // ),
-              0.03.height.hSpace,
             ],
           ).hPadding(0.03.width),
         ),

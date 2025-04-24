@@ -27,7 +27,7 @@ class MoneyRequestModel {
   }) {
     _generateId(
       phoneNumber: phoneNumber,
-      dateTime: "${date.year} ${date.month} ${date.day}",
+      dateTime: "${date.year}${date.month}${date.day}",
       doctorId: doctorId,
     );
   }

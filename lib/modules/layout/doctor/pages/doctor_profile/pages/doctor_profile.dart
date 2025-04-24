@@ -7,7 +7,7 @@ import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/doctor/pages/doctor_profile/widget/doctor_profile_component.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DoctorProfile extends StatefulWidget {
   const DoctorProfile({super.key});
 
@@ -38,10 +38,11 @@ class _DoctorProfileState extends State<DoctorProfile> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Profile",
+          local!.profile,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -74,7 +75,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         ),
                   ),
                   Text(
-                    user?.email ?? "No Email",
+                    user?.email ?? local!.noEmail,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: AppColors.secondaryColor,
                         ),
@@ -82,7 +83,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: Icons.person,
-                    content: user?.displayName ?? "No Name",
+                    content: user?.displayName ?? local!.noName,
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
@@ -97,7 +98,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: Icons.attach_money,
-                    content: "${doctor!.price} EGP",
+                    content: "${doctor!.price} ${local!.egp}",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(

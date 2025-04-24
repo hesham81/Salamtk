@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
 import '/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -14,6 +15,8 @@ import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doct
 import '/modules/layout/doctor/widget/patients_list.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -37,22 +40,10 @@ class _DoctorHomeState extends State<DoctorHome> {
         isLoading = false;
       });
     } catch (e) {
-      var snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          inMaterialBanner: true,
-          color: Colors.red,
-          title: 'Error',
-          message: "Error loading doctor data",
-          contentType: ContentType.failure,
-        ),
+      SnackBarServices.showErrorMessage(
+        context,
+        message: "Error loading doctor data",
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
       setState(() {
         isLoading = false;
       });
@@ -71,6 +62,7 @@ class _DoctorHomeState extends State<DoctorHome> {
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
 
+    var local = AppLocalizations.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -92,7 +84,7 @@ class _DoctorHomeState extends State<DoctorHome> {
       ),
       appBar: AppBar(
         title: Text(
-          "Home",
+          local!.home,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -126,8 +118,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                       selectableDayPredicate: (date) => date.day != 23,
                     ),
                     0.03.height.hSpace,
-
-                    // Reservations List
                     StreamBuilder(
                       stream: ReservationCollection.getAllPatients(
                         doctorId: user!.uid,
@@ -135,7 +125,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
 
                         if (snapshot.hasError) {
@@ -159,15 +151,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                         return ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => slideLeftWidget(
-                              newPage: DoctorPatientReservationCheck(),
-                              context: context,
-                            ),
-                            child: PatientsList(
-                              model: dateReservations[index],
-                              reservation: dateReservations[index],
-                            ),
+                          itemBuilder: (context, index) => PatientsList(
+                            model: dateReservations[index],
+                            reservation: dateReservations[index],
                           ),
                           separatorBuilder: (context, index) =>
                               0.01.height.hSpace,

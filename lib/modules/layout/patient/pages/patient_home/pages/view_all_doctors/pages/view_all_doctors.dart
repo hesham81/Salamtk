@@ -10,6 +10,7 @@ import '/core/utils/doctors/doctors_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
 import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ViewAllDoctors extends StatefulWidget {
   const ViewAllDoctors({super.key});
@@ -44,10 +45,11 @@ class _ViewAllDoctorsState extends State<ViewAllDoctors> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "All Doctors",
+          local!.allDoctors,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

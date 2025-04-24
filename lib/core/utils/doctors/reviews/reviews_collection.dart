@@ -143,6 +143,7 @@ abstract class ReviewsCollection {
           }
         }
       }
+
       return Left(allReviews);
     } catch (error) {
       return Right(error.toString());

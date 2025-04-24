@@ -8,7 +8,12 @@ import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CallUs extends StatelessWidget {
-  const CallUs({super.key});
+  final bool isPatient;
+
+  const CallUs({
+    super.key,
+    this.isPatient = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +92,11 @@ class CallUs extends StatelessWidget {
             0.01.height.hSpace,
             GestureDetector(
               onTap: () async {
-                await LaunchersClasses.openWhatsApp("+201027002208");
+                await LaunchersClasses.openWhatsApp(
+                  (isPatient)
+                      ? "+2${AppConstants.phoneNumber1}"
+                      : "+2${AppConstants.phoneNumber2}",
+                );
               },
               child: CustomContainer(
                 child: Row(
@@ -98,7 +107,9 @@ class CallUs extends StatelessWidget {
                     ),
                     0.01.width.vSpace,
                     Text(
-                      "01027002208",
+                        (isPatient)
+                            ? AppConstants.phoneNumber1
+                            : AppConstants.phoneNumber2,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.blackColor,
                           ),
@@ -110,7 +121,7 @@ class CallUs extends StatelessWidget {
             0.01.height.hSpace,
             GestureDetector(
               onTap: () async {
-                await LaunchersClasses.openFacebook("100015005379859");
+                await LaunchersClasses.openFacebook("61572844967010");
               },
               child: CustomContainer(
                 child: Row(

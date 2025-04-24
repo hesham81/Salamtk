@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/extensions/alignment.dart';
 import '/core/functions/location_services.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/filtered_doctors/pages/filtered_cities/pages/filtered_cities.dart';
@@ -223,32 +225,30 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
-            SizedBox(
-              width: double.maxFinite,
-              child: CustomElevatedButton(
-                child: Row(
-                  children: [
-                    0.01.width.vSpace,
-                    Text(
-                      local.joinUs,
-                      style: theme.textTheme.labelLarge!.copyWith(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
+            CustomElevatedButton(
+              child: Row(
+                children: [
+                  Icon(
+                    FontAwesomeIcons.userDoctor,
+                    color: AppColors.primaryColor,
+                  ),
+                  0.01.width.vSpace,
+                  Text(
+                    local.joinUs,
+                    style: theme.textTheme.labelLarge!.copyWith(
                       color: AppColors.primaryColor,
                     ),
-                    0.03.width.vSpace,
-                  ],
-                ),
-                onPressed: () {
-                  slideLeftWidget(
-                    newPage: DoctorSignUp(),
-                    context: context,
-                  );
-                },
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primaryColor,
+                  ),
+                ],
+              ).hPadding(0.1.width),
+              onPressed: () => slideLeftWidget(
+                newPage: DoctorSignUp(),
+                context: context,
               ),
             ),
             (searchList.isEmpty)
@@ -298,7 +298,17 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       provider.setSelectedDoctor(
-                        searchList.isEmpty ? doctors[index] : searchList[index],
+                        searchList.isEmpty
+                            ? doctors
+                                .where(
+                                  (element) => element.isVerified == true,
+                                )
+                                .toList()[index]
+                            : searchList
+                                .where(
+                                  (element) => element.isVerified == true,
+                                )
+                                .toList()[index],
                       );
                       slideLeftWidget(
                         newPage: SelectedDoctor(),
@@ -308,16 +318,40 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                     child: MostDoctorsBooked(
                       displayFavouriteIcon: true,
                       model: searchList.isEmpty
-                          ? doctors[index]
-                          : searchList[index],
+                          ? doctors
+                              .where(
+                                (element) => element.isVerified == true,
+                              )
+                              .toList()[index]
+                          : searchList
+                              .where(
+                                (element) => element.isVerified == true,
+                              )
+                              .toList()[index],
                     ),
                   ),
                   separatorBuilder: (context, index) => 0.01.height.hSpace,
                   itemCount: searchList.isEmpty
-                      ? (doctors.length > 3)
+                      ? (doctors
+                                  .where(
+                                    (element) => element.isVerified == true,
+                                  )
+                                  .toList()
+                                  .length >
+                              3)
                           ? 3
-                          : doctors.length
-                      : searchList.length,
+                          : doctors
+                              .where(
+                                (element) => element.isVerified == true,
+                              )
+                              .toList()
+                              .length
+                      : searchList
+                          .where(
+                            (element) => element.isVerified == true,
+                          )
+                          .toList()
+                          .length,
                 );
               },
             ),

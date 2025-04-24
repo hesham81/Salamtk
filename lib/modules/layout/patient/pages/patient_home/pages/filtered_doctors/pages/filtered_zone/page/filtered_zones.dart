@@ -7,6 +7,7 @@ import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
 import '/modules/layout/patient/pages/patient_home/pages/view_all_doctors/pages/view_all_doctors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilteredZones extends StatefulWidget {
   const FilteredZones({super.key});
@@ -54,10 +55,11 @@ class _FilteredZonesState extends State<FilteredZones> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Zones",
+          local!.zones,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

@@ -1,18 +1,31 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:salamtk/main.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/reservations/reservation_collection.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/models/doctors_models/doctor_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientProvider extends ChangeNotifier {
   DoctorModel? _selectedDoctor;
   String? _selectedSlot;
   List<String> favourites = [];
   String? _selectedPhoneNumber;
+  String? _reservationPhoneNumber;
+
+  String? _reservationName;
+
+  String? _reservationEmail;
+
+  String? get reservationName => _reservationName;
+
+  String? get reservationEmail => _reservationEmail;
+
+  String? get reservationPhoneNumber => _reservationPhoneNumber;
 
   String _providerPath = "";
 
@@ -20,6 +33,18 @@ class PatientProvider extends ChangeNotifier {
 
   String get getProviderName => _providerName;
 
+  void setReservationName(String value) {
+    _reservationName = value;
+    notifyListeners();
+  }
+  void setReservationEmail(String value) {
+    _reservationEmail = value;
+    notifyListeners();
+  }
+  void setReservationPhoneNumber(String value) {
+    _reservationPhoneNumber = value;
+    notifyListeners();
+  }
   void setProviderName(String value) {
     _providerName = value;
     notifyListeners();
@@ -111,132 +136,133 @@ class PatientProvider extends ChangeNotifier {
   }
 
   File? get getImage => _image;
+  static var local = AppLocalizations.of(navigationKey.currentContext!);
 
   List<ReservationModel> _reservations = [];
   List<Map<String, dynamic>> categories = [
     // First Screen
     {
       "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
-      "text": "Obstetrics",
+      "text": local!.obstetrics,
       "color": Colors.orangeAccent,
     },
     {
       "icon": "assets/icons/categorize/dentist.jpg",
-      "text": "Teeth",
+      "text": local!.teeth,
       "color": Colors.orangeAccent,
     },
     {
       "icon": "assets/icons/categorize/Urology.jpg",
       // Assuming this is for Urology
-      "text": "Urology",
+      "text": local!.urology,
       "color": Colors.red,
     },
     {
       "icon": "assets/icons/lung.png",
-      "text": "Lung",
+      "text": local!.lung,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Pediatrics.jpg",
       // Assuming this is for Pediatrics
-      "text": "Pediatrics",
+      "text": local!.pediatrics,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/psychologist.jpg",
-      "text": "Psychiatry",
+      "text": local!.psychiatry,
       "color": Colors.blue,
     },
     {
       "icon": "assets/icons/categorize/ENT.jpg", // Assuming this is for ENT
-      "text": "Ear, Nose & Throat (ENT)",
+      "text": local!.ent,
       "color": Colors.redAccent,
     },
     {
       "icon": "assets/icons/categorize/Dermatology.jpg",
-      "text": "Dermatology",
+      "text": local!.dermatology,
       "color": Colors.orangeAccent,
     },
 
     // Second Screen
     {
       "icon": "assets/icons/categorize/Orthopedics.jpg",
-      "text": "Orthopedics",
+      "text": local!.orthopedics,
       "color": AppColors.secondaryColor,
     },
     {
       "icon": "assets/icons/categorize/Ophthalmology.jpg",
-      "text": "Eye",
+      "text": local!.eye,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Cardiology.jpg",
-      "text": "Heart",
+      "text": local!.heart,
       "color": Colors.red,
     },
     {
       "icon": "assets/icons/categorize/Nutritionist.jpg",
-      "text": "Nutritionist",
+      "text": local!.nutritionist,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
       // Assuming this is for Family Medicine & Allergy
-      "text": "Family Medicine & Allergy",
+      "text": local!.familyMedicineAndAllergy,
       "color": Colors.orangeAccent,
     },
     {
       "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
       // Assuming this is for Orthopedic & Spinal Surgery
-      "text": "Orthopedic ",
+      "text": local!.orthopedics,
       "color": Colors.redAccent,
     },
     {
       "icon": "assets/icons/categorize/Gastroenterology.jpg",
       // Assuming this is for Gastroenterology
-      "text": "Gastroenterology",
+      "text": local!.gastroenterology,
       "color": Colors.orangeAccent,
     },
 
     // Third Screen
     {
       "icon": "assets/icons/elbatna_icon.jpg",
-      "text": "Internal Medicine",
+      "text": local!.theInterior,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/surgery_icon.jpg",
-      "text": "Surgery",
+      "text": local!.surgery,
       "color": Colors.blue,
     },
     {
       "icon": "assets/icons/categorize/Acupuncture.jpg",
       // Assuming this is for Acupuncture
-      "text": "Acupuncture",
+      "text": local!.acupuncture,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Vascular Surgery.jpg",
       // Assuming this is for Vascular Surgery
-      "text": "Vascular Surgery",
+      "text": local!.vascularSurgery,
       "color": Colors.blueAccent,
     },
     {
       "icon": "assets/icons/categorize/Nephrology.jpg",
       // Assuming this is for Nephrology
-      "text": "Nephrology",
+      "text": local!.nephrology,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Radiology.jpg",
       // Assuming this is for Radiology
-      "text": "Radiology",
+      "text": local!.radiology,
       "color": Colors.orangeAccent,
     },
     {
       "icon": "assets/icons/categorize/Endocrinology.jpg",
       // Assuming this is for Endocrinology
-      "text": "Endocrinology",
+      "text": local!.endocrinology,
       "color": Colors.orangeAccent,
     },
 
@@ -244,25 +270,25 @@ class PatientProvider extends ChangeNotifier {
     {
       "icon": "assets/icons/categorize/Genetics.jpg",
       // Assuming this is for Genetics
-      "text": "Genetics",
+      "text": local!.genetics,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Speech Therapy.jpg",
       // Assuming this is for Speech Therapy
-      "text": "Speech Therapy",
+      "text": local!.speechTherapy,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Pain Management.jpg",
       // Assuming this is for Pain Management
-      "text": "Pain Management",
+      "text": local!.painManagement,
       "color": Colors.green,
     },
     {
       "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
       // Assuming this is for Cosmetic Surgery
-      "text": "Cosmetic Surgery",
+      "text": local!.cosmeticSurgery,
       "color": Colors.green,
     },
   ];

@@ -12,10 +12,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MoneyRequestModelSheet extends StatefulWidget {
   final double totalAmount;
+  final String phoneNumber;
 
   const MoneyRequestModelSheet({
     super.key,
     required this.totalAmount,
+    required this.phoneNumber,
   });
 
   @override
@@ -45,7 +47,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
           children: [
             0.01.height.hSpace,
             Text(
-              "Money Request",
+              local!.moneyRequest,
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: AppColors.slateBlueColor,
                   ),
@@ -53,7 +55,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
             0.01.height.hSpace,
             Divider(),
             CustomTextFormField(
-              hintText: "Amount",
+              hintText: local.amount,
               controller: amountController,
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -82,11 +84,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                       "No Phone Number"
                   : "Phone Number",
               controller: phoneNumberController,
-              isReadOnly: (isSelected)
-                  ? false
-                  : (FirebaseAuth.instance.currentUser?.phoneNumber != null)
-                      ? true
-                      : false,
+              isReadOnly: (isSelected) ? false : true,
               keyboardType: TextInputType.phone,
               suffixIcon: Icons.phone,
               validate: (value) {
@@ -105,8 +103,8 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
             0.01.height.hSpace,
             AnimatedButton(
               borderRadius: 25,
-              selectedText: "Your Phone Number",
-              text: "Another Phone Number",
+              selectedText: local.yourPhoneNumber,
+              text: local.anotherPhoneNumber,
               textStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
                     color: AppColors.primaryColor,
                   ),
@@ -114,6 +112,11 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
               isReverse: true,
               isSelected: isSelected,
               onPress: () {
+                if (isSelected) {
+                  phoneNumberController.text = widget.phoneNumber;
+                } else {
+                  phoneNumberController.clear();
+                }
                 setState(() {
                   isSelected = !isSelected;
                 });
@@ -124,13 +127,13 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
             Row(
               children: [
                 Text(
-                  "Total Amount: ",
+                  "${local.totalAmount}: ",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),
                 ),
                 Text(
-                  "${widget.totalAmount.toStringAsFixed(1)} EGP",
+                  "${widget.totalAmount.toStringAsFixed(1)} ${local.egp}",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.slateBlueColor,
                       ),
@@ -141,13 +144,13 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
             Row(
               children: [
                 Text(
-                  "After WithDraw Amount: ",
+                  "${local.afterWithdrawAmount}: ",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),
                 ),
                 Text(
-                  "${(amountController.text.isEmpty) ? widget.totalAmount.toStringAsFixed(1) : afterWithDrawAmount} EGP",
+                  "${(amountController.text.isEmpty) ? widget.totalAmount.toStringAsFixed(1) : afterWithDrawAmount.toStringAsFixed(1)} ${local.egp}",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.slateBlueColor,
                       ),
@@ -161,7 +164,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                 Expanded(
                   child: CustomElevatedButton(
                     child: Text(
-                      "Request",
+                      local.request,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.primaryColor,
                           ),
@@ -188,7 +191,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                 Expanded(
                   child: CustomElevatedButton(
                     child: Text(
-                      "Cancel",
+                      local.cancel,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.primaryColor,
                           ),

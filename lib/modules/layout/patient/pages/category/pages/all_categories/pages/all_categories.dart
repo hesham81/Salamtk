@@ -4,6 +4,7 @@ import '/core/extensions/extensions.dart';
 import '/modules/layout/patient/pages/patient_home/widget/category_widget.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AllCategories extends StatefulWidget {
   const AllCategories({super.key});
@@ -16,10 +17,11 @@ class _AllCategoriesState extends State<AllCategories> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Categories",
+          local!.categories,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

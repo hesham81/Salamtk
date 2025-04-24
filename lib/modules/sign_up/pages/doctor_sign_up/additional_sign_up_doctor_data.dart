@@ -30,7 +30,7 @@ class _AdditionalSignUpDoctorDataState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Fill Profile",
+          local!.fillProfile,
           style: theme.titleMedium!.copyWith(
             color: AppColors.primaryColor,
           ),
@@ -81,14 +81,14 @@ class _AdditionalSignUpDoctorDataState
             Row(
               children: [
                 Text(
-                  "From : ",
+                  "${local.workingFrom} : ",
                   style: theme.labelLarge!.copyWith(
                     color: AppColors.secondaryColor,
                   ),
                 ),
                 Expanded(
                   child: CustomDropdown(
-                    hintText: provider.workingFrom ?? "Working From",
+                    hintText: provider.workingFrom ?? local.workingFrom,
                     items: provider.timeSlots,
                     onChanged: (p0) {
                       provider.setWorkingFrom(p0!);
@@ -101,14 +101,14 @@ class _AdditionalSignUpDoctorDataState
             Row(
               children: [
                 Text(
-                  "To : ",
+                  "${local.workingTo} : ",
                   style: theme.labelLarge!.copyWith(
                     color: AppColors.secondaryColor,
                   ),
                 ),
                 Expanded(
                   child: CustomDropdown(
-                    hintText: provider.workingTo ?? "Working To",
+                    hintText: provider.workingTo ?? local.workingTo,
                     items: provider.workingToList,
                     onChanged: (p0) {
                       provider.setWorkingTo(p0!);
@@ -123,7 +123,7 @@ class _AdditionalSignUpDoctorDataState
                 children: [
                   0.02.width.vSpace,
                   Text(
-                    "Upload Certificate",
+                    local.uploadCertificate,
                     style: theme.titleSmall!.copyWith(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
@@ -150,7 +150,7 @@ class _AdditionalSignUpDoctorDataState
                   ),
             0.01.height.hSpace,
             DividersWord(
-              text: "Clinic Info",
+              text: local.clinicInfo,
             ),
             0.02.height.hSpace,
             CustomTextFormField(
@@ -175,7 +175,7 @@ class _AdditionalSignUpDoctorDataState
             Row(
               children: [
                 Text(
-                  "From : ",
+                  "${local.from} : ",
                   style: theme.labelLarge!.copyWith(
                     color: AppColors.secondaryColor,
                   ),
@@ -183,7 +183,7 @@ class _AdditionalSignUpDoctorDataState
                 Expanded(
                   child: CustomDropdown(
                     hintText:
-                        provider.clinicWorkingFrom ?? "Clinic Working From",
+                        provider.clinicWorkingFrom ?? local.clinicWorkingFrom,
                     items: provider.days,
                     onChanged: (p0) {
                       provider.setClinicWorkingFrom(p0!);
@@ -196,14 +196,14 @@ class _AdditionalSignUpDoctorDataState
             Row(
               children: [
                 Text(
-                  "To : ",
+                  "${local.to} : ",
                   style: theme.labelLarge!.copyWith(
                     color: AppColors.secondaryColor,
                   ),
                 ),
                 Expanded(
                   child: CustomDropdown(
-                    hintText: provider.clinicWorkingTo ?? "Clinic Working To",
+                    hintText: provider.clinicWorkingTo ?? local.clinicWorkingTo,
                     items: provider.days,
                     onChanged: (p0) {
                       provider.setClinicWorkingTo(p0!);
@@ -217,7 +217,7 @@ class _AdditionalSignUpDoctorDataState
               width: 1.width,
               child: CustomElevatedButton(
                 child: Text(
-                  "Confirm",
+                  local.confirm,
                   style: theme.titleSmall!.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
