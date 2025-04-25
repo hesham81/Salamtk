@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../../core/providers/app_providers/language_provider.dart';
 import '/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -29,7 +31,19 @@ class _DoctorHomeState extends State<DoctorHome> {
   final User? user = FirebaseAuth.instance.currentUser;
   late DoctorModel doctor;
   bool isLoading = true;
-  bool isInTheClinic = false; // Track the "in the clinic" state
+  bool isInTheClinic = false;
+  List<ReservationModel> _reservations = [];
+
+  Future<void> _getDoctorsReservations() async {
+    try {
+      final doctorData = await ReservationCollection.getAllReservations();
+      _reservations =
+          doctorData.where((element) => element.doctorId == user!.uid).toList();
+      setState(() {});
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 
   Future<void> getDoctorData() async {
     try {
@@ -53,10 +67,14 @@ class _DoctorHomeState extends State<DoctorHome> {
   @override
   void initState() {
     super.initState();
-    getDoctorData(); // Fetch doctor data on initialization
+    Future.wait([
+      _getDoctorsReservations(),
+      getDoctorData(),
+    ]);
   }
 
-  DateTime? dateTime = DateTime.now();
+  DateTime? _focusedDay = DateTime.now();
+  bool isContainReservations = false;
 
   @override
   Widget build(BuildContext context) {
@@ -103,19 +121,42 @@ class _DoctorHomeState extends State<DoctorHome> {
                 child: Column(
                   children: [
                     0.01.height.hSpace,
-                    CalendarTimeline(
-                      initialDate: dateTime ?? DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(Duration(days: 30)),
-                      onDateSelected: (date) => setState(() {
-                        dateTime = date;
-                      }),
-                      leftMargin: 20,
-                      monthColor: Colors.blueGrey,
-                      dayColor: AppColors.slateBlueColor,
-                      activeDayColor: Colors.white,
-                      activeBackgroundDayColor: AppColors.secondaryColor,
-                      selectableDayPredicate: (date) => date.day != 23,
+                    TableCalendar(
+                      locale:
+                          Provider.of<LanguageProvider>(context).getLanguage,
+                      focusedDay: _focusedDay!,
+                      firstDay: DateTime.now(),
+                      lastDay: DateTime.now().add(
+                        Duration(
+                          days: 90,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(provider.getSelectedDate, day),
+                      onDaySelected: (selectedDay, focusedDay) async {
+                        setState(() {
+                          _focusedDay = focusedDay;
+                        });
+                        provider.setSelectedDate(selectedDay);
+                      },
+                      startingDayOfWeek: StartingDayOfWeek.saturday,
+                      daysOfWeekHeight: 0.05.height,
+                      headerStyle: HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
+                      ),
+                      calendarStyle: CalendarStyle(
+                        todayDecoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: (isContainReservations)
+                              ? AppColors.slateBlueColor
+                              : AppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
                     0.03.height.hSpace,
                     StreamBuilder(
@@ -141,13 +182,16 @@ class _DoctorHomeState extends State<DoctorHome> {
 
                         List<ReservationModel> dateReservations = reservations
                             .where((element) =>
-                                element.date.day == dateTime!.day &&
-                                element.date.month == dateTime!.month &&
+                                element.date.day == _focusedDay!.day &&
+                                element.date.month == _focusedDay!.month &&
                                 element.status == "Approved")
                             .toList();
 
                         provider.setTotalReservations(dateReservations.length);
 
+                        (dateReservations.isEmpty)
+                            ? isContainReservations = true
+                            : isContainReservations = false;
                         return ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),

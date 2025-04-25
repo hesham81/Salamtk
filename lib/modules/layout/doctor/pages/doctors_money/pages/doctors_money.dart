@@ -62,7 +62,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
         totalMoney += reserve.price;
       }
     }
-    lossMoney = requestMoney + totalMoney * 0.15;
+    lossMoney = requestMoney ;
 
 
     doctorsMoney = totalMoney - lossMoney;

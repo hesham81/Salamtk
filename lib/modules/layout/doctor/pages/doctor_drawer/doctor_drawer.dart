@@ -1,7 +1,10 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '../../../../../core/providers/app_providers/language_provider.dart';
 import '/core/constant/app_assets.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -51,6 +54,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
+    var provider = Provider.of<LanguageProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -59,7 +63,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
           children: [
             (isLoading)
                 ? ProfileImageContainer(
-                    name: doctor?.name ?? "No Name",
+                    name: doctor?.name ?? local!.noName,
                     imageUrl: doctor?.imageUrl ?? AppAssets.doctorAvatar,
                     email: FirebaseAuth.instance.currentUser?.email ??
                         "doctor@gmail.com",
@@ -67,7 +71,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                 : Skeletonizer(
                     enabled: isLoading,
                     child: ProfileImageContainer(
-                      name: doctor?.name ?? "No Name",
+                      name: doctor?.name ?? local!.noName,
                       imageUrl: doctor?.imagePath ?? AppAssets.doctorAvatar,
                       email: FirebaseAuth.instance.currentUser?.email ??
                           "doctor@gmail.com",
@@ -161,6 +165,26 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                   ),
                 ),
                 Divider(),
+                CustomDropdown(
+                  hintText: (provider.getLanguage == "en") ? "English" : "Arabic",
+                  items: [
+                    "English",
+                    "Arabic",
+                  ],
+                  onChanged: (p0) {
+                    if (p0 == "English") {
+                      if (provider.getLanguage != "en") {
+                        provider.setLang("en");
+                      }
+                    } else {
+                      if (provider.getLanguage != "ar") {
+                        provider.setLang("ar");
+                      }
+                    }
+                  },
+                ),
+                Divider(),
+
                 CustomElevatedButton(
                   child: Row(
                     children: [

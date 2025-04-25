@@ -69,7 +69,7 @@
   "pleaseEnterReview": "Please type your review",
   "addReview": "Submit Review",
   "reviewAddedSuccessfully": "Review submitted successfully",
-  "isDoctorOnClinic": "Is the doctor available at the clinic?",
+  "isDoctorOnClinic": "Is Doctor On Clinic",
   "confirm": "Confirm",
   "cancel": "Cancel",
   "noDate": "No Date Selected",
@@ -165,7 +165,7 @@
     "zones" : "Zones",
     "application" : "Application",
    "welcomeTo" : "Welcome To",
-   "salamtk":"Salamtk",
+   "salamtk":"Salamutk",
    "signInUp":"Sign In/Up",
    "signInNow":"Sign In Now To Get Started",
    "contactUs":"Contact Us"

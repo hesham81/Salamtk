@@ -2,22 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/extensions/extensions.dart';
-import 'package:salamtk/core/route/route_names.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/core/utils/reservations/reservation_collection.dart';
-import 'package:salamtk/core/utils/reservations/reservation_services_collections.dart';
-import 'package:salamtk/core/widget/custom_elevated_button.dart';
-import 'package:salamtk/models/reservations_models/reservation_model.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/pages/selected_doctor.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
-import '../../../../../../../../../core/providers/patient_providers/patient_provider.dart';
-import '../../../../../../../../../core/theme/app_colors.dart';
-
+import '/core/extensions/extensions.dart';
+import '/core/route/route_names.dart';
+import '/core/services/snack_bar_services.dart';
+import '/core/utils/reservations/reservation_collection.dart';
+import '/core/widget/custom_elevated_button.dart';
+import '/models/reservations_models/reservation_model.dart';
+import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
+import '/core/providers/patient_providers/patient_provider.dart';
+import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../../../../../../../core/utils/storage/screenshots.dart';
+import '/core/utils/storage/screenshots.dart';
 
 class RevisionPage extends StatefulWidget {
   const RevisionPage({super.key});
@@ -34,7 +29,7 @@ class _RevisionPageState extends State<RevisionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Revision Page",
+          local!.revisionPage,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -57,7 +52,7 @@ class _RevisionPageState extends State<RevisionPage> {
             Column(
               children: [
                 Text(
-                  "${local!.totalAmount} : ${provider.getDoctor?.price} ${local.egp}",
+                  "${local.totalAmount} : ${provider.getDoctor?.price} ${local.egp}",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                         fontWeight: FontWeight.bold,
@@ -163,7 +158,9 @@ class _RevisionPageState extends State<RevisionPage> {
                               MaterialPageRoute(
                                 builder: (context) => PatientHome(),
                               ),
-                              (route) =>  route.settings.name == RouteNames.revisionPage ,
+                              (route) =>
+                                  route.settings.name ==
+                                  RouteNames.revisionPage,
                             );
                             provider.disposeData();
                           } else {

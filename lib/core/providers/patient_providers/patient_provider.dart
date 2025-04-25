@@ -16,7 +16,15 @@ class PatientProvider extends ChangeNotifier {
   List<String> favourites = [];
   String? _selectedPhoneNumber;
   String? _reservationPhoneNumber;
+  bool _isContainReservations = false ;
 
+  bool get getIsContainReservations => _isContainReservations;
+
+
+  void setIsContainReservations(bool value) {
+    _isContainReservations = value;
+    notifyListeners();
+  }
   String? _reservationName;
 
   String? _reservationEmail;
