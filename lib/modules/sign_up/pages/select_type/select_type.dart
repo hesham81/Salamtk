@@ -5,12 +5,15 @@ import '/core/constant/app_assets.dart';
 import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
 import '/modules/sign_up/pages/patient_sign_up/patient_sign_up.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 class SelectType extends StatelessWidget {
   const SelectType({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
@@ -32,7 +35,7 @@ class SelectType extends StatelessWidget {
                   ),
                   0.03.width.vSpace,
                   Text(
-                    "Patient",
+                    local!.patient,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
@@ -55,7 +58,7 @@ class SelectType extends StatelessWidget {
                   ),
                   0.03.width.vSpace,
                   Text(
-                    "Doctor",
+                    local.doctor,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],

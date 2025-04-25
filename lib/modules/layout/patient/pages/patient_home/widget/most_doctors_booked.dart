@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:salamtk/core/widget/loading_image.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/functions/favourites.dart';
 import '/core/utils/patients/favoutie_collections.dart';
@@ -20,11 +19,13 @@ class MostDoctorsBooked extends StatefulWidget {
   final DoctorModel model;
   bool isLiked;
   bool displayFavouriteIcon;
+  bool displayDistance;
 
   MostDoctorsBooked({
     super.key,
     required this.model,
     this.isLiked = false,
+    this.displayDistance = false,
     this.displayFavouriteIcon = false,
   });
 
@@ -140,19 +141,21 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                     ),
                   ],
                 ),
-                Text(
-                  LocationServices.calculateDistance(
-                    provider.lo,
-                    LatLng(
-                      widget.model.lat ?? 0,
-                      widget.model.long ?? 0,
-                    ),
-                  ),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: Colors.grey),
-                ),
+                (!widget.displayFavouriteIcon)
+                    ? Text(
+                        LocationServices.calculateDistance(
+                          provider.lo,
+                          LatLng(
+                            widget.model.lat ?? 0,
+                            widget.model.long ?? 0,
+                          ),
+                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.grey),
+                      )
+                    : SizedBox(),
               ],
             ).allPadding(10),
           ),

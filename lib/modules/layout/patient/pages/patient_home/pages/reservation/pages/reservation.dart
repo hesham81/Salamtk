@@ -141,7 +141,7 @@ class _ReservationState extends State<Reservation> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          local!.confirm,
+          local!.reserve,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -177,7 +177,7 @@ class _ReservationState extends State<Reservation> {
                   }
                 },
           child: Text(
-            local.confirm,
+            local.reserve,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppColors.primaryColor,
                 ),

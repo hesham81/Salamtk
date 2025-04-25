@@ -13,13 +13,12 @@ abstract class OtpServices {
     return EmailOTP.getOTP();
   }
 
-  static Future<bool?> verifyOtp(String otp) async {
+  static bool? verifyOtp(String otp)  {
     if (EmailOTP.isOtpExpired()) {
-      sendOtp();
       return null;
     }
 
-    return await EmailOTP.verifyOTP(otp: otp);
+    return  EmailOTP.verifyOTP(otp: otp);
   }
 
   static Future<void> resendOtp() async {

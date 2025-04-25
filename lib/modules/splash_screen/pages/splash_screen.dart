@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salamtk/core/extensions/extensions.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/services/local_storage/shared_preference.dart';
@@ -64,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
               AppAssets.halfCircleLeft,
             ).alignTopLeft(),
           ),
-          Image.asset(AppAssets.logo).center,
+          Image.asset(AppAssets.logo).center.allPadding(18),
           FadeInRight(
             duration: Duration(seconds: 2),
             child: SvgPicture.asset(

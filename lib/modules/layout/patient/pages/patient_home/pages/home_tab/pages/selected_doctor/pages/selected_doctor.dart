@@ -60,7 +60,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
@@ -101,10 +100,12 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                       color: AppColors.primaryColor,
                     ),
               ),
-              onPressed: () => slideLeftWidget(
-                newPage: Reservation(),
-                context: context,
-              ),
+              onPressed: (provider.getDoctor!.isVerified)
+                  ? () => slideLeftWidget(
+                        newPage: Reservation(),
+                        context: context,
+                      )
+                  : null,
             ),
           ),
         ],

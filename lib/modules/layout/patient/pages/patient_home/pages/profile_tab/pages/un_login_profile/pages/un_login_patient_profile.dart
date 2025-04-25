@@ -2,12 +2,14 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_elevated_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UnLoginPatientProfile extends StatelessWidget {
   const UnLoginPatientProfile({super.key});
@@ -15,7 +17,7 @@ class UnLoginPatientProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<LanguageProvider>(context);
-
+    var local = AppLocalizations.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -29,14 +31,14 @@ class UnLoginPatientProfile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Welcome To ",
+                          local!.welcomeTo,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!
                               .copyWith(color: AppColors.blackColor),
                         ),
                         Text(
-                          "Salamtk ",
+                          "${local.salamtk} ",
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!
@@ -44,7 +46,7 @@ class UnLoginPatientProfile extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "Application",
+                            local.application,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -57,7 +59,7 @@ class UnLoginPatientProfile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "Sign In Now To Get Started",
+                          local.signInNow,
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     color: AppColors.slateBlueColor,
@@ -68,7 +70,7 @@ class UnLoginPatientProfile extends StatelessWidget {
                     0.01.height.hSpace,
                     CustomElevatedButton(
                       child: Text(
-                        "Sign In/Up",
+                        local.signInUp,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.primaryColor,
                             ),
@@ -91,7 +93,7 @@ class UnLoginPatientProfile extends StatelessWidget {
                     ),
                     0.01.width.vSpace,
                     Text(
-                      "Contact Us",
+                      local.contactUs,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.blackColor,
                           ),
@@ -100,21 +102,27 @@ class UnLoginPatientProfile extends StatelessWidget {
                 ),
               ),
               0.01.height.hSpace,
-              CustomContainer(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.call,
-                      color: AppColors.secondaryColor,
-                    ),
-                    0.01.width.vSpace,
-                    Text(
-                      "Call Us",
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.blackColor,
-                          ),
-                    ),
-                  ],
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: CallUs(),
+                  context: context,
+                ),
+                child: CustomContainer(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.call,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.callUs,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               0.01.height.hSpace,

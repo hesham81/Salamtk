@@ -1,12 +1,15 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/constant/app_assets.dart';
-import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
-import 'package:salamtk/models/doctors_models/doctor_model.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctors_money/pages/doctors_money.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctors_money/widget/profile_image_container.dart';
+import '../../../../../core/providers/app_providers/language_provider.dart';
+import '/core/constant/app_assets.dart';
+import '/core/utils/doctors/doctors_collection.dart';
+import '/models/doctors_models/doctor_model.dart';
+import '/modules/layout/doctor/pages/doctors_money/pages/doctors_money.dart';
+import '/modules/layout/doctor/pages/doctors_money/widget/profile_image_container.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
@@ -14,6 +17,9 @@ import '/core/widget/custom_elevated_button.dart';
 import '/modules/layout/doctor/pages/doctor_profile/pages/doctor_profile.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
 import '/modules/sign_in/pages/sign_in.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class DoctorDrawer extends StatefulWidget {
   const DoctorDrawer({super.key});
@@ -47,6 +53,8 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
+    var provider = Provider.of<LanguageProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -55,7 +63,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
           children: [
             (isLoading)
                 ? ProfileImageContainer(
-                    name: doctor?.name ?? "No Name",
+                    name: doctor?.name ?? local!.noName,
                     imageUrl: doctor?.imageUrl ?? AppAssets.doctorAvatar,
                     email: FirebaseAuth.instance.currentUser?.email ??
                         "doctor@gmail.com",
@@ -63,7 +71,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                 : Skeletonizer(
                     enabled: isLoading,
                     child: ProfileImageContainer(
-                      name: doctor?.name ?? "No Name",
+                      name: doctor?.name ?? local!.noName,
                       imageUrl: doctor?.imagePath ?? AppAssets.doctorAvatar,
                       email: FirebaseAuth.instance.currentUser?.email ??
                           "doctor@gmail.com",
@@ -84,11 +92,10 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.01.width.vSpace,
                       Text(
-                        "Profile",
-                        style:
-                            Theme.of(context).textTheme.titleSmall!.copyWith(
-                                  color: AppColors.blackColor,
-                                ),
+                        local!.profile,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
                       ),
                     ],
                   ),
@@ -107,11 +114,10 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.01.width.vSpace,
                       Text(
-                        "Money",
-                        style:
-                            Theme.of(context).textTheme.titleSmall!.copyWith(
-                                  color: AppColors.blackColor,
-                                ),
+                        local.money,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
                       ),
                     ],
                   ),
@@ -119,7 +125,9 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                 Divider(),
                 ListTile(
                   onTap: () => slideLeftWidget(
-                    newPage: CallUs(),
+                    newPage: CallUs(
+                      isPatient: false,
+                    ),
                     context: context,
                   ),
                   title: Row(
@@ -130,11 +138,10 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.01.width.vSpace,
                       Text(
-                        "Call Us",
-                        style:
-                            Theme.of(context).textTheme.titleSmall!.copyWith(
-                                  color: AppColors.blackColor,
-                                ),
+                        local.callUs,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
                       ),
                     ],
                   ),
@@ -149,16 +156,35 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.01.width.vSpace,
                       Text(
-                        "Privacy And Policy",
-                        style:
-                            Theme.of(context).textTheme.titleSmall!.copyWith(
-                                  color: AppColors.blackColor,
-                                ),
+                        local.privacy,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Divider(),
+                CustomDropdown(
+                  hintText: (provider.getLanguage == "en") ? "English" : "Arabic",
+                  items: [
+                    "English",
+                    "Arabic",
+                  ],
+                  onChanged: (p0) {
+                    if (p0 == "English") {
+                      if (provider.getLanguage != "en") {
+                        provider.setLang("en");
+                      }
+                    } else {
+                      if (provider.getLanguage != "ar") {
+                        provider.setLang("ar");
+                      }
+                    }
+                  },
+                ),
+                Divider(),
+
                 CustomElevatedButton(
                   child: Row(
                     children: [
@@ -168,11 +194,10 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.02.width.vSpace,
                       Text(
-                        "Logout",
-                        style:
-                            Theme.of(context).textTheme.titleSmall!.copyWith(
-                                  color: AppColors.primaryColor,
-                                ),
+                        local.logout  ,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
                       ),
                     ],
                   ).hPadding(0.05.width),

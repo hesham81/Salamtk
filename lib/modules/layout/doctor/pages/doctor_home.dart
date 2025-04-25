@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../../core/providers/app_providers/language_provider.dart';
 import '/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -14,6 +17,8 @@ import '/modules/layout/doctor/pages/doctor_patient_reservation_check/pages/doct
 import '/modules/layout/doctor/widget/patients_list.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -26,7 +31,19 @@ class _DoctorHomeState extends State<DoctorHome> {
   final User? user = FirebaseAuth.instance.currentUser;
   late DoctorModel doctor;
   bool isLoading = true;
-  bool isInTheClinic = false; // Track the "in the clinic" state
+  bool isInTheClinic = false;
+  List<ReservationModel> _reservations = [];
+
+  Future<void> _getDoctorsReservations() async {
+    try {
+      final doctorData = await ReservationCollection.getAllReservations();
+      _reservations =
+          doctorData.where((element) => element.doctorId == user!.uid).toList();
+      setState(() {});
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 
   Future<void> getDoctorData() async {
     try {
@@ -37,22 +54,10 @@ class _DoctorHomeState extends State<DoctorHome> {
         isLoading = false;
       });
     } catch (e) {
-      var snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          inMaterialBanner: true,
-          color: Colors.red,
-          title: 'Error',
-          message: "Error loading doctor data",
-          contentType: ContentType.failure,
-        ),
+      SnackBarServices.showErrorMessage(
+        context,
+        message: "Error loading doctor data",
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
       setState(() {
         isLoading = false;
       });
@@ -62,15 +67,20 @@ class _DoctorHomeState extends State<DoctorHome> {
   @override
   void initState() {
     super.initState();
-    getDoctorData(); // Fetch doctor data on initialization
+    Future.wait([
+      _getDoctorsReservations(),
+      getDoctorData(),
+    ]);
   }
 
-  DateTime? dateTime = DateTime.now();
+  DateTime? _focusedDay = DateTime.now();
+  bool isContainReservations = false;
 
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);
 
+    var local = AppLocalizations.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -92,7 +102,7 @@ class _DoctorHomeState extends State<DoctorHome> {
       ),
       appBar: AppBar(
         title: Text(
-          "Home",
+          local!.home,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -111,23 +121,44 @@ class _DoctorHomeState extends State<DoctorHome> {
                 child: Column(
                   children: [
                     0.01.height.hSpace,
-                    CalendarTimeline(
-                      initialDate: dateTime ?? DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(Duration(days: 30)),
-                      onDateSelected: (date) => setState(() {
-                        dateTime = date;
-                      }),
-                      leftMargin: 20,
-                      monthColor: Colors.blueGrey,
-                      dayColor: AppColors.slateBlueColor,
-                      activeDayColor: Colors.white,
-                      activeBackgroundDayColor: AppColors.secondaryColor,
-                      selectableDayPredicate: (date) => date.day != 23,
+                    TableCalendar(
+                      locale:
+                          Provider.of<LanguageProvider>(context).getLanguage,
+                      focusedDay: _focusedDay!,
+                      firstDay: DateTime.now(),
+                      lastDay: DateTime.now().add(
+                        Duration(
+                          days: 90,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(provider.getSelectedDate, day),
+                      onDaySelected: (selectedDay, focusedDay) async {
+                        setState(() {
+                          _focusedDay = focusedDay;
+                        });
+                        provider.setSelectedDate(selectedDay);
+                      },
+                      startingDayOfWeek: StartingDayOfWeek.saturday,
+                      daysOfWeekHeight: 0.05.height,
+                      headerStyle: HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
+                      ),
+                      calendarStyle: CalendarStyle(
+                        todayDecoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: (isContainReservations)
+                              ? AppColors.slateBlueColor
+                              : AppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
                     0.03.height.hSpace,
-
-                    // Reservations List
                     StreamBuilder(
                       stream: ReservationCollection.getAllPatients(
                         doctorId: user!.uid,
@@ -135,7 +166,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
 
                         if (snapshot.hasError) {
@@ -149,25 +182,22 @@ class _DoctorHomeState extends State<DoctorHome> {
 
                         List<ReservationModel> dateReservations = reservations
                             .where((element) =>
-                                element.date.day == dateTime!.day &&
-                                element.date.month == dateTime!.month &&
+                                element.date.day == _focusedDay!.day &&
+                                element.date.month == _focusedDay!.month &&
                                 element.status == "Approved")
                             .toList();
 
                         provider.setTotalReservations(dateReservations.length);
 
+                        (dateReservations.isEmpty)
+                            ? isContainReservations = true
+                            : isContainReservations = false;
                         return ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => slideLeftWidget(
-                              newPage: DoctorPatientReservationCheck(),
-                              context: context,
-                            ),
-                            child: PatientsList(
-                              model: dateReservations[index],
-                              reservation: dateReservations[index],
-                            ),
+                          itemBuilder: (context, index) => PatientsList(
+                            model: dateReservations[index],
+                            reservation: dateReservations[index],
                           ),
                           separatorBuilder: (context, index) =>
                               0.01.height.hSpace,

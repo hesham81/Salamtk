@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/utils/doctors/requests_collections.dart';
 import 'package:salamtk/models/money/money_request_model.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctors_money/pages/money_request_model_sheet.dart';
@@ -15,6 +16,7 @@ import '/core/utils/reservations/reservation_collection.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/models/reservations_models/reservation_model.dart';
 import '/core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DoctorsMoney extends StatefulWidget {
   const DoctorsMoney({super.key});
@@ -27,12 +29,20 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
   double totalMoney = 0.0;
   double doctorsMoney = 0.0;
   double lossMoney = 0.0;
+  double requestMoney = 0.0;
+
   List<ReservationModel> _reservations = [];
   bool isLoading = true;
   List<MoneyRequestModel> _requests = [];
+  String doctorPhoneNumber = "";
 
   Future<void> _getAllRequests() async {
     _requests = await RequestsCollections.getAllRequests();
+    doctorPhoneNumber = await DoctorsCollection.searchForDoctorUsingDoctorId(
+            doctorId: FirebaseAuth.instance.currentUser!.uid)
+        .then(
+      (value) => value.phoneNumber,
+    );
     setState(() {});
   }
 
@@ -41,7 +51,9 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
     var userId = FirebaseAuth.instance.currentUser!.uid;
     _requests.forEach(
       (element) =>
-          (element.status == "Completed") ? lossMoney += element.amount : 0,
+          (element.status == "Completed" || element.status == "Pending")
+              ? requestMoney += element.amount
+              : 0,
     );
     List<ReservationModel> _reservations =
         await ReservationCollection.getAllReservations();
@@ -50,15 +62,9 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
         totalMoney += reserve.price;
       }
     }
+    lossMoney = requestMoney ;
 
-    totalMoney -= lossMoney;
 
-    lossMoney = totalMoney * 0.15;
-    for (var reserve in _reservations) {
-      if (reserve.status == "Cancelled") {
-        lossMoney += reserve.price;
-      }
-    }
     doctorsMoney = totalMoney - lossMoney;
     setState(() {});
   }
@@ -80,6 +86,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
     showModalBottomSheet(
       context: context,
       builder: (context) => MoneyRequestModelSheet(
+        phoneNumber: doctorPhoneNumber,
         totalAmount: doctorsMoney,
       ),
     );
@@ -99,10 +106,11 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Money",
+          local!.money,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -144,7 +152,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                       ),
                       0.01.height.hSpace,
                       Text(
-                        "${doctorsMoney.toStringAsFixed(1)} EGP",
+                        "${doctorsMoney.toStringAsFixed(1)} ${local.egp}",
                         style:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
                                   color: AppColors.primaryColor,
@@ -154,7 +162,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
                       CustomElevatedButton(
                         btnColor: AppColors.primaryColor,
                         child: Text(
-                          "Withdraw",
+                          local.withdraw,
                           style:
                               Theme.of(context).textTheme.titleSmall!.copyWith(
                                     color: AppColors.secondaryColor,
@@ -174,7 +182,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
               ),
               0.01.height.hSpace,
               Text(
-                "Transactions",
+                local.transactionsMoney,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: AppColors.blackColor,
                     ),

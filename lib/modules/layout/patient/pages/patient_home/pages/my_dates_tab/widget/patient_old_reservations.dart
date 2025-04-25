@@ -83,7 +83,13 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
           Row(
             children: [
               Text(
-                widget.model.status,
+                (widget.model.status == "Pending")
+                    ? local!.pending
+                    : (widget.model.status == "Cancelled")
+                        ? local!.cancelled
+                        : (widget.model.status == "Approved")
+                            ? local!.approved
+                            : local!.completed,
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: (widget.model.status == "Completed")
                           ? Colors.blue

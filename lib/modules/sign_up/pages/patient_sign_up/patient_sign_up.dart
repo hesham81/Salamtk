@@ -48,20 +48,20 @@ class _PatientSignUpState extends State<PatientSignUp> {
               Column(
                 children: [
                   CustomTextFormField(
-                    hintText: "Name",
+                    hintText: local!.name,
                     suffixIcon: Icons.person_outline,
                     validate: (value) => Validations.isNameValid(value ?? ""),
                     controller: nameController,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Email",
+                    hintText: local.email,
                     suffixIcon: Icons.email_outlined,
                     controller: emailController,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: local!.phoneNumber,
+                    hintText: local.phoneNumber,
                     controller: phoneNumberController,
                     suffixIcon: Icons.phone_android_outlined,
                     validate: (value) {
@@ -81,7 +81,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
 
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Password",
+                    hintText: local.password,
                     isPassword: true,
                     validate: (value) =>
                         Validations.isPasswordValid(value ?? ""),
@@ -89,7 +89,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Confirm Password",
+                    hintText: local.confirmPassword,
                     isPassword: true,
                     validate: (value) => Validations.rePasswordValid(
                       passwordController.text,
@@ -158,7 +158,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
                     }
                   },
                   child: Text(
-                    "Sign Up",
+                    local.signUp,
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
               ).hPadding(0.05.width),
               0.02.height.hSpace,
               CustomTextButton(
-                text: "Have an account? Log in",
+                text: local.haveAnAccountLogin,
                 onPressed: () => Navigator.pop(context),
               )
             ],

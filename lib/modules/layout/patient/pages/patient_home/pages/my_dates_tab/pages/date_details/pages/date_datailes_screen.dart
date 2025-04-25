@@ -72,23 +72,23 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
 
   Future<void> _checkIfUserAddReviewOrNot() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
+    print("Login");
     ReviewsCollection.getMyReviews(patientId: uid).then(
       (value) {
         value.fold(
-          (l) {
-            l.map(
-              (e) {
-                e.reservationId == widget.model.reservationId;
-                _review = e;
-                return;
-              },
-            );
+          (reviews) {
+            for (var review in reviews) {
+              if (review.reservationId == widget.model.reservationId) {
+                _review = review;
+                setState(() {});
+                break;
+              }
+            }
           },
           (r) {},
         );
       },
     );
-    setState(() {});
   }
 
   double rate = 0.0;
@@ -159,7 +159,7 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                     0.01.height.hSpace,
                     MixedTextColors(
                       title: local.paymentMethod,
-                      value: widget.model.paymentMethod,
+                      value: local.electronicWallet,
                     ),
                     0.01.height.hSpace,
                     MixedTextColors(
@@ -179,7 +179,13 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                     0.01.height.hSpace,
                     MixedTextColors(
                       title: local.status,
-                      value: widget.model.status,
+                      value: (widget.model.status == "Pending")
+                          ? local.pending
+                          : (widget.model.status == "Cancelled")
+                              ? local.cancelled
+                              : (widget.model.status == "Approved")
+                                  ? local.approved
+                                  : local.completed,
                       valueColor: (widget.model.status == "Pending")
                           ? Colors.yellow
                           : (widget.model.status == "Cancelled")

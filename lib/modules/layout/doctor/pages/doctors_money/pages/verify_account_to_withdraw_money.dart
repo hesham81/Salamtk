@@ -8,6 +8,7 @@ import '/core/extensions/extensions.dart';
 import '/core/services/otp_services.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VerifyAccountToWithdrawMoney extends StatefulWidget {
   final double amount;
@@ -28,6 +29,7 @@ class _VerifyAccountToWithdrawMoneyState
     extends State<VerifyAccountToWithdrawMoney> {
   @override
   Widget build(BuildContext context) {
+  var local = AppLocalizations.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -43,11 +45,11 @@ class _VerifyAccountToWithdrawMoneyState
             0.03.height.hSpace,
             OtpTextField(
               onSubmit: (value) async {
-                bool? response = await OtpServices.verifyOtp(value);
+                bool? response =  OtpServices.verifyOtp(value);
                 if (response == null) {
                   SnackBarServices.showErrorMessage(
                     context,
-                    message: "OTP Expired New Code Sent",
+                    message: "OTP Expired ",
                   );
                 } else if (response) {
                   EasyLoading.show();
@@ -85,7 +87,7 @@ class _VerifyAccountToWithdrawMoneyState
               backgroundColor: AppColors.secondaryColor,
               textColor: AppColors.primaryColor,
               text: Text(
-                "Resend Code",
+                local!.resendCode,
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primaryColor,
                     ),

@@ -97,9 +97,6 @@ class CheckTransactionsStatus extends StatelessWidget {
                             child: Container(
                               width: double.maxFinite,
                               height: 0.2.height,
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 3),
-                              ),
                             ),
                           ),
                           errorWidget: (context, url, error) => Column(

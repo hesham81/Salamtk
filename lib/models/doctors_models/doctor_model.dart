@@ -1,15 +1,15 @@
 import '/core/constant/app_assets.dart';
 
 class DoctorModel {
-  final String name;
+   String name;
   final String? uid;
-  final double price;
-  final String description;
+   double price;
+   String description;
   final String country;
   final String state;
   final String city;
-  final String specialist;
-  final String phoneNumber;
+   String specialist;
+   String phoneNumber;
   double? rate;
   final double? lat;
   final double? long;

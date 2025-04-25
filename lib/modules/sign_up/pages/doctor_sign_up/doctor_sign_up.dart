@@ -90,14 +90,14 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
               Column(
                 children: [
                   CustomTextFormField(
-                    hintText: "Name",
+                    hintText: local!.name,
                     suffixIcon: Icons.person_outline,
                     validate: (value) => Validations.isNameValid(value ?? ""),
                     controller: nameController,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Description",
+                    hintText: local.description,
                     suffixIcon: Icons.edit,
                     minLine: 3,
                     maxLine: 3,
@@ -106,14 +106,14 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Email",
+                    hintText: local.email,
                     suffixIcon: Icons.email_outlined,
                     validate: (value) => Validations.isEmailValid(value ?? ""),
                     controller: emailController,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Password",
+                    hintText: local.password,
                     isPassword: true,
                     validate: (value) =>
                         Validations.isPasswordValid(value ?? ""),
@@ -121,7 +121,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Confirm Password",
+                    hintText: local.confirmPassword,
                     isPassword: true,
                     validate: (value) => Validations.rePasswordValid(
                       passwordController.text,
@@ -150,7 +150,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: "Price",
+                    hintText: local.price,
                     controller: price,
                     keyboardType: TextInputType.number,
                     suffixIcon: Icons.attach_money_rounded,
@@ -163,7 +163,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ),
                   0.02.height.hSpace,
                   Text(
-                    "Choose Your Specialist ",
+                    local.chooseYourSpecialist,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: AppColors.blackColor,
                         ),
@@ -220,7 +220,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             color: AppColors.secondaryColor,
                           ),
                           Text(
-                            "Select Clinic Location ",
+                            local.selectClinicLocation,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -247,7 +247,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                           if (provider.marker == null) {
                             SnackBarServices.showErrorMessage(
                               context,
-                              message: "Select Location",
+                              message: local.selectClinicLocation,
                             );
                             return;
                           }
@@ -267,7 +267,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                         }
                       },
                       child: Text(
-                        "Sign Up",
+                        local.signUp,
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -278,7 +278,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   ).hPadding(0.05.width),
                   0.02.height.hSpace,
                   CustomTextButton(
-                    text: "Have an account? Log in",
+                    text: local.haveAnAccountLogin,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

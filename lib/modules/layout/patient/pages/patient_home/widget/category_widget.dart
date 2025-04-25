@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:salamtk/core/extensions/align.dart';
+import 'package:salamtk/core/functions/translation_services.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/categoriezed_doctors/pages/categorized_doctors.dart';
+import '../../../../../../core/providers/app_providers/language_provider.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
 
@@ -31,6 +34,7 @@ class CategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var languageProvider = Provider.of<LanguageProvider>(context);
     return Column(
       children: [
         InkWell(
@@ -38,7 +42,7 @@ class CategoryWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => CategorizedDoctors(),
-              settings: RouteSettings(arguments: text), // Pass the arguments here
+              settings: RouteSettings(arguments:(languageProvider.getLanguage == 'ar')? TranslationServices.translateCategoriesToEn(text) :text), // Pass the arguments here
             ),
           ),
           child: Container(
