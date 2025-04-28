@@ -168,7 +168,13 @@
    "salamtk":"Salamutk",
    "signInUp":"Sign In/Up",
    "signInNow":"Sign In Now To Get Started",
-   "contactUs":"Contact Us"
+   "contactUs":"Contact Us",
+   "city":"City",
+   "state":"State",
+   "country":"Country",
+   "address":"Address",
+   "area":"Area",
+   "street":"Street"
 
 
 }

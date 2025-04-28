@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
 import '/core/providers/sign_up_providers/sign_up_providers.dart';
 import '/core/widget/custom_container.dart';
@@ -237,6 +238,27 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                       ),
                     ),
                   ),
+                  0.01.height.hSpace,
+                  (provider.state != null)
+                      ? Column(
+                          children: [
+                            MixedTextColors(
+                              title: local.city,
+                              value: provider.state!.replaceAll("Governorate", ""),
+                            ),
+                            0.01.height.hSpace,
+                            MixedTextColors(
+                              title: local.state,
+                              value: provider.city!,
+                            ),
+                            0.01.height.hSpace,
+                            MixedTextColors(
+                              title: local.address,
+                              value: provider.street!,
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                   0.02.height.hSpace,
                   SizedBox(
                     width: double.maxFinite,
