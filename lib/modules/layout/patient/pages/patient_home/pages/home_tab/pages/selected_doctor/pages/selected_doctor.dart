@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +47,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     isLoading = false;
     setState(() {});
   }
+
 
   @override
   void initState() {

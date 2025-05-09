@@ -49,7 +49,12 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
 
   String? selectedPhoneNumber;
 
-  Future<void> _uploadImage(PatientProvider provider) async {
+  Future<void> _uploadImage(
+    PatientProvider provider, {
+    String? camera,
+    String? gallery,
+    String? option,
+  }) async {
     final ImagePicker picker = ImagePicker();
     XFile? selectedImage;
 
@@ -58,14 +63,14 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          "Choose Option",
+          option ?? "",
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: Icon(Icons.camera_alt),
-              title: Text("Take Photo"),
+              title: Text(camera ?? ""),
               onTap: () async {
                 Navigator.pop(context); // Close the dialog
                 selectedImage =
@@ -81,7 +86,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
             ),
             ListTile(
               leading: Icon(Icons.photo_library),
-              title: Text("Choose from Gallery"),
+              title: Text(gallery ?? ""),
               onTap: () async {
                 Navigator.pop(context); // Close the dialog
                 selectedImage =
@@ -230,6 +235,30 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                 },
               ),
               0.01.height.hSpace,
+              GestureDetector(
+                onTap: () => _uploadImage(
+                  provider,
+                  camera: local.chooseFromCamera,
+                  gallery: local.chooseFromGallery,
+                  option: local.chooseOption,
+                ),
+                child: CustomContainer(
+                  child: Row(
+                    children: [
+                      Text(
+                        local.uploadScreenshot,
+                        style: Theme.of(context).textTheme.titleSmall!,
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.camera_enhance,
+                        color: AppColors.secondaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              0.01.height.hSpace,
               CustomTextFormField(
                 hintText: local.yourNumber,
                 controller: phoneNumber,
@@ -247,25 +276,6 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                   }
                   return null;
                 },
-              ),
-              0.01.height.hSpace,
-              GestureDetector(
-                onTap: () => _uploadImage(provider),
-                child: CustomContainer(
-                  child: Row(
-                    children: [
-                      Text(
-                        local.uploadScreenshot,
-                        style: Theme.of(context).textTheme.titleSmall!,
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.camera_enhance,
-                        color: AppColors.secondaryColor,
-                      ),
-                    ],
-                  ),
-                ),
               ),
               0.01.height.hSpace,
               (provider.getImage == null)

@@ -1,15 +1,12 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
-import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
+import '/core/functions/doctors_profile_methods.dart';
+import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import '/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
 import '/core/providers/sign_up_providers/sign_up_providers.dart';
-import '/core/widget/custom_container.dart';
-import '/core/widget/select_map.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
@@ -17,7 +14,6 @@ import '/core/validations/validations.dart';
 import '/core/widget/custom_text_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/core/theme/app_colors.dart';
-import '/core/utils/auth/sign_up_auth.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_button.dart';
 
@@ -70,6 +66,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
     "Cosmetic Surgery"
   ];
   String? selectedSpecialist;
+  String? selectedCity;
+  String? selectedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -207,35 +205,70 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ],
                   ),
                   0.02.height.hSpace,
-                  GestureDetector(
-                    onTap: () => slideLeftWidget(
-                      newPage: SelectMap(),
-                      context: context,
-                    ),
-                    child: CustomContainer(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.map_outlined,
-                            color: AppColors.secondaryColor,
-                          ),
-                          Text(
-                            local.selectClinicLocation,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  color: AppColors.blackColor,
-                                ),
-                          ),
-                          0.01.width.vSpace,
-                          Icon(
-                            Icons.arrow_forward_ios_sharp,
-                            color: AppColors.secondaryColor,
-                          ),
-                        ],
+                  // GestureDetector(
+                  //   onTap: () => slideLeftWidget(
+                  //     newPage: SelectMap(),
+                  //     context: context,
+                  //   ),
+                  //   child: CustomContainer(
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Icon(
+                  //           Icons.map_outlined,
+                  //           color: AppColors.secondaryColor,
+                  //         ),
+                  //         Text(
+                  //           local.selectClinicLocation,
+                  //           style: Theme.of(context)
+                  //               .textTheme
+                  //               .titleSmall!
+                  //               .copyWith(
+                  //                 color: AppColors.blackColor,
+                  //               ),
+                  //         ),
+                  //         0.01.width.vSpace,
+                  //         Icon(
+                  //           Icons.arrow_forward_ios_sharp,
+                  //           color: AppColors.secondaryColor,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+
+                  0.01.height.hSpace,
+                  CustomDropdown<String>(
+                    items: DoctorsProfileMethods.getAllCities(),
+                    decoration: CustomDropdownDecoration(
+                      closedBorder: Border.all(
+                        color: AppColors.secondaryColor,
+
                       ),
+                      closedBorderRadius: BorderRadius.circular(25)
+                    ),
+                    onChanged: (p0) {
+                      setState(() {
+                        selectedCity = p0;
+                      });
+
+                    },
+                  ),
+                  0.01.height.hSpace,
+                  CustomDropdown<String>(
+                    items:
+                        DoctorsProfileMethods.getGov(city: selectedCity ?? ""),
+                    onChanged: (p0) {
+                      setState(() {
+                        selectedLocation = p0;
+                      });
+                    },
+                    decoration: CustomDropdownDecoration(
+                        closedBorder: Border.all(
+                          color: AppColors.secondaryColor,
+
+                        ),
+                        closedBorderRadius: BorderRadius.circular(25)
                     ),
                   ),
                   0.01.height.hSpace,
@@ -244,7 +277,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                           children: [
                             MixedTextColors(
                               title: local.city,
-                              value: provider.state!.replaceAll("Governorate", ""),
+                              value:
+                                  provider.state!.replaceAll("Governorate", ""),
                             ),
                             0.01.height.hSpace,
                             MixedTextColors(
@@ -265,14 +299,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     child: CustomElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate() &&
-                            selectedSpecialist != null) {
-                          if (provider.marker == null) {
-                            SnackBarServices.showErrorMessage(
-                              context,
-                              message: local.selectClinicLocation,
-                            );
-                            return;
-                          }
+                            selectedSpecialist != null && selectedCity != null && selectedLocation != null) {
                           provider.setDoctorData(
                             name: nameController.text,
                             description: description.text,
@@ -281,6 +308,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             phoneNumber: phoneNumberController.text,
                             price: double.tryParse(price.text) ?? 0.0,
                             specialist: selectedSpecialist!,
+                            city: selectedCity,
+                            state: selectedLocation,
                           );
                           slideLeftWidget(
                             newPage: AdditionalSignUpDoctorData(),

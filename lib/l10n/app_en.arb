@@ -174,7 +174,10 @@
    "country":"Country",
    "address":"Address",
    "area":"Area",
-   "street":"Street"
+   "street":"Street",
+   "chooseFromCamera":"Choose From Camera",
+   "chooseOption" :"Choose Option",
+   "next":"Next"
 
 
 }

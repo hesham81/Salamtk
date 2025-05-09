@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/reservation/pages/reservation.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/reservation/revision_page/page/revision_page.dart';
+import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/route/route_names.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/modules/splash_screen/pages/splash_screen.dart';
@@ -15,6 +16,10 @@ abstract class OnGenerateRoute {
       case RouteNames.revisionPage:
         return MaterialPageRoute(
           builder: (context) => Reservation(),
+        );
+      case RouteNames.signInOtp:
+        return MaterialPageRoute(
+          builder: (context) => Otp(),
         );
 
       default:

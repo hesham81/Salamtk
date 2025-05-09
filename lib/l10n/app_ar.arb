@@ -14,7 +14,7 @@
   "heart": "القلب",
   "lung": "الرئة",
   "teeth": "الأسنان",
-  "eye": "العين",
+  "eye": "العيون",
   "general": "عام",
   "theInterior": "الباطنية",
   "nerves": "الأعصاب",
@@ -47,7 +47,7 @@
   "newWord": "جديد",
   "joinUs": "انضم الآن",
   "pending": "قيد الانتظار",
-  "approved": "متفق عليه",
+  "approved": "مؤكد",
   "cancelled": "ملغي",
   "completed": "مكتمل",
   "favourites": "المفضلة",
@@ -60,7 +60,7 @@
   "medicalAnalysis": "تحليل طبي",
   "noReviewsYet": "لا توجد مراجعات حتى الآن",
   "reserveDay": "يوم الحجز",
-  "yourNumber": "رقــمـك",
+  "yourNumber": "الرقم المحول منه",
   "from": "من",
   "uploadScreenshot": "رفع لقطة شاشة",
   "selectNumber": "اختر الرقم",
@@ -171,5 +171,8 @@
   "country":"دوله",
   "address":"العنوان",
   "area":"الحي",
-  "street":"الشارع"
+  "street":"الشارع",
+   "chooseFromCamera":"التقط صوره",
+   "chooseOption" :"اختر",
+   "next":"التالي"
 }

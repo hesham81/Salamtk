@@ -38,7 +38,7 @@ class PatientPrivacyAndPolicyEn extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              "At Salamatk.com, we respect your privacy and are committed to protecting your personal information.\nBy using the app, you agree to the collection and use of data as outlined in this policy.",
+              "At Salamatk.app, we respect your privacy and are committed to protecting your personal information.\nBy using the app, you agree to the collection and use of data as outlined in this policy.",
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -167,7 +167,7 @@ class PatientPrivacyAndPolicyEn extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              """•	Salamatk.com acts as an intermediary between doctors and patients and does not provide direct medical services.
+              """•	Salamatk.app acts as an intermediary between doctors and patients and does not provide direct medical services.
 •	We are not responsible for any delays or cancellations by the doctor.""",
               style: Theme.of(context).textTheme.titleSmall,
             ),
@@ -177,7 +177,7 @@ class PatientPrivacyAndPolicyEn extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              """•	Salamatk.com reserves the right to modify or update these terms and policies at any time.
+              """•	Salamatk.app reserves the right to modify or update these terms and policies at any time.
 •	Users will be notified of any significant changes via the app or email.""",
               style: Theme.of(context).textTheme.titleSmall,
             ),

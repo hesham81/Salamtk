@@ -18,8 +18,8 @@ class PatientPrivacyAndPolicyAr extends StatelessWidget {
         title: Text(
           local!.privacyAndPolicy,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: AppColors.primaryColor,
-          ),
+                color: AppColors.primaryColor,
+              ),
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -38,10 +38,10 @@ class PatientPrivacyAndPolicyAr extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              "نحن في سلامتك.com نحترم خصوصيتك ونلتزم بحماية معلوماتك الشخصية.\nمن خلال استخدامك للتطبيق، فإنك توافق على جمع واستخدام البيانات كما هو موضح في هذه السياسة.",
+              "نحن في سلامتك.app نحترم خصوصيتك ونلتزم بحماية معلوماتك الشخصية.\nمن خلال استخدامك للتطبيق، فإنك توافق على جمع واستخدام البيانات كما هو موضح في هذه السياسة.",
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             0.01.height.hSpace,
             DividersWord(
@@ -138,9 +138,6 @@ class PatientPrivacyAndPolicyAr extends StatelessWidget {
             0.01.height.hSpace,
 
             // Terms of Use
-            DividersWord(
-              text: "شروط الاستخدام",
-            ),
             0.01.height.hSpace,
             DividersWord(
               text: "التسجيل والاستخدام",
@@ -167,7 +164,7 @@ class PatientPrivacyAndPolicyAr extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              """•	“سلامتك.com” هو وسيط بين الطبيب والمريض ولا يقدم خدمات طبية مباشرة.
+              """•	“سلامتك.app” هو وسيط بين الطبيب والمريض ولا يقدم خدمات طبية مباشرة.
 •	لا نتحمل مسؤولية أي تأخير أو إلغاء من طرف الطبيب.""",
               style: Theme.of(context).textTheme.titleSmall,
             ),
@@ -177,7 +174,7 @@ class PatientPrivacyAndPolicyAr extends StatelessWidget {
             ),
             0.01.height.hSpace,
             Text(
-              """•	تحتفظ “سلامتك.com” بحق تعديل أو تحديث الشروط والسياسات في أي وقت.
+              """•	تحتفظ “سلامتك.app” بحق تعديل أو تحديث الشروط والسياسات في أي وقت.
 •	سيتم إخطار المستخدمين بأي تغييرات جوهرية عبر التطبيق أو البريد الإلكتروني.""",
               style: Theme.of(context).textTheme.titleSmall,
             ),

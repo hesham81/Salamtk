@@ -58,6 +58,11 @@ dependencies:
   email_otp: ^3.0.2
   otp_timer_button: ^1.1.1
   readmore: ^3.0.0
+  firebase_messaging: ^15.2.5
+  flutter_local_notifications: ^19.1.0
+  googleapis_auth: ^2.0.0
+  dio: ^5.8.0+1
+  sms_autofill: ^2.4.1
 #  linear_calendar:
 
 dev_dependencies:

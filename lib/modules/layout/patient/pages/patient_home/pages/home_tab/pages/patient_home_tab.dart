@@ -338,8 +338,8 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                                   )
                                   .toList()
                                   .length >
-                              3)
-                          ? 3
+                              5)
+                          ? 5
                           : doctors
                               .where(
                                 (element) => element.isVerified == true,

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salamtk/core/extensions/extensions.dart';
+import 'package:salamtk/core/utils/fcm_service.dart';
 import 'package:salamtk/core/widget/dividers_word.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
@@ -9,10 +12,12 @@ class DoctorPrivacyAndPolicyAr extends StatefulWidget {
   const DoctorPrivacyAndPolicyAr({super.key});
 
   @override
-  State<DoctorPrivacyAndPolicyAr> createState() => _DoctorPrivacyAndPolicyArState();
+  State<DoctorPrivacyAndPolicyAr> createState() =>
+      _DoctorPrivacyAndPolicyArState();
 }
 
 class _DoctorPrivacyAndPolicyArState extends State<DoctorPrivacyAndPolicyAr> {
+
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
@@ -38,9 +43,8 @@ class _DoctorPrivacyAndPolicyArState extends State<DoctorPrivacyAndPolicyAr> {
             Text(
               "نحن في “سلامتك.com” نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية والمهنية. تهدف هذه السياسة إلى توضيح كيفية جمع واستخدام وحماية بيانات الأطباء الذين يستخدمون منصتنا لتقديم خدماتهم الطبية.",
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             0.01.height.hSpace,
             DividersWord(

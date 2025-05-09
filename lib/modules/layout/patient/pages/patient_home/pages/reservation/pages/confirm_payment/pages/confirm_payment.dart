@@ -67,7 +67,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
           }
         },
         child: Text(
-          "Next",
+          local.next,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

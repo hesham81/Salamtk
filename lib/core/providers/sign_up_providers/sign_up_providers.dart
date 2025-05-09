@@ -141,6 +141,13 @@ class SignUpProviders extends ChangeNotifier {
 
   File? get certificate => _certificate;
 
+  String? _selectedCity;
+  String? _selectedLocation;
+
+  String get selectedLocation => _selectedLocation ?? "";
+
+  String get selectedCity => _selectedCity ?? "";
+
   Future<void> uploadImage() async {
     final ImagePicker picker = ImagePicker();
     XFile? selectedImage;
@@ -188,6 +195,8 @@ class SignUpProviders extends ChangeNotifier {
     required String phoneNumber,
     required double price,
     required String specialist,
+    String? city ,
+    String? state ,
   }) {
     _name = name;
     _description = description;
@@ -196,6 +205,8 @@ class SignUpProviders extends ChangeNotifier {
     _phoneNumber = phoneNumber;
     _price = price;
     _specialist = specialist;
+    _selectedCity = city ;
+    _selectedLocation = state ;
     notifyListeners();
   }
 
@@ -307,18 +318,18 @@ class SignUpProviders extends ChangeNotifier {
           workingTo: workingTo!,
           certificateUrl: certificateUrl,
           imageUrl: imageUrl,
-          area: area!,
+          area: area ?? "",
           rate: 2.5,
           uid: uid,
           lat: _marker?.point.latitude ?? 0,
           long: _marker?.point.longitude ?? 0,
-          street: street!,
+          street: street ?? "",
           name: name!,
           price: price!,
           description: description!,
-          country: country!,
-          state: state!,
-          city: city!,
+          country: country??"مصر",
+          state:_selectedCity ?? _state ??"",
+          city:  _selectedLocation ?? _city ??"",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
         ),

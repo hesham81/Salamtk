@@ -5,8 +5,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_privacy_and_policy/pages/doctor_privacy_and_policy_ar.dart';
+import 'package:salamtk/modules/splash_screen/pages/splash_screen.dart';
 import '../../../../../core/providers/app_providers/language_provider.dart';
 import '../doctor_privacy_and_policy/pages/doctor_privacy_and_policy_en.dart';
+import '../doctors_data_screen/pages/doctors_data_screen.dart';
 import '/core/constant/app_assets.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -150,6 +152,28 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                 Divider(),
                 ListTile(
                   onTap: () => slideLeftWidget(
+                    newPage: DoctorsDataScreen(),
+                    context: context,
+                  ),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.person_4,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        "Doctors",
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  onTap: () => slideLeftWidget(
                       newPage: (provider.getLanguage == "en")
                           ? DoctorPrivacyAndPolicyEn()
                           : DoctorPrivacyAndPolicyAr(),
@@ -213,7 +237,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignIn(),
+                        builder: (context) => SplashScreen(),
                       ),
                       (route) => false,
                     );

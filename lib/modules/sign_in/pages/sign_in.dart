@@ -4,7 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/functions/otp_services.dart';
+import 'package:salamtk/core/providers/app_providers/language_provider.dart';
+import 'package:salamtk/core/utils/auth/phone_auth.dart';
+import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/utils/auth/social_auth.dart';
 import '/core/constant/shared_preference_key.dart';
@@ -34,32 +39,6 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  Future<void> startPhoneVerification(BuildContext context) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+201027002208',
-      verificationCompleted: (PhoneAuthCredential credential) {
-        SnackBarServices.showSuccessMessage(context,
-            message: 'Verification completed');
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        SnackBarServices.showErrorMessage(context,
-            message: 'Verification failed');
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        SnackBarServices.showSuccessMessage(context, message: "Code Sent");
-        log("Code Will Sent");
-         PhoneAuthProvider.credential(
-          verificationId: verificationId,
-          smsCode: "123456",
-        );
-        log("Code  Sent");
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        SnackBarServices.showErrorMessage(context, message: "Timeout");
-      },
-    );
-  }
-
   var formKey = GlobalKey<FormState>();
   var phoneNumberController = TextEditingController();
   var formNumberKey = GlobalKey<FormState>();
@@ -70,6 +49,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
+    var provider = Provider.of<LanguageProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -262,7 +242,25 @@ class _SignInState extends State<SignIn> {
                           onPressed: () async {
                             if (formNumberKey.currentState!.validate()) {
                               EasyLoading.show();
-                              await startPhoneVerification(context);
+                              var res = await PhoneNumberAuth.checkIfExist(
+                                phoneNumber: phoneNumberController.text,
+                              );
+                              if (res != null) {
+                                await OtpServices.sendOtp(
+                                  phoneNumber: phoneNumberController.text,
+                                  lan: "en",
+                                  name: "",
+                                );
+                                slideLeftWidget(
+                                  newPage: Otp(),
+                                  context: context,
+                                );
+                              } else {
+                                SnackBarServices.showErrorMessage(
+                                  context,
+                                  message: "Phone Number Is Not Exist",
+                                );
+                              }
                               EasyLoading.dismiss();
                             }
                           },
