@@ -18,7 +18,7 @@ abstract class RequestDoctorCollection {
   }) async {
     try {
       RequestDoctorModel request = RequestDoctorModel(doctorId: doctorId);
-      await _firestore.doc(request.requestId).set(request.toJson());
+      await _firestore.doc(request.doctorId).set(request.toJson());
     } catch (error) {
       throw Exception(error.toString());
     }
@@ -29,6 +29,25 @@ abstract class RequestDoctorCollection {
     try {
       await _firestore.doc(requestId).update({"status": true});
       await SupervisesDoctorsCollections.addDoctor(doctorId: requestId);
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+  static  Stream<QuerySnapshot<RequestDoctorModel>> getStreamRequests() {
+    return _collectionReference().snapshots();
+  }
+  static Future<void> deleteRequest({
+    required String doctorId,
+  }) async {
+    try {
+      var docs = await _collectionReference().get().then((value) => value.docs);
+      for(var request in docs)
+        {
+          if(request.data().doctorId == doctorId)
+            {
+              await request.reference.delete();
+            }
+        }
     } catch (error) {
       throw Exception(error.toString());
     }

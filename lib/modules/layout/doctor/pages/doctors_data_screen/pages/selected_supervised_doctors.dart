@@ -17,7 +17,7 @@ class SelectedSupervisedDoctors extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Dcotor",
+          "Select Doctor",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

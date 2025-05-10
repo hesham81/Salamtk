@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/extensions/extensions.dart';
 import 'package:salamtk/core/theme/app_colors.dart';
+import 'package:salamtk/core/utils/doctors/request_doctor_collection.dart';
 import 'package:salamtk/core/widget/custom_container.dart';
 import 'package:salamtk/core/widget/custom_elevated_button.dart';
 import 'package:salamtk/core/widget/loading_image.dart';
 import 'package:salamtk/models/doctors_models/doctor_model.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctors_data_screen/pages/doctors_data_screen.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 
 class DoctorsRequest extends StatelessWidget {
@@ -28,8 +32,18 @@ class DoctorsRequest extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          onPressed: () async{
-
+          onPressed: () async {
+            EasyLoading.show();
+            await RequestDoctorCollection.requestDoctor(
+              doctorId: doctor.uid!,
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DoctorsDataScreen(),
+              ),
+            );
+            EasyLoading.dismiss();
           },
         ),
       ),

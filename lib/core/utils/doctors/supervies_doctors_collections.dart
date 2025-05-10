@@ -44,4 +44,8 @@ abstract class SupervisesDoctorsCollections {
       return Future.value(false);
     }
   }
+
+  static Stream<QuerySnapshot<SupervisedDoctorsModel>> getDoctors() {
+    return _collectionRef().snapshots();
+  }
 }
