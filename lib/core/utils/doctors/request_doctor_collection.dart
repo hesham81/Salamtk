@@ -13,6 +13,22 @@ abstract class RequestDoctorCollection {
         toFirestore: (value, options) => value.toJson(),
       );
 
+  static Future<bool> checkIfSupervisedOrRequestedOrNot({
+    required String doctorId,
+  }) async {
+    try {
+      var docs = await _collectionReference().get().then((value) => value.docs);
+      for (var request in docs) {
+        if (request.data().doctorId == doctorId) {
+          return true;
+        }
+      }
+      return false;
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
   static Future<void> requestDoctor({
     required String doctorId,
   }) async {
@@ -23,6 +39,7 @@ abstract class RequestDoctorCollection {
       throw Exception(error.toString());
     }
   }
+
   static Future<void> acceptRequest({
     required String requestId,
   }) async {
@@ -33,21 +50,21 @@ abstract class RequestDoctorCollection {
       throw Exception(error.toString());
     }
   }
-  static  Stream<QuerySnapshot<RequestDoctorModel>> getStreamRequests() {
+
+  static Stream<QuerySnapshot<RequestDoctorModel>> getStreamRequests() {
     return _collectionReference().snapshots();
   }
+
   static Future<void> deleteRequest({
     required String doctorId,
   }) async {
     try {
       var docs = await _collectionReference().get().then((value) => value.docs);
-      for(var request in docs)
-        {
-          if(request.data().doctorId == doctorId)
-            {
-              await request.reference.delete();
-            }
+      for (var request in docs) {
+        if (request.data().doctorId == doctorId) {
+          await request.reference.delete();
         }
+      }
     } catch (error) {
       throw Exception(error.toString());
     }

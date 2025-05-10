@@ -14,6 +14,29 @@ abstract class SupervisesDoctorsCollections {
         toFirestore: (value, options) => value.toJson(),
       );
 
+  static Future<bool> checkIfSupervisedOrRequestedOrNot({
+    required String doctorId,
+  }) async {
+    try {
+      var docs = await _collectionRef().get().then(
+            (value) => value.docs
+                .map(
+                  (e) => e.data(),
+                )
+                .toList(),
+          );
+
+      for (var doc in docs) {
+        if (doc.doctors.contains(doctorId)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
   static Future<void> addDoctor({
     required String doctorId,
   }) async {

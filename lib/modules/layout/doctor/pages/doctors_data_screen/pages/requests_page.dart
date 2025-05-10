@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:salamtk/core/extensions/align.dart';
-import 'package:salamtk/core/extensions/extensions.dart';
-import 'package:salamtk/core/theme/app_colors.dart';
+import '/core/extensions/align.dart';
+import '/core/extensions/extensions.dart';
+import '/core/theme/app_colors.dart';
 import '../../../../../../core/utils/doctors/doctors_collection.dart';
 import '../../../../../../core/utils/doctors/request_doctor_collection.dart';
 import '../../../../../../core/widget/custom_container.dart';
@@ -57,7 +57,7 @@ class _RequestsPageState extends State<RequestsPage> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Text("No r equests doctors found.");
+                  return const Text("No requests doctors found.");
                 }
 
                 List<RequestDoctorModel> supervisedList = snapshot.data!.docs

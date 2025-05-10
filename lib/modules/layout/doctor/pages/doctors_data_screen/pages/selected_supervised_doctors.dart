@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/utils/doctors/request_doctor_collection.dart';
+import 'package:salamtk/core/utils/doctors/supervies_doctors_collections.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctors_data_screen/pages/doctors_request.dart';
 import '/core/extensions/extensions.dart';
 import '/core/theme/app_colors.dart';
@@ -9,8 +11,16 @@ import '/core/utils/doctors/doctors_collection.dart';
 import '/core/widget/custom_container.dart';
 import '/models/doctors_models/doctor_model.dart';
 
-class SelectedSupervisedDoctors extends StatelessWidget {
+class SelectedSupervisedDoctors extends StatefulWidget {
   const SelectedSupervisedDoctors({super.key});
+
+  @override
+  State<SelectedSupervisedDoctors> createState() =>
+      _SelectedSupervisedDoctorsState();
+}
+
+class _SelectedSupervisedDoctorsState extends State<SelectedSupervisedDoctors> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +61,7 @@ class SelectedSupervisedDoctors extends StatelessWidget {
                   (element) =>
                       element.uid == FirebaseAuth.instance.currentUser!.uid,
                 );
+
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -58,6 +69,7 @@ class SelectedSupervisedDoctors extends StatelessWidget {
                     onTap: () => slideLeftWidget(
                         newPage: DoctorsRequest(
                           doctor: doctors[index],
+
                         ),
                         context: context),
                     child: CustomContainer(

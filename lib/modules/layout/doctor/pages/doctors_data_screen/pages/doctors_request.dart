@@ -11,8 +11,11 @@ import 'package:salamtk/core/widget/loading_image.dart';
 import 'package:salamtk/models/doctors_models/doctor_model.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctors_data_screen/pages/doctors_data_screen.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class DoctorsRequest extends StatelessWidget {
+import '../../../../../../core/utils/doctors/supervies_doctors_collections.dart';
+
+class DoctorsRequest extends StatefulWidget {
   final DoctorModel doctor;
 
   const DoctorsRequest({
@@ -21,30 +24,71 @@ class DoctorsRequest extends StatelessWidget {
   });
 
   @override
+  State<DoctorsRequest> createState() => _DoctorsRequestState();
+}
+
+class _DoctorsRequestState extends State<DoctorsRequest> {
+  Future<void> _checkIfSupervisedOrRequestedOrNot({
+    required String doctorId,
+  }) async {
+    bool supervised =
+        await SupervisesDoctorsCollections.checkIfSupervisedOrRequestedOrNot(
+      doctorId: doctorId,
+    );
+    bool requested =
+        await RequestDoctorCollection.checkIfSupervisedOrRequestedOrNot(
+      doctorId: doctorId,
+    );
+    setState(() {
+      isNotAllowed = (requested || supervised) ? true : false;
+      isLoading = false;
+    });
+  }
+
+  bool isNotAllowed = false;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.wait([
+      _checkIfSupervisedOrRequestedOrNot(
+        doctorId: widget.doctor.uid!,
+      ),
+    ]);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomContainer(
-        child: CustomElevatedButton(
-          child: Text(
-            "Request",
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+      bottomNavigationBar: Skeletonizer(
+        enabled: isLoading,
+        child: CustomContainer(
+          child: CustomElevatedButton(
+            child: Text(
+              "Request",
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            onPressed: (isNotAllowed)
+                ? null
+                : () async {
+                    EasyLoading.show();
+                    await RequestDoctorCollection.requestDoctor(
+                      doctorId: widget.doctor.uid!,
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorsDataScreen(),
+                      ),
+                    );
+                    EasyLoading.dismiss();
+                  },
           ),
-          onPressed: () async {
-            EasyLoading.show();
-            await RequestDoctorCollection.requestDoctor(
-              doctorId: doctor.uid!,
-            );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DoctorsDataScreen(),
-              ),
-            );
-            EasyLoading.dismiss();
-          },
         ),
       ),
       appBar: AppBar(
@@ -63,49 +107,49 @@ class DoctorsRequest extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            0.01.height.hSpace,
-            // Image.asset(
-            //   "assets/images/request.jpg",
-            // ),
-            CircleAvatar(
-              radius: 150,
-              backgroundImage: CachedNetworkImageProvider(
-                doctor.imageUrl ?? "",
+        child: Skeletonizer(
+          enabled: isLoading,
+          child: Column(
+            children: [
+              0.01.height.hSpace,
+              CircleAvatar(
+                radius: 150,
+                backgroundImage: CachedNetworkImageProvider(
+                  widget.doctor.imageUrl ?? "",
+                ),
               ),
-            ),
-            0.01.height.hSpace,
-            Column(
-              children: [
-                MixedTextColors(
-                  title: "Doctor Name ",
-                  value: doctor.name,
-                ),
-                0.01.height.hSpace,
-                MixedTextColors(
-                  title: "Doctor Description ",
-                  value: doctor.description,
-                ),
-                0.01.height.hSpace,
-                MixedTextColors(
-                  title: "Doctor Specialist ",
-                  value: doctor.specialist,
-                ),
-                0.01.height.hSpace,
-                MixedTextColors(
-                  title: "Doctor Phone Number ",
-                  value: doctor.phoneNumber,
-                ),
-                0.01.height.hSpace,
-                MixedTextColors(
-                  title: "Doctor Rating ",
-                  value: doctor.rate.toString(),
-                ),
-                0.01.height.hSpace,
-              ],
-            ).hPadding(0.03.width)
-          ],
+              0.01.height.hSpace,
+              Column(
+                children: [
+                  MixedTextColors(
+                    title: "Doctor Name ",
+                    value: widget.doctor.name,
+                  ),
+                  0.01.height.hSpace,
+                  MixedTextColors(
+                    title: "Doctor Description ",
+                    value: widget.doctor.description,
+                  ),
+                  0.01.height.hSpace,
+                  MixedTextColors(
+                    title: "Doctor Specialist ",
+                    value: widget.doctor.specialist,
+                  ),
+                  0.01.height.hSpace,
+                  MixedTextColors(
+                    title: "Doctor Phone Number ",
+                    value: widget.doctor.phoneNumber,
+                  ),
+                  0.01.height.hSpace,
+                  MixedTextColors(
+                    title: "Doctor Rating ",
+                    value: widget.doctor.rate.toString(),
+                  ),
+                  0.01.height.hSpace,
+                ],
+              ).hPadding(0.03.width)
+            ],
+          ),
         ),
       ),
     );
