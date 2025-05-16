@@ -10,6 +10,8 @@ import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/widget/custom_container.dart';
 import '/models/doctors_models/doctor_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectedSupervisedDoctors extends StatefulWidget {
   const SelectedSupervisedDoctors({super.key});
@@ -24,10 +26,11 @@ class _SelectedSupervisedDoctorsState extends State<SelectedSupervisedDoctors> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Doctor",
+          local!.selectDoctor,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),

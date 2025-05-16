@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/extensions/alignment.dart';
+import 'package:salamtk/core/widget/custom_text_button.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/app_providers/all_app_providers_db.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
@@ -90,6 +92,15 @@ class _FilteredZonesState extends State<FilteredZones> {
                 });
               },
             ),
+            0.01.height.hSpace,
+            CustomTextButton(
+              text: local.seeAll,
+              onPressed: () => slideLeftWidget(
+                  newPage: ViewAllDoctors(
+                    isSeeAll: true,
+                  ),
+                  context: context),
+            ).rightBottomWidget(),
             ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

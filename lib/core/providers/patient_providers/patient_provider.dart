@@ -16,15 +16,15 @@ class PatientProvider extends ChangeNotifier {
   List<String> favourites = [];
   String? _selectedPhoneNumber;
   String? _reservationPhoneNumber;
-  bool _isContainReservations = false ;
+  bool _isContainReservations = false;
 
   bool get getIsContainReservations => _isContainReservations;
-
 
   void setIsContainReservations(bool value) {
     _isContainReservations = value;
     notifyListeners();
   }
+
   String? _reservationName;
 
   String? _reservationEmail;
@@ -45,14 +45,17 @@ class PatientProvider extends ChangeNotifier {
     _reservationName = value;
     notifyListeners();
   }
+
   void setReservationEmail(String value) {
     _reservationEmail = value;
     notifyListeners();
   }
+
   void setReservationPhoneNumber(String value) {
     _reservationPhoneNumber = value;
     notifyListeners();
   }
+
   void setProviderName(String value) {
     _providerName = value;
     notifyListeners();
@@ -146,12 +149,17 @@ class PatientProvider extends ChangeNotifier {
   File? get getImage => _image;
   static var local = AppLocalizations.of(navigationKey.currentContext!);
 
+  _checkLocal() {
+    local = AppLocalizations.of(navigationKey.currentContext!);
+    notifyListeners();
+  }
+
   List<ReservationModel> _reservations = [];
-  List<Map<String, dynamic>> categories = [
+  List<Map<String, dynamic>> _categories = [
     // First Screen
     {
       "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
-      "text": local!.obstetrics,
+      "text":  local!.obstetrics,
       "color": Colors.orangeAccent,
     },
     {
@@ -219,12 +227,12 @@ class PatientProvider extends ChangeNotifier {
       "text": local!.familyMedicineAndAllergy,
       "color": Colors.orangeAccent,
     },
-    {
-      "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
-      // Assuming this is for Orthopedic & Spinal Surgery
-      "text": local!.orthopedics,
-      "color": Colors.redAccent,
-    },
+    // {
+    //   "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
+    //   // Assuming this is for Orthopedic & Spinal Surgery
+    //   "text": local!.orthopedics,
+    //   "color": Colors.redAccent,
+    // },
     {
       "icon": "assets/icons/categorize/Gastroenterology.jpg",
       // Assuming this is for Gastroenterology
@@ -300,6 +308,12 @@ class PatientProvider extends ChangeNotifier {
       "color": Colors.green,
     },
   ];
+
+  List<Map<String, dynamic>> get categories {
+    _checkLocal();
+    return _categories;
+  }
+
   DateTime? _selectedDate;
   String? _selectedPaymentMethod;
 
@@ -472,5 +486,9 @@ class PatientProvider extends ChangeNotifier {
     }
 
     return !daysData.contains(day);
+  }
+
+  reUpdateProvider() {
+    _checkLocal();
   }
 }

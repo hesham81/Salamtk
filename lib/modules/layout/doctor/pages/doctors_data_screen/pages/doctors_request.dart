@@ -14,6 +14,7 @@ import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_t
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../core/utils/doctors/supervies_doctors_collections.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DoctorsRequest extends StatefulWidget {
   final DoctorModel doctor;
@@ -61,13 +62,14 @@ class _DoctorsRequestState extends State<DoctorsRequest> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       bottomNavigationBar: Skeletonizer(
         enabled: isLoading,
         child: CustomContainer(
           child: CustomElevatedButton(
             child: Text(
-              "Request",
+              local!.request,
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -93,7 +95,7 @@ class _DoctorsRequestState extends State<DoctorsRequest> {
       ),
       appBar: AppBar(
         title: Text(
-          "Request Doctor",
+          local.requestDoctor,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -122,27 +124,27 @@ class _DoctorsRequestState extends State<DoctorsRequest> {
               Column(
                 children: [
                   MixedTextColors(
-                    title: "Doctor Name ",
+                    title: local.name,
                     value: widget.doctor.name,
                   ),
                   0.01.height.hSpace,
                   MixedTextColors(
-                    title: "Doctor Description ",
+                    title: local.description,
                     value: widget.doctor.description,
                   ),
                   0.01.height.hSpace,
                   MixedTextColors(
-                    title: "Doctor Specialist ",
+                    title: local.specialist,
                     value: widget.doctor.specialist,
                   ),
                   0.01.height.hSpace,
                   MixedTextColors(
-                    title: "Doctor Phone Number ",
+                    title: local.phoneNumber,
                     value: widget.doctor.phoneNumber,
                   ),
                   0.01.height.hSpace,
                   MixedTextColors(
-                    title: "Doctor Rating ",
+                    title: local.rating,
                     value: widget.doctor.rate.toString(),
                   ),
                   0.01.height.hSpace,

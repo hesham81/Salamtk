@@ -102,13 +102,13 @@ class SignUpProviders extends ChangeNotifier {
   ];
 
   final List<String> days = [
+    "Saturday",
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
-    "Sunday"
   ];
 
   String? _clinicWorkingFrom;
@@ -140,6 +140,15 @@ class SignUpProviders extends ChangeNotifier {
   File? get image => _image;
 
   File? get certificate => _certificate;
+
+  String? _distinctiveMark;
+
+  String? get distinctiveMark => _distinctiveMark;
+
+  void setDistinctiveMark(String value) {
+    _distinctiveMark = value;
+    notifyListeners();
+  }
 
   String? _selectedCity;
   String? _selectedLocation;
@@ -195,8 +204,10 @@ class SignUpProviders extends ChangeNotifier {
     required String phoneNumber,
     required double price,
     required String specialist,
-    String? city ,
-    String? state ,
+    required String street,
+    String? distinctiveMark,
+    String? city,
+    String? state,
   }) {
     _name = name;
     _description = description;
@@ -205,8 +216,10 @@ class SignUpProviders extends ChangeNotifier {
     _phoneNumber = phoneNumber;
     _price = price;
     _specialist = specialist;
-    _selectedCity = city ;
-    _selectedLocation = state ;
+    _selectedCity = city;
+    _selectedLocation = state;
+    _street = street;
+    _distinctiveMark = distinctiveMark;
     notifyListeners();
   }
 
@@ -235,12 +248,6 @@ class SignUpProviders extends ChangeNotifier {
 
   String? get area => _area;
 
-  void setMarker(Marker marker) {
-    _marker = marker;
-    notifyListeners();
-    _analyseMarkerLocation();
-  }
-
   String? get country => _country;
 
   String? get state => _state;
@@ -256,19 +263,6 @@ class SignUpProviders extends ChangeNotifier {
 
   void setClinicWorkingTo(String value) {
     _clinicWorkingTo = value;
-    notifyListeners();
-  }
-
-  Future<void> _analyseMarkerLocation() async {
-    LatLng point = _marker!.point;
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(point.latitude, point.longitude);
-    _country = placemark.first.country ?? "Not Located";
-    _state = placemark.first.administrativeArea ?? "Not Located";
-    _city = placemark.first.locality ?? "Not Located";
-    _street = placemark.first.street ?? "Not Located";
-    _area = placemark.first.subAdministrativeArea ?? "Not Located";
-
     notifyListeners();
   }
 
@@ -311,6 +305,7 @@ class SignUpProviders extends ChangeNotifier {
       );
       await DoctorsCollection.setDoctor(
         DoctorModel(
+          distinctiveMark: distinctiveMark,
           clinicWorkingFrom: clinicWorkingFrom!,
           clinicWorkingTo: clinicWorkingTo!,
           clinicPhoneNumber: phoneNumber!,
@@ -327,9 +322,9 @@ class SignUpProviders extends ChangeNotifier {
           name: name!,
           price: price!,
           description: description!,
-          country: country??"مصر",
-          state:_selectedCity ?? _state ??"",
-          city:  _selectedLocation ?? _city ??"",
+          country: country ?? "مصر",
+          state: _selectedCity ?? _state ?? "",
+          city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
         ),

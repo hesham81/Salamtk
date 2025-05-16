@@ -74,17 +74,17 @@ class _SelectMapState extends State<SelectMap> {
                 _locationData?.latitude ?? 50,
                 _locationData?.longitude ?? 50,
               ),
-              onTap: (tapPosition, point) {
-                provider.setMarker(
-                  Marker(
-                    point: point,
-                    child: Icon(
-                      FontAwesomeIcons.houseMedicalFlag,
-                      color: AppColors.secondaryColor,
-                    ),
-                  ),
-                );
-              },
+              // onTap: (tapPosition, point) {
+              //   provider.setMarker(
+              //     Marker(
+              //       point: point,
+              //       child: Icon(
+              //         FontAwesomeIcons.houseMedicalFlag,
+              //         color: AppColors.secondaryColor,
+              //       ),
+              //     ),
+              //   );
+              // },
             ),
             children: [
               TileLayer(

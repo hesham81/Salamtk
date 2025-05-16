@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_privacy_and_policy/pages/doctor_privacy_and_policy_ar.dart';
+import 'package:salamtk/modules/layout/doctor/pages/notifications/pages/doctor_notify_requests.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import 'package:salamtk/modules/splash_screen/pages/splash_screen.dart';
 import '../../../../../core/providers/app_providers/language_provider.dart';
 import '../doctor_privacy_and_policy/pages/doctor_privacy_and_policy_en.dart';
@@ -163,7 +165,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.01.width.vSpace,
                       Text(
-                        "Doctors",
+                        local.addAssistantDoctor,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.blackColor,
                             ),
@@ -187,6 +189,46 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       0.01.width.vSpace,
                       Text(
                         local.privacy,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  onTap: () => slideLeftWidget(
+                      newPage: DoctorNotifyRequests(), context: context),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.notifications,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.assistantDoctorNotifications,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  onTap: () =>
+                      slideLeftWidget(newPage: PatientHome(), context: context),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.travel_explore_outlined,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.explore,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.blackColor,
                             ),
@@ -243,6 +285,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                     );
                   },
                 ),
+                0.03.height.hSpace
               ],
             ).hPadding(0.03.width)
           ],

@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/providers/app_providers/language_provider.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/day_widget.dart';
+import '../../../../../../../../../../core/functions/translation_services.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 import '/core/extensions/align.dart';
 import '/core/utils/doctors/reviews/reviews_collection.dart';
@@ -48,7 +52,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     setState(() {});
   }
 
-
   @override
   void initState() {
     Future.wait(
@@ -61,6 +64,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
 
   @override
   Widget build(BuildContext context) {
+    var language = Provider.of<LanguageProvider>(context);
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
     return Scaffold(
@@ -114,63 +118,152 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             0.01.height.hSpace,
-            MostDoctorsBooked(
-              model: provider.getDoctor!,
+            CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(
+                provider.getDoctor?.imageUrl ?? "",
+              ),
+              radius: 160,
             ),
-            0.01.height.hSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 Text(
-                  local.aboutDoctor,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  provider.getDoctor?.name ?? "",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                0.01.height.hSpace,
+                Spacer(),
+                Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                0.01.width.vSpace,
                 Text(
-                  provider.getDoctor!.description,
+                  provider.getDoctor?.rate.toString().substring(0, 3) ?? '',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                0.01.width.vSpace,
+                Text(
+                  (language.getLanguage == "en")
+                      ? provider.getDoctor?.specialist ?? ""
+                      : TranslationServices.translateCategoriesToAr(
+                          provider.getDoctor!.specialist,
+                        ),
                   style: Theme.of(context)
                       .textTheme
-                      .bodyMedium!
+                      .titleSmall!
                       .copyWith(color: Colors.grey),
                 ),
               ],
             ),
             0.01.height.hSpace,
-            GestureDetector(
-              onTap: () async {
-                await LaunchersClasses.openGoogleMaps(
-                  point: LatLng(
-                    provider.getDoctor?.lat ?? 0,
-                    provider.getDoctor?.long ?? 0,
-                  ),
-                );
-              },
-              child: CustomContainer(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: AppColors.secondaryColor,
-                        ),
-                        0.02.width.hSpace,
-                        Expanded(
-                          child: Text(
-                            provider.getDoctor!.street,
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: AppColors.secondaryColor,
-                        )
-                      ],
-                    )
-                  ],
+            Row(
+              children: [
+                Icon(
+                  Icons.access_time_rounded,
+                  color: AppColors.blackColor,
                 ),
-              ),
+                0.01.width.vSpace,
+                Text(
+                  "${provider.getDoctor?.workingFrom ?? ""} ${local.to} ${provider.getDoctor?.workingTo ?? ""}",
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
             ),
             0.01.height.hSpace,
+            Row(
+              children: [
+                Icon(
+                  Icons.phone,
+                  color: AppColors.blackColor,
+                ),
+                0.01.width.vSpace,
+                Text(
+                  provider.getDoctor?.clinicPhoneNumber ?? "",
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DayWidget(
+                  day: (language.getLanguage == "en")
+                      ? provider.getDoctor?.clinicWorkingFrom ?? ""
+                      : TranslationServices.translateDaysToAr(
+                          provider.getDoctor?.clinicWorkingFrom ?? "",
+                        ),
+                ),
+                Icon(
+                  Icons.compare_arrows_rounded,
+                ),
+                DayWidget(
+                  day: (language.getLanguage == "en")
+                      ? provider.getDoctor?.clinicWorkingTo ?? ""
+                      : TranslationServices.translateDaysToAr(
+                          provider.getDoctor?.clinicWorkingTo ?? "",
+                        ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Divider().hPadding(0.1.width),
+            Text(
+              local.aboutDoctor,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            0.01.height.hSpace,
+            Text(
+              provider.getDoctor?.description ?? "",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                ),
+                0.01.height.vSpace,
+                Text(
+                  "${provider.getDoctor!.city} ${provider.getDoctor!.state}",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Icon(
+                  Icons.streetview,
+                ),
+                0.01.height.vSpace,
+                Text(
+                  provider.getDoctor?.street ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            (provider.getDoctor!.distinctiveMark != null)
+                ? Text(
+                    provider.getDoctor?.distinctiveMark ?? "",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : SizedBox(),
             Divider().hPadding(0.1.width),
             Row(
               children: [

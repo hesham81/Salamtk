@@ -5,7 +5,7 @@
   "loginWithGoogle": "Sign in with Google",
   "dontHaveAnAccountJoinUs": "Don't have an account? Join now",
   "login": "Log In",
-  "home": "Home",
+  "home": "Booking Table",
   "myDates": "My Appointments",
   "profile": "Profile",
   "categories": "Categories",
@@ -177,7 +177,21 @@
    "street":"Street",
    "chooseFromCamera":"Choose From Camera",
    "chooseOption" :"Choose Option",
-   "next":"Next"
+   "next":"Next",
+   "assistantDoctorNotifications": "Assistant Doctor Notifications",
+     "addAssistantDoctor": "Add Assistant Doctor",
+     "relatedDoctors": "Related Doctors",
+     "noSupervisedDoctorsFound": "No Supervised Doctors Found",
+     "allRequests": "All Requests",
+     "selectDoctor": "Select Doctor",
+     "requestDoctor": "Request Doctor",
+     "request": "Request",
+     "noDoctorDetailsFound": "No Doctor Details Found",
+     "doctorNotifications": "Doctor Notifications",
+     "explore":"Explore",
+     "specialist":"Specialist",
+     "rating":"Rating",
+     "distinctiveMark":"Distinctive Mark"
 
 
 }

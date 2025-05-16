@@ -147,21 +147,21 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                     ),
                   ],
                 ),
-                (!widget.displayFavouriteIcon)
-                    ? Text(
-                        LocationServices.calculateDistance(
-                          provider.lo,
-                          LatLng(
-                            widget.model.lat ?? 0,
-                            widget.model.long ?? 0,
-                          ),
-                        ),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(color: Colors.grey),
-                      )
-                    : SizedBox(),
+                // (!widget.displayFavouriteIcon)
+                //     ? Text(
+                //         LocationServices.calculateDistance(
+                //           provider.lo,
+                //           LatLng(
+                //             widget.model.lat ?? 0,
+                //             widget.model.long ?? 0,
+                //           ),
+                //         ),
+                //         style: Theme.of(context)
+                //             .textTheme
+                //             .titleSmall!
+                //             .copyWith(color: Colors.grey),
+                //       )
+                //     : SizedBox(),
               ],
             ).allPadding(10),
           ),

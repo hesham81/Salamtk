@@ -34,7 +34,14 @@ class DoctorModel {
 
   String clinicPhoneNumber ;
 
+  bool isHidden ;
+  double totalPrice ;
+
+  String? distinctiveMark;
+
   DoctorModel({
+    this.totalPrice = 0 ,
+    this.distinctiveMark,
     required this.clinicWorkingFrom,
     required this.clinicWorkingTo,
     required this.clinicPhoneNumber,
@@ -57,6 +64,7 @@ class DoctorModel {
     this.rate,
     this.lat,
     this.long,
+    this.isHidden = false,
     String? imagePath, // Made imagePath nullable for customization
     DateTime? createdAt, // Allowed createdAt to be passed during initialization
     this.isInTheClinic = false,
@@ -101,12 +109,16 @@ class DoctorModel {
           : null,
       // Use default if not provided
       isInTheClinic: json['isInTheClinic'] ?? false, // Default to false if null
+      isHidden: json['isHidden'] ?? false,
+      totalPrice: json['totalPrice'] ?? 0,
+      distinctiveMark: json['distinctiveMark'] ?? '',
     );
   }
 
   // Method for serializing to JSON
   Map<String, dynamic> toJson() {
     return {
+      "distinctiveMark": distinctiveMark,
       'clinicWorkingFrom': clinicWorkingFrom,
       'clinicWorkingTo': clinicWorkingTo,
       'clinicPhoneNumber': clinicPhoneNumber,
@@ -133,6 +145,8 @@ class DoctorModel {
       'createdAt': createdAt.toIso8601String(),
       // Serialize DateTime as ISO string
       'isInTheClinic': isInTheClinic,
+      'isHidden': isHidden,
+      'totalPrice': totalPrice,
     };
   }
 }

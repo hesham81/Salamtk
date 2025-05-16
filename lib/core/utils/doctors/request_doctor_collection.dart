@@ -46,6 +46,8 @@ abstract class RequestDoctorCollection {
     try {
       await _firestore.doc(requestId).update({"status": true});
       await SupervisesDoctorsCollections.addDoctor(doctorId: requestId);
+      await deleteRequest(doctorId: requestId);
+      
     } catch (error) {
       throw Exception(error.toString());
     }

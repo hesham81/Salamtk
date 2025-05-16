@@ -238,6 +238,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               ),
               0.01.height.hSpace,
               CustomTextFormField(
+                keyboardType: TextInputType.phone,
                 hintText: local.phoneNumber,
                 isReadOnly:
                     (phoneNumberController.text == local.noPhoneNumberSet ||

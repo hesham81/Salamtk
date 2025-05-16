@@ -35,6 +35,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController price = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  TextEditingController distinctiveMarkController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<String> specialists = [
@@ -205,57 +207,24 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ],
                   ),
                   0.02.height.hSpace,
-                  // GestureDetector(
-                  //   onTap: () => slideLeftWidget(
-                  //     newPage: SelectMap(),
-                  //     context: context,
-                  //   ),
-                  //   child: CustomContainer(
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Icon(
-                  //           Icons.map_outlined,
-                  //           color: AppColors.secondaryColor,
-                  //         ),
-                  //         Text(
-                  //           local.selectClinicLocation,
-                  //           style: Theme.of(context)
-                  //               .textTheme
-                  //               .titleSmall!
-                  //               .copyWith(
-                  //                 color: AppColors.blackColor,
-                  //               ),
-                  //         ),
-                  //         0.01.width.vSpace,
-                  //         Icon(
-                  //           Icons.arrow_forward_ios_sharp,
-                  //           color: AppColors.secondaryColor,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-
-                  0.01.height.hSpace,
                   CustomDropdown<String>(
+                    hintText: local.city,
                     items: DoctorsProfileMethods.getAllCities(),
                     decoration: CustomDropdownDecoration(
                       closedBorder: Border.all(
                         color: AppColors.secondaryColor,
-
                       ),
-                      closedBorderRadius: BorderRadius.circular(25)
+                      closedBorderRadius: BorderRadius.circular(25),
                     ),
                     onChanged: (p0) {
                       setState(() {
                         selectedCity = p0;
                       });
-
                     },
                   ),
                   0.01.height.hSpace,
                   CustomDropdown<String>(
+                    hintText: local.zones,
                     items:
                         DoctorsProfileMethods.getGov(city: selectedCity ?? ""),
                     onChanged: (p0) {
@@ -266,10 +235,24 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     decoration: CustomDropdownDecoration(
                         closedBorder: Border.all(
                           color: AppColors.secondaryColor,
-
                         ),
-                        closedBorderRadius: BorderRadius.circular(25)
-                    ),
+                        closedBorderRadius: BorderRadius.circular(25)),
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.street,
+                    controller: streetController,
+                    validate: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Street";
+                      }
+                      return null;
+                    },
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.distinctiveMark,
+                    controller: distinctiveMarkController,
                   ),
                   0.01.height.hSpace,
                   (provider.state != null)
@@ -299,8 +282,14 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     child: CustomElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate() &&
-                            selectedSpecialist != null && selectedCity != null && selectedLocation != null) {
+                            selectedSpecialist != null &&
+                            selectedCity != null &&
+                            selectedLocation != null) {
                           provider.setDoctorData(
+                            distinctiveMark:
+                                distinctiveMarkController.text.isEmpty
+                                    ? null
+                                    : distinctiveMarkController.text,
                             name: nameController.text,
                             description: description.text,
                             email: emailController.text,
@@ -310,6 +299,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             specialist: selectedSpecialist!,
                             city: selectedCity,
                             state: selectedLocation,
+                            street: streetController.text,
                           );
                           slideLeftWidget(
                             newPage: AdditionalSignUpDoctorData(),

@@ -1,5 +1,5 @@
 abstract class AppAssets{
-  static const String logo = 'assets/images/new_removed_logo.png';
+  static const String logo = 'assets/images/new_logo_design.jpg';
   static const String halfCircleLeft = 'assets/images/half_circle.svg';
   static const String halfCircleRight = 'assets/images/half_circle_right.svg';
   static const String google = 'assets/icons/google.svg';

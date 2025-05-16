@@ -10,6 +10,7 @@ import '../../../../../../core/utils/doctors/request_doctor_collection.dart';
 import '../../../../../../core/widget/custom_container.dart';
 import '../../../../../../models/doctors_models/doctor_model.dart';
 import '../../../../../../models/doctors_models/request_doctor_data_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RequestsPage extends StatefulWidget {
   const RequestsPage({super.key});
@@ -23,12 +24,15 @@ class _RequestsPageState extends State<RequestsPage> {
     return await DoctorsCollection.getDoctorData(uid: doctorId);
   }
 
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "All Requests",
+          local!.allRequests,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -57,14 +61,14 @@ class _RequestsPageState extends State<RequestsPage> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Text("No requests doctors found.");
+                  return Text(local.noSupervisedDoctorsFound);
                 }
 
                 List<RequestDoctorModel> supervisedList = snapshot.data!.docs
                     .map((e) => e.data())
-                    .where((model) =>
-                        model.supervisedDoctorId ==
-                        FirebaseAuth.instance.currentUser!.uid)
+                    .where(
+                      (model) => model.supervisedDoctorId == userId,
+                    )
                     .toList();
 
                 if (supervisedList.isEmpty) {
@@ -102,7 +106,7 @@ class _RequestsPageState extends State<RequestsPage> {
                         .toList();
 
                     if (doctors.isEmpty) {
-                      return const Text("No doctor details found.");
+                      return  Text("No doctor details found.");
                     }
 
                     return ListView.separated(

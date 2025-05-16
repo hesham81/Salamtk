@@ -23,6 +23,8 @@ import 'package:salamtk/core/utils/doctors/supervies_doctors_collections.dart';
 // Pages
 import 'package:salamtk/modules/layout/doctor/pages/doctors_data_screen/pages/selected_supervised_doctors.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class DoctorsDataScreen extends StatefulWidget {
   const DoctorsDataScreen({super.key});
 
@@ -37,6 +39,7 @@ class _DoctorsDataScreenState extends State<DoctorsDataScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => slideLeftWidget(
@@ -63,7 +66,7 @@ class _DoctorsDataScreenState extends State<DoctorsDataScreen> {
           ),
         ],
         title: Text(
-          "Related Doctors",
+          local!.relatedDoctors,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -90,7 +93,7 @@ class _DoctorsDataScreenState extends State<DoctorsDataScreen> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Text("No supervised doctors found.");
+                  return  Text(local.noSupervisedDoctorsFound);
                 }
 
                 List<SupervisedDoctorsModel> supervisedList = snapshot

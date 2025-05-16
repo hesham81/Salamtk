@@ -56,6 +56,7 @@ abstract class SignUpAuth {
     required String clinicWorkingFrom,
     required String clinicWorkingTo,
     required String clinicPhoneNumber,
+    String? distanctiveMark,
     double? lat,
     double? long,
   }) async {
@@ -96,6 +97,7 @@ abstract class SignUpAuth {
         lat: lat,
         long: long,
         area: area,
+        distinctiveMark: distanctiveMark,
       );
       await DoctorsCollection.setDoctor(doctor).then(
         (value) {

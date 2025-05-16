@@ -24,7 +24,7 @@ abstract class TranslationServices {
     "Ear, Nose & Throat (ENT)": "أنف وأذن وحنجرة",
     "Dermatology": "الأمراض الجلدية",
     "Orthopedics": "العظام",
-    "Eye": "العين",
+    "Eye": "العيون",
     "Heart": "القلب",
     "Nutritionist": "أخصائي تغذية",
     "Family Medicine & Allergy": "الطب العام والحساسية",
@@ -55,7 +55,7 @@ abstract class TranslationServices {
   static String translateCategoriesToEn(String arCategory) {
     // Reverse lookup: Find the key for the given Arabic value
     String? enCategory = _specialists.entries
-        .firstWhere((entry) => entry.value == arCategory)
+        .firstWhere((entry) => entry.value.toLowerCase() == arCategory.toLowerCase())
         .key;
     return enCategory ?? "Category not found"; // Fallback if not found
   }

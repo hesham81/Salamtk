@@ -5,6 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/extensions/align.dart';
+import 'package:salamtk/core/utils/settings/app_settings_collections.dart';
+import 'package:salamtk/models/settings/app_settings_model.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/reservation/revision_page/page/revision_page.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/constant/app_constants.dart';
@@ -25,6 +28,14 @@ class PayWithElectronicWallet extends StatefulWidget {
 
 class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
   final TextEditingController phoneNumber = TextEditingController();
+  late AppSettingsDataModel _settings;
+
+  Future<void> _getAppSettings() async {
+    _settings = await AppSettingsCollections.getAppSettings();
+    isLoading = false;
+    setState(() {});
+  }
+
   int selectedIndex = 0;
   final List<String> companiesLogos = [
     "assets/icons/etisalat.jpg",
@@ -108,6 +119,7 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
     //
   }
 
+  bool isLoading = true;
   var formKey = GlobalKey<FormState>();
 
   _checkInitData() {
@@ -118,14 +130,13 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
     if (provider.getUserPhoneNumber != null) {
       phoneNumber.text = provider.getUserPhoneNumber!;
     }
-    if (provider.getAppPhoneNumber != null) {
-      selectedPhoneNumber = provider.getAppPhoneNumber!;
-    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+    Future.wait([
+      _getAppSettings(),
+    ]);
     super.initState();
     _checkInitData();
   }
@@ -154,17 +165,15 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                 color: AppColors.primaryColor,
               ),
         ),
-        onPressed: (selectedPhoneNumber == null ||
-                provider.getImage == null ||
-                phoneNumber.text.isEmpty)
+        onPressed: (provider.getImage == null || phoneNumber.text.isEmpty)
             ? null
             : () async {
                 if (formKey.currentState!.validate()) {
                   provider.setProviderPath(companiesLogos[selectedIndex]);
                   provider.setProviderName(providerDataString[selectedIndex]);
-                  provider.setAppPhoneNumber(selectedPhoneNumber);
+                  provider.setAppPhoneNumber(_settings.phoneNumber);
                   provider.setUserPhoneNumber(phoneNumber.text);
-                  provider.setPhoneNumber(selectedPhoneNumber!);
+                  provider.setPhoneNumber(_settings.phoneNumber);
                   provider.setIsPayValid(true);
                   Navigator.pushReplacement(
                       context,
@@ -174,122 +183,122 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                 }
               },
       ).allPadding(10),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              0.01.height.hSpace,
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.moneyBillTransfer,
-                        color: AppColors.secondaryColor,
-                      ),
-                      0.02.width.vSpace,
-                      Text(
-                        local.from,
-                        style: Theme.of(context).textTheme.titleSmall!,
-                      ),
-                    ],
-                  ),
-                  0.01.width.vSpace,
-                  Expanded(
-                    child: CustomContainer(
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            companiesLogos[selectedIndex],
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
+      body: (isLoading)
+          ? CircularProgressIndicator(
+              color: AppColors.secondaryColor,
+            ).center
+          : SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    0.01.height.hSpace,
+                    Text(
+                      _settings.phoneNumber,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                          0.01.width.vSpace,
-                          Expanded(
-                            child: Text(
-                              phoneNumber.text.isEmpty
-                                  ? local.yourNumber
-                                  : phoneNumber.text,
+                    ).center,
+                    0.01.height.hSpace,
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.moneyBillTransfer,
+                              color: AppColors.secondaryColor,
+                            ),
+                            0.02.width.vSpace,
+                            Text(
+                              local.from,
                               style: Theme.of(context).textTheme.titleSmall!,
                             ),
+                          ],
+                        ),
+                        0.01.width.vSpace,
+                        Expanded(
+                          child: CustomContainer(
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  companiesLogos[selectedIndex],
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                                0.01.width.vSpace,
+                                Expanded(
+                                  child: Text(
+                                    phoneNumber.text.isEmpty
+                                        ? local.yourNumber
+                                        : phoneNumber.text,
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall!,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    0.01.height.hSpace,
+                    GestureDetector(
+                      onTap: () => _uploadImage(
+                        provider,
+                        camera: local.chooseFromCamera,
+                        gallery: local.chooseFromGallery,
+                        option: local.chooseOption,
+                      ),
+                      child: CustomContainer(
+                        child: Row(
+                          children: [
+                            Text(
+                              local.uploadScreenshot,
+                              style: Theme.of(context).textTheme.titleSmall!,
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.camera_enhance,
+                              color: AppColors.secondaryColor,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    0.01.height.hSpace,
+                    CustomTextFormField(
+                      hintText: local.yourNumber,
+                      controller: phoneNumber,
+                      onChanged: (value) {
+                        updateOperator(value!);
+                      },
+                      keyboardType: TextInputType.number,
+                      validate: (value) {
+                        if (value == null || value.isEmpty) {
+                          return local.phoneError;
+                        }
+                        final egyptPhoneRegex =
+                            RegExp(r'^0(10|11|12|15)\d{8}$');
+                        if (!egyptPhoneRegex.hasMatch(value)) {
+                          return local.emptyPhone;
+                        }
+                        return null;
+                      },
+                    ),
+                    0.01.height.hSpace,
+                    (provider.getImage == null)
+                        ? SizedBox()
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.file(
+                              provider.getImage!,
+                            ),
+                          )
+                  ],
+                ).hPadding(0.03.width),
               ),
-              0.01.height.hSpace,
-              CustomDropdown<String>(
-                items: [
-                  AppConstants.phoneNumber1,
-                  AppConstants.phoneNumber2,
-                ],
-                hintText: selectedPhoneNumber ?? local.selectNumber,
-                onChanged: (p0) {
-                  setState(() {
-                    selectedPhoneNumber = p0;
-                  });
-                },
-              ),
-              0.01.height.hSpace,
-              GestureDetector(
-                onTap: () => _uploadImage(
-                  provider,
-                  camera: local.chooseFromCamera,
-                  gallery: local.chooseFromGallery,
-                  option: local.chooseOption,
-                ),
-                child: CustomContainer(
-                  child: Row(
-                    children: [
-                      Text(
-                        local.uploadScreenshot,
-                        style: Theme.of(context).textTheme.titleSmall!,
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.camera_enhance,
-                        color: AppColors.secondaryColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              0.01.height.hSpace,
-              CustomTextFormField(
-                hintText: local.yourNumber,
-                controller: phoneNumber,
-                onChanged: (value) {
-                  updateOperator(value!);
-                },
-                keyboardType: TextInputType.number,
-                validate: (value) {
-                  if (value == null || value.isEmpty) {
-                    return local.phoneError;
-                  }
-                  final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                  if (!egyptPhoneRegex.hasMatch(value)) {
-                    return local.emptyPhone;
-                  }
-                  return null;
-                },
-              ),
-              0.01.height.hSpace,
-              (provider.getImage == null)
-                  ? SizedBox()
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        provider.getImage!,
-                      ),
-                    )
-            ],
-          ).hPadding(0.03.width),
-        ),
-      ),
+            ),
     );
   }
 }
