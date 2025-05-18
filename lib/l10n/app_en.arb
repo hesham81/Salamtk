@@ -191,7 +191,26 @@
      "explore":"Explore",
      "specialist":"Specialist",
      "rating":"Rating",
-     "distinctiveMark":"Distinctive Mark"
+     "distinctiveMark":"Distinctive Mark",
+     "pleaseEnterStreet":"Please Enter Street",
+     "userHome":"Home",
+     "doctorAddedSuccefully":"Doctor Added Successfully",
+     "pleaseSelectWorkingTo":"Please Select Working To",
+     "pleaseCheckClinicInfo":"Please Check Clinic Info",
+     "pleaseSelectWorkingFrom":"Please Select Working From",
+     "pleaseUploadYourImage" : "Please Upload Your Image",
+     "pleaseUploadYourCertificate" : "Please Upload Your Certificate",
+     "pleaseEnterPrice" : "Please Enter Price",
+     "doctorAddedSuccefully" : "Doctor Added Successfully",
+     "somethingWentWrong" : "Something Went Wrong",
+     "pleasEnterYourPassword" : "Please Enter Your Password",
+     "emailOrPasswordIncorrect" : "Email Or Password Incorrect",
+     "error" : "Error",
+     "welcomeBack" : "Welcome Back",
+     "workingTimes" : "Working Times",
+     "workingDays" : "Working Days",
+     "clinicLocation" : "Clinic Location"
+
 
 
 }

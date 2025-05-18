@@ -327,6 +327,7 @@ class SignUpProviders extends ChangeNotifier {
           city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
+
         ),
       );
       await SharedPreference.setString(

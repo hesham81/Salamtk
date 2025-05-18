@@ -9,6 +9,7 @@ import 'package:salamtk/core/functions/otp_services.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/utils/auth/phone_auth.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/utils/auth/sign_up_auth.dart';
 import '/core/validations/validations.dart';
@@ -32,7 +33,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -62,22 +63,30 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: local.phoneNumber,
-                    controller: phoneNumberController,
-                    suffixIcon: Icons.phone_android_outlined,
-                    validate: (value) {
-                      if (value == null || value.isEmpty) {
-                        return local.emptyPhone;
-                      }
-
-                      final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                      if (!egyptPhoneRegex.hasMatch(value)) {
-                        return local.phoneError;
-                      }
-
-                      return null;
-                    },
+                    hintText: local.email,
+                    suffixIcon: Icons.email_outlined,
+                    validate: (value) => Validations.isEmailValid(value ?? ""),
+                    controller: emailController,
                   ),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.password,
+                    isPassword: true,
+                    validate: (value) =>
+                        Validations.isPasswordValid(value ?? ""),
+                    controller: passwordController,
+                  ),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.confirmPassword,
+                    isPassword: true,
+                    validate: (value) => Validations.rePasswordValid(
+                      passwordController.text,
+                      value ?? "",
+                    ),
+                    controller: confirmPasswordController,
+                  ),
+                  0.02.height.hSpace,
                   0.02.height.hSpace,
                 ],
               ).hPadding(0.03.width),
@@ -88,29 +97,25 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       EasyLoading.show();
-                      var isExist = await PhoneNumberAuth.checkIfExist(
-                        phoneNumber: phoneNumberController.text,
+                      await SignUpAuth.signUp(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        name: nameController.text,
+                      ).then(
+                        (value) {
+                          if (value == null) {
+                            slideLeftWidget(
+                              newPage: PatientHome(),
+                              context: context,
+                            );
+                          } else {
+                            SnackBarServices.showErrorMessage(
+                              context,
+                              message: value,
+                            );
+                          }
+                        },
                       );
-                      if (isExist ) {
-                        SnackBarServices.showErrorMessage(
-                          context,
-                          message: "Account Already Exist",
-                        );
-                      } else {
-                        await PhoneNumberAuth.signUpWithPhoneNumber(
-                          phoneNumber: phoneNumberController.text,
-                          name: nameController.text,
-                        );
-                        await OtpServices.sendOtp(
-                          phoneNumber: phoneNumberController.text,
-                          lan: "ar",
-                          name: nameController.text,
-                        );
-                        slideLeftWidget(
-                          newPage: Otp(),
-                          context: context,
-                        );
-                      }
 
                       EasyLoading.dismiss();
                     }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/day_widget.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 import '../../../../../../../../../../core/functions/translation_services.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 import '/core/extensions/align.dart';
@@ -115,7 +116,8 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
       ).hPadding(0.03.width).vPadding(0.01.height),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             0.01.height.hSpace,
             CircleAvatar(
@@ -166,62 +168,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               ],
             ),
             0.01.height.hSpace,
-            Row(
-              children: [
-                Icon(
-                  Icons.access_time_rounded,
-                  color: AppColors.blackColor,
-                ),
-                0.01.width.vSpace,
-                Text(
-                  "${provider.getDoctor?.workingFrom ?? ""} ${local.to} ${provider.getDoctor?.workingTo ?? ""}",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: AppColors.blackColor,
-                      ),
-                ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
-                Icon(
-                  Icons.phone,
-                  color: AppColors.blackColor,
-                ),
-                0.01.width.vSpace,
-                Text(
-                  provider.getDoctor?.clinicPhoneNumber ?? "",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: AppColors.blackColor,
-                      ),
-                ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DayWidget(
-                  day: (language.getLanguage == "en")
-                      ? provider.getDoctor?.clinicWorkingFrom ?? ""
-                      : TranslationServices.translateDaysToAr(
-                          provider.getDoctor?.clinicWorkingFrom ?? "",
-                        ),
-                ),
-                Icon(
-                  Icons.compare_arrows_rounded,
-                ),
-                DayWidget(
-                  day: (language.getLanguage == "en")
-                      ? provider.getDoctor?.clinicWorkingTo ?? ""
-                      : TranslationServices.translateDaysToAr(
-                          provider.getDoctor?.clinicWorkingTo ?? "",
-                        ),
-                ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Divider().hPadding(0.1.width),
             Text(
               local.aboutDoctor,
               style: Theme.of(context).textTheme.titleMedium,
@@ -232,14 +178,129 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             0.01.height.hSpace,
+            Divider(),
+            0.01.height.hSpace,
+            Text(
+              local.workingTimes,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            0.01.height.hSpace,
             Row(
               children: [
-                Icon(
-                  Icons.location_on,
+                Text(
+                  "${local.from} : ",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+                0.01.width.vSpace,
+                Text(
+                  provider.getDoctor!.workingFrom
+                      .replaceFirst("AM", "ص")
+                      .replaceFirst("PM", "م"),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "${local.to} : ",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+                0.01.width.vSpace,
+                Text(
+                  provider.getDoctor!.workingTo
+                      .replaceFirst("AM", "ص")
+                      .replaceFirst("PM", "م"),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Divider(),
+            0.01.height.hSpace,
+            Text(
+              local.workingDays,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "${local.from} : ",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+                0.01.width.vSpace,
+                Text(
+                  (language.getLanguage == "en")
+                      ? provider.getDoctor?.clinicWorkingFrom ?? ""
+                      : TranslationServices.translateDaysToAr(
+                          provider.getDoctor?.clinicWorkingFrom ?? "",
+                        ),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "${local.to} : ",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+                0.01.width.vSpace,
+                Text(
+                  (language.getLanguage == "en")
+                      ? provider.getDoctor?.clinicWorkingTo ?? ""
+                      : TranslationServices.translateDaysToAr(
+                          provider.getDoctor?.clinicWorkingTo ?? "",
+                        ),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: AppColors.blackColor,
+                      ),
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
+            CustomTextButton(
+              text: provider.getDoctor?.clinicPhoneNumber ?? "",
+              onPressed: () async {
+                await LaunchersClasses.call(
+                  phoneNumber: provider.getDoctor?.clinicPhoneNumber ?? "010",
+                );
+              },
+            ),
+            0.01.height.hSpace,
+            Divider(),
+            0.01.height.hSpace,
+            Text(
+              local.clinicLocation,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            0.01.height.hSpace,
+            Row(
+              children: [
+                Text(
+                  "${local.city} : ",
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 0.01.height.vSpace,
                 Text(
-                  "${provider.getDoctor!.city} ${provider.getDoctor!.state}",
+                  provider.getDoctor?.state ?? "",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -247,23 +308,32 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             0.01.height.hSpace,
             Row(
               children: [
-                Icon(
-                  Icons.streetview,
+                Text(
+                  "${local.zones} : ",
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 0.01.height.vSpace,
                 Text(
-                  provider.getDoctor?.street ?? "",
+                  provider.getDoctor?.city ?? "",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
             0.01.height.hSpace,
-            (provider.getDoctor!.distinctiveMark != null)
-                ? Text(
-                    provider.getDoctor?.distinctiveMark ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  )
-                : SizedBox(),
+            Row(
+              children: [
+                Text(
+                  "${local.street} : ",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                0.01.height.vSpace,
+                Text(
+                  "${provider.getDoctor?.street} (${provider.getDoctor?.distinctiveMark})",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            0.01.height.hSpace,
             Divider().hPadding(0.1.width),
             Row(
               children: [

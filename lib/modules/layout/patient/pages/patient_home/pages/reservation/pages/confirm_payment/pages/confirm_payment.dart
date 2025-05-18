@@ -197,9 +197,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                         nameController.text =
                             FirebaseAuth.instance.currentUser?.displayName ??
                                 local.noName;
-                        phoneNumberController.text =
-                            FirebaseAuth.instance.currentUser?.phoneNumber ??
-                                local.noPhoneNumberSet;
+
                       } else {
                         nameController.text = "";
                         phoneNumberController.text = "";
@@ -240,11 +238,6 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               CustomTextFormField(
                 keyboardType: TextInputType.phone,
                 hintText: local.phoneNumber,
-                isReadOnly:
-                    (phoneNumberController.text == local.noPhoneNumberSet ||
-                            phoneNumberController.text == "")
-                        ? false
-                        : reserveToYourSelf,
                 controller: phoneNumberController,
                 suffixIcon: Icons.phone_android_outlined,
                 validate: (value) {

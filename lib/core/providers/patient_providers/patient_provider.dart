@@ -17,305 +17,186 @@ class PatientProvider extends ChangeNotifier {
   String? _selectedPhoneNumber;
   String? _reservationPhoneNumber;
   bool _isContainReservations = false;
-
-  bool get getIsContainReservations => _isContainReservations;
-
-  void setIsContainReservations(bool value) {
-    _isContainReservations = value;
-    notifyListeners();
-  }
-
   String? _reservationName;
-
   String? _reservationEmail;
-
-  String? get reservationName => _reservationName;
-
-  String? get reservationEmail => _reservationEmail;
-
-  String? get reservationPhoneNumber => _reservationPhoneNumber;
-
   String _providerPath = "";
-
   String _providerName = "";
-
-  String get getProviderName => _providerName;
-
-  void setReservationName(String value) {
-    _reservationName = value;
-    notifyListeners();
-  }
-
-  void setReservationEmail(String value) {
-    _reservationEmail = value;
-    notifyListeners();
-  }
-
-  void setReservationPhoneNumber(String value) {
-    _reservationPhoneNumber = value;
-    notifyListeners();
-  }
-
-  void setProviderName(String value) {
-    _providerName = value;
-    notifyListeners();
-  }
-
-  void setProviderPath(String value) {
-    _providerPath = value;
-    notifyListeners();
-  }
-
-  String get getProviderPath => _providerPath;
   String? _userPhoneNumber;
-
   bool? _isPayValid;
-
   String? _selectedCity;
   String? _selectedZone;
-
   String? _screenshot;
-
   File? _image;
-
-  String? get getScreenshot => _screenshot;
-
   String? appPhoneNumber;
 
   String? get getSelectedCity => _selectedCity;
-
   String? get getSelectedZone => _selectedZone;
-
-  void setSelectedCity(String? value) {
+  void setSelectedCity(String value) {
     _selectedCity = value;
     notifyListeners();
   }
-
-  void setSelectedZone(String? value) {
+  void setSelectedZone(String value) {
     _selectedZone = value;
     notifyListeners();
   }
+  late int _totalReservations;
+  List<ReservationModel> _reservations = [];
 
-  void setAppPhoneNumber(String? value) {
-    appPhoneNumber = value;
-    notifyListeners();
-  }
+  AppLocalizations? local;
 
-  String? get getAppPhoneNumber => appPhoneNumber;
-
-  void setIsPayValid(bool? value) {
-    _isPayValid = value;
-    notifyListeners();
-  }
-
-  void disposeData() {
-    _image = null;
-    _screenshot = null;
-    _userPhoneNumber = null;
-    _selectedPhoneNumber = null;
-    _isPayValid = null;
-    _selectedPhoneNumber = null;
-    _selectedSlot = null;
-    _selectedDate = null;
-    notifyListeners();
-  }
-
-  bool? get getIsPayValid => _isPayValid;
-
-  void setScreenshot(String value) {
-    _screenshot = value;
-    notifyListeners();
-  }
-
-  void setUserPhoneNumber(String value) {
-    _userPhoneNumber = value;
-    notifyListeners();
-  }
-
-  String? get getUserPhoneNumber => _userPhoneNumber;
-
-  void setPhoneNumber(String value) {
-    _selectedPhoneNumber = value;
-    notifyListeners();
-  }
-
-  String? get getPhoneNumber => _selectedPhoneNumber;
-
-  void setImage(File? value) {
-    _image = value;
-    notifyListeners();
-  }
-
-  File? get getImage => _image;
-  static var local = AppLocalizations.of(navigationKey.currentContext!);
-
-  _checkLocal() {
+  void _checkLocal() {
     local = AppLocalizations.of(navigationKey.currentContext!);
     notifyListeners();
   }
 
-  List<ReservationModel> _reservations = [];
-  List<Map<String, dynamic>> _categories = [
-    // First Screen
-    {
-      "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
-      "text":  local!.obstetrics,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/dentist.jpg",
-      "text": local!.teeth,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Urology.jpg",
-      // Assuming this is for Urology
-      "text": local!.urology,
-      "color": Colors.red,
-    },
-    {
-      "icon": "assets/icons/lung.png",
-      "text": local!.lung,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Pediatrics.jpg",
-      // Assuming this is for Pediatrics
-      "text": local!.pediatrics,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/psychologist.jpg",
-      "text": local!.psychiatry,
-      "color": Colors.blue,
-    },
-    {
-      "icon": "assets/icons/categorize/ENT.jpg", // Assuming this is for ENT
-      "text": local!.ent,
-      "color": Colors.redAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Dermatology.jpg",
-      "text": local!.dermatology,
-      "color": Colors.orangeAccent,
-    },
+  void reUpdateProvider() {
+    _checkLocal();
+  }
 
-    // Second Screen
-    {
-      "icon": "assets/icons/categorize/Orthopedics.jpg",
-      "text": local!.orthopedics,
-      "color": AppColors.secondaryColor,
-    },
-    {
-      "icon": "assets/icons/categorize/Ophthalmology.jpg",
-      "text": local!.eye,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Cardiology.jpg",
-      "text": local!.heart,
-      "color": Colors.red,
-    },
-    {
-      "icon": "assets/icons/categorize/Nutritionist.jpg",
-      "text": local!.nutritionist,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
-      // Assuming this is for Family Medicine & Allergy
-      "text": local!.familyMedicineAndAllergy,
-      "color": Colors.orangeAccent,
-    },
-    // {
-    //   "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
-    //   // Assuming this is for Orthopedic & Spinal Surgery
-    //   "text": local!.orthopedics,
-    //   "color": Colors.redAccent,
-    // },
-    {
-      "icon": "assets/icons/categorize/Gastroenterology.jpg",
-      // Assuming this is for Gastroenterology
-      "text": local!.gastroenterology,
-      "color": Colors.orangeAccent,
-    },
-
-    // Third Screen
-    {
-      "icon": "assets/icons/elbatna_icon.jpg",
-      "text": local!.theInterior,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/surgery_icon.jpg",
-      "text": local!.surgery,
-      "color": Colors.blue,
-    },
-    {
-      "icon": "assets/icons/categorize/Acupuncture.jpg",
-      // Assuming this is for Acupuncture
-      "text": local!.acupuncture,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Vascular Surgery.jpg",
-      // Assuming this is for Vascular Surgery
-      "text": local!.vascularSurgery,
-      "color": Colors.blueAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Nephrology.jpg",
-      // Assuming this is for Nephrology
-      "text": local!.nephrology,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Radiology.jpg",
-      // Assuming this is for Radiology
-      "text": local!.radiology,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Endocrinology.jpg",
-      // Assuming this is for Endocrinology
-      "text": local!.endocrinology,
-      "color": Colors.orangeAccent,
-    },
-
-    // Fourth Screen
-    {
-      "icon": "assets/icons/categorize/Genetics.jpg",
-      // Assuming this is for Genetics
-      "text": local!.genetics,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Speech Therapy.jpg",
-      // Assuming this is for Speech Therapy
-      "text": local!.speechTherapy,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Pain Management.jpg",
-      // Assuming this is for Pain Management
-      "text": local!.painManagement,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
-      // Assuming this is for Cosmetic Surgery
-      "text": local!.cosmeticSurgery,
-      "color": Colors.green,
-    },
-  ];
-
+  // Categories Getter with dynamic localization
   List<Map<String, dynamic>> get categories {
     _checkLocal();
-    return _categories;
+    return [
+      {
+        "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
+        "text": local?.obstetrics,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/dentist.jpg",
+        "text": local?.teeth,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Urology.jpg",
+        "text": local?.urology,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/lung.png",
+        "text": local?.lung,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pediatrics.jpg",
+        "text": local?.pediatrics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/psychologist.jpg",
+        "text": local?.psychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/ENT.jpg",
+        "text": local?.ent,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Dermatology.jpg",
+        "text": local?.dermatology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Orthopedics.jpg",
+        "text": local?.orthopedics,
+        "color": AppColors.secondaryColor,
+      },
+      {
+        "icon": "assets/icons/categorize/Ophthalmology.jpg",
+        "text": local?.eye,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cardiology.jpg",
+        "text": local?.heart,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/categorize/Nutritionist.jpg",
+        "text": local?.nutritionist,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
+        "text": local?.familyMedicineAndAllergy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Gastroenterology.jpg",
+        "text": local?.gastroenterology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/elbatna_icon.jpg",
+        "text": local?.theInterior,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/surgery_icon.jpg",
+        "text": local?.surgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/Acupuncture.jpg",
+        "text": local?.acupuncture,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Vascular Surgery.jpg",
+        "text": local?.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Nephrology.jpg",
+        "text": local?.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Radiology.jpg",
+        "text": local?.radiology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Endocrinology.jpg",
+        "text": local?.endocrinology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Genetics.jpg",
+        "text": local?.genetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Speech Therapy.jpg",
+        "text": local?.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pain Management.jpg",
+        "text": local?.painManagement,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
+        "text": local?.cosmeticSurgery,
+        "color": Colors.green,
+      },
+    ];
   }
 
   DateTime? _selectedDate;
   String? _selectedPaymentMethod;
+
+  Future<void> checkReservations() async {
+    try {
+      var userId = FirebaseAuth.instance.currentUser!.uid;
+      _reservations = await ReservationCollection.getReservations(patientId: userId);
+      notifyListeners();
+    } catch (error) {
+      print("Error fetching reservations: $error");
+    }
+  }
 
   void addReservation(ReservationModel reservation) {
     _reservations.add(reservation);
@@ -327,44 +208,6 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  PatientProvider() {
-    _totalReservations = 0;
-    checkReservations();
-  }
-
-  void removeData() {
-    _selectedDoctor = null;
-    _selectedSlot = null;
-    _selectedDate = null;
-    _selectedPaymentMethod = null;
-  }
-
-  Future<void> checkReservations() async {
-    try {
-      _reservations.clear();
-      var userId = await FirebaseAuth.instance.currentUser!.uid;
-      _reservations = await ReservationCollection.getReservations(
-        patientId: userId,
-      );
-      notifyListeners();
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  //setters
-
-  _initFavourites() async {
-    User? user = await FirebaseAuth.instance.currentUser;
-    await FavouriteCollections.getFavourite(user!.uid).listen(
-      (event) {
-        for (var element in event.data()?.favouriteDoctors ?? []) {
-          favourites = element;
-        }
-      },
-    );
-  }
-
   void setSelectedPaymentMethod(String paymentMethod) {
     _selectedPaymentMethod = paymentMethod;
     notifyListeners();
@@ -372,7 +215,6 @@ class PatientProvider extends ChangeNotifier {
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
-
     notifyListeners();
   }
 
@@ -384,9 +226,8 @@ class PatientProvider extends ChangeNotifier {
     "Friday", // 4
     "Saturday", // 5
     "Sunday", //6
-    ///Saturday to Tuesday
-    /// 6 -- 1
   ];
+
   List<String> _sortedDays = [
     "Saturday",
     "Sunday",
@@ -427,40 +268,104 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //getter
-
-  bool get isDoctorSelected => _selectedDoctor != null ? true : false;
-
+  // Getters
+  bool get getIsContainReservations => _isContainReservations;
+  String? get reservationName => _reservationName;
+  String? get reservationEmail => _reservationEmail;
+  String? get reservationPhoneNumber => _reservationPhoneNumber;
+  String get getProviderName => _providerName;
+  String get getProviderPath => _providerPath;
+  String? get getAppPhoneNumber => appPhoneNumber;
+  bool? get getIsPayValid => _isPayValid;
+  String? get getUserPhoneNumber => _userPhoneNumber;
+  String? get getPhoneNumber => _selectedPhoneNumber;
+  File? get getImage => _image;
+  String? get getScreenshot => _screenshot;
   DoctorModel? get getDoctor => _selectedDoctor;
-
   String? get getPaymentMethod => _selectedPaymentMethod;
-
   DateTime? get getSelectedDate => _selectedDate;
-
   String? get getSelectedSlot => _selectedSlot;
-
   List<ReservationModel> get getReservations => _reservations;
+  int get getTotalReservations => _totalReservations;
 
-  late int _totalReservations;
+  void setIsContainReservations(bool value) {
+    _isContainReservations = value;
+    notifyListeners();
+  }
+
+  void setReservationName(String value) {
+    _reservationName = value;
+    notifyListeners();
+  }
+
+  void setReservationEmail(String value) {
+    _reservationEmail = value;
+    notifyListeners();
+  }
+
+  void setReservationPhoneNumber(String value) {
+    _reservationPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setProviderName(String value) {
+    _providerName = value;
+    notifyListeners();
+  }
+
+  void setProviderPath(String value) {
+    _providerPath = value;
+    notifyListeners();
+  }
+
+  void setAppPhoneNumber(String? value) {
+    appPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setIsPayValid(bool? value) {
+    _isPayValid = value;
+    notifyListeners();
+  }
+
+  void setUserPhoneNumber(String value) {
+    _userPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setPhoneNumber(String value) {
+    _selectedPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setImage(File? value) {
+    _image = value;
+    notifyListeners();
+  }
+
+  void setScreenshot(String value) {
+    _screenshot = value;
+    notifyListeners();
+  }
+
+  void disposeData() {
+    _image = null;
+    _screenshot = null;
+    _userPhoneNumber = null;
+    _selectedPhoneNumber = null;
+    _isPayValid = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    notifyListeners();
+  }
 
   void setTotalReservations(int value) {
     _totalReservations = value;
     notifyListeners();
   }
 
-  void notify() {
-    notifyListeners();
-  }
-
-  int get getTotalReservations => _totalReservations;
-
-  Future<DoctorModel?> searchForDoctor({
-    required String doctorPhoneNumber,
-  }) async {
-    DoctorModel? doctor = await DoctorsCollection.getDoctorData(
-      uid: doctorPhoneNumber,
-    );
-    return doctor;
+  Future<DoctorModel?> searchForDoctor({required String doctorPhoneNumber}) async {
+    return await DoctorsCollection.getDoctorData(uid: doctorPhoneNumber);
   }
 
   bool handleDoctorDayIndex() {
@@ -488,7 +393,25 @@ class PatientProvider extends ChangeNotifier {
     return !daysData.contains(day);
   }
 
-  reUpdateProvider() {
-    _checkLocal();
+  void initFavourites() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FavouriteCollections.getFavourite(user.uid).listen((snapshot) {
+        favourites = snapshot.data()?.favouriteDoctors ?? [];
+        notifyListeners();
+      });
+    }
+  }
+
+  void removeData() {
+    _selectedDoctor = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    _selectedPaymentMethod = null;
+    notifyListeners();
+  }
+
+  void notify() {
+    notifyListeners();
   }
 }

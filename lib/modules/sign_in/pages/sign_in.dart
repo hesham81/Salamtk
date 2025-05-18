@@ -44,7 +44,7 @@ class _SignInState extends State<SignIn> {
   var formNumberKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool loginWithEmail = false;
+  bool loginWithEmail = true;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class _SignInState extends State<SignIn> {
                           controller: passwordController,
                           validate: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return local.pleasEnterYourPassword;
                             }
                             return null;
                           },
@@ -119,7 +119,7 @@ class _SignInState extends State<SignIn> {
                                     inMaterialBanner: true,
                                     color: Colors.red,
                                     title: 'Error',
-                                    message: "Email Or Password is incorrect",
+                                    message: local.emailOrPasswordIncorrect,
                                     contentType: ContentType.failure,
                                   ),
                                 );
@@ -142,7 +142,7 @@ class _SignInState extends State<SignIn> {
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
                                     message:
-                                        'Welcome Back ${usernameController.text}',
+                                        '${local.welcomeBack} ${usernameController.text}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -166,7 +166,7 @@ class _SignInState extends State<SignIn> {
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
                                     message:
-                                        'Welcome Back ${usernameController.text}',
+                                        '${local.welcomeBack} ${usernameController.text}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -213,22 +213,22 @@ class _SignInState extends State<SignIn> {
                             return null;
                           },
                         ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              loginWithEmail = !loginWithEmail;
-                            });
-                          },
-                          child: Text(
-                            local.loginWithEmail,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  color: AppColors.secondaryColor,
-                                ),
-                          ),
-                        ).rightBottomWidget(),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       loginWithEmail = !loginWithEmail;
+                        //     });
+                        //   },
+                        //   child: Text(
+                        //     local.loginWithEmail,
+                        //     style: Theme.of(context)
+                        //         .textTheme
+                        //         .titleSmall!
+                        //         .copyWith(
+                        //           color: AppColors.secondaryColor,
+                        //         ),
+                        //   ),
+                        // ).rightBottomWidget(),
                         // 0.1.height.hSpace,
                         CustomElevatedButton(
                           child: Text(

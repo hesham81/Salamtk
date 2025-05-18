@@ -227,28 +227,28 @@ class _AdditionalSignUpDoctorDataState
                   if (provider.certificate == null) {
                     SnackBarServices.showErrorMessage(
                       context,
-                      message: "Please Upload Your Certificate",
+                      message: local.pleaseUploadYourCertificate,
                     );
                   } else if (provider.image == null) {
                     SnackBarServices.showErrorMessage(
                       context,
-                      message: "Please Upload Your Image",
+                      message: local.pleaseUploadYourImage,
                     );
                   } else if (provider.workingFrom == null) {
                     SnackBarServices.showErrorMessage(
                       context,
-                      message: "Please Select Working From",
+                      message: local.pleaseSelectWorkingFrom,
                     );
                   } else if (provider.workingTo == null) {
                     SnackBarServices.showErrorMessage(
                       context,
-                      message: "Please Select Working To",
+                      message: local.pleaseSelectWorkingTo,
                     );
                   } else if (provider.clinicWorkingTo == null ||
                       provider.clinicWorkingFrom == null) {
                     SnackBarServices.showErrorMessage(
                       context,
-                      message: "Please Check Clinic Info",
+                      message: local.pleaseCheckClinicInfo,
                     );
                   } else {
                     provider.confirm(context).then(
@@ -256,7 +256,7 @@ class _AdditionalSignUpDoctorDataState
                         if (value) {
                           SnackBarServices.showSuccessMessage(
                             context,
-                            message: "Doctor Added Successfully",
+                            message: local.doctorAddedSuccefully,
                           );
                           Navigator.pushAndRemoveUntil(
                             context,
@@ -268,7 +268,7 @@ class _AdditionalSignUpDoctorDataState
                         } else {
                           SnackBarServices.showErrorMessage(
                             context,
-                            message: "Something Went Wrong",
+                            message: local.somethingWentWrong,
                           );
                         }
                       },

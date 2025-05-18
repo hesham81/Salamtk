@@ -244,7 +244,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     controller: streetController,
                     validate: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please Enter Street";
+                        return local.pleaseEnterStreet;
                       }
                       return null;
                     },
