@@ -253,7 +253,7 @@ class _AdditionalSignUpDoctorDataState
                   } else {
                     provider.confirm(context).then(
                       (value) {
-                        if (value) {
+                        if (value == null) {
                           SnackBarServices.showSuccessMessage(
                             context,
                             message: local.doctorAddedSuccefully,
@@ -268,7 +268,7 @@ class _AdditionalSignUpDoctorDataState
                         } else {
                           SnackBarServices.showErrorMessage(
                             context,
-                            message: local.somethingWentWrong,
+                            message: value ,
                           );
                         }
                       },

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/functions/translation_services.dart';
+import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import '/core/functions/doctors_profile_methods.dart';
 import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 import '/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
@@ -39,33 +41,32 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController distinctiveMarkController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<String> specialists = [
-    "Obstetrics",
-    "Teeth",
-    "Urology",
-    "Lung",
-    "Pediatrics",
-    "Psychiatry",
-    "Ear, Nose & Throat (ENT)",
-    "Dermatology",
-    "Orthopedics",
-    "Eye",
-    "Heart",
-    "Nutritionist",
-    "Family Medicine & Allergy",
-    "Orthopedic",
-    "Gastroenterology",
-    "Internal Medicine",
-    "Surgery",
-    "Acupuncture",
-    "Vascular Surgery",
-    "Nephrology",
-    "Radiology",
-    "Endocrinology",
-    "Genetics",
-    "Speech Therapy",
-    "Pain Management",
-    "Cosmetic Surgery"
+  List<String> specialistsEn = [
+    'Obstetrics',
+    'Teeth',
+    'Urology',
+    'Lung',
+    'Pediatrics',
+    'Psychiatry',
+    'ENT',
+    'Dermatology',
+    'Orthopedics',
+    'Eye',
+    'Heart',
+    'Nutritionist',
+    'Family Medicine & Allergy',
+    'Gastroenterology',
+    'The Interior',
+    'Surgery',
+    'Acupuncture',
+    'Vascular Surgery',
+    'Nephrology',
+    'Radiology',
+    'Endocrinology',
+    'Genetics',
+    'Speech Therapy',
+    'Pain Management',
+    'Cosmetic Surgery',
   ];
   String? selectedSpecialist;
   String? selectedCity;
@@ -75,6 +76,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<SignUpProviders>(context);
+    var lang = Provider.of<LanguageProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -157,7 +159,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     suffixIcon: Icons.attach_money_rounded,
                     validate: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please Enter Price";
+                        return local.pleaseEnterPrice;
                       }
                       return null;
                     },
@@ -173,7 +175,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   DropdownMenu(
                     width: double.maxFinite,
                     onSelected: (value) {
-                      selectedSpecialist = value;
+                      selectedSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
                     },
                     inputDecorationTheme: InputDecorationTheme(
                       border: OutlineInputBorder(
@@ -199,7 +203,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                       suffixIconColor: AppColors.secondaryColor,
                     ),
                     dropdownMenuEntries: [
-                      for (var icon in specialists)
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
                         DropdownMenuEntry(
                           value: icon,
                           label: icon,

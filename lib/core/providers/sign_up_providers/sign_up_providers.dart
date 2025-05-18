@@ -268,7 +268,7 @@ class SignUpProviders extends ChangeNotifier {
 
   TextEditingController phoneNumberController = TextEditingController();
 
-  Future<bool> confirm(BuildContext context) async {
+  Future<String?> confirm(BuildContext context) async {
     try {
       EasyLoading.show();
       UserCredential? user =
@@ -327,8 +327,13 @@ class SignUpProviders extends ChangeNotifier {
           city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
-
         ),
+      ).then(
+        (value) {
+          if (value != null) {
+            return value;
+          }
+        },
       );
       await SharedPreference.setString(
         SharedPreferenceKey.role,
@@ -336,10 +341,19 @@ class SignUpProviders extends ChangeNotifier {
       );
       EasyLoading.dismiss();
       resetDoctorData();
-      return true;
-    } catch (error) {
-      EasyLoading.dismiss();
-      return false;
+      return null;
+    } on FirebaseException catch (error) {
+      if (error.code == 'weak-password') {
+        return ('The password provided is too weak.');
+      } else if (error.code == 'email-already-in-use') {
+        return ('The account already exists ');
+      }
     }
+
+    catch (error) {
+      EasyLoading.dismiss();
+      return error.toString();
+    }
+
   }
 }
