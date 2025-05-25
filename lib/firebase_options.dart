@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '8747852076',
     projectId: 'twseef-app',
     storageBucket: 'twseef-app.firebasestorage.app',
-    androidClientId: '8747852076-eib3kfoi2k6se2hr9j4efdtbijfjfcn5.apps.googleusercontent.com',
+    androidClientId: '8747852076-6fjt26vk65hbnmbpnunqsgtvuio5ruln.apps.googleusercontent.com',
     iosClientId: '8747852076-e7f44d7jcg35u57a4dvp6fcqr1idmaa8.apps.googleusercontent.com',
     iosBundleId: 'com.example.twseef',
   );

@@ -2,17 +2,32 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
     <key>LSApplicationQueriesSchemes</key>
     <array>
       <string>sms</string>
       <string>tel</string>
-    </arra  y>
+    </array>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>com.google.FirebaseCore.DATA</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.8747852076-e7f44d7jcg35u57a4dvp6fcqr1idmaa8</string>
+        </array>
+      </dict>
+    </array>
+
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
     <key>NSCameraUsageDescription</key>
     <string>We need access to your camera to take photos.</string>
     <key>FirebaseAppDelegateProxyEnabled</key>

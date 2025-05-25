@@ -71,6 +71,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   String? selectedSpecialist;
   String? selectedCity;
   String? selectedLocation;
+  String? secondSpecialist;
+  String? thirdSpecialist;
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +215,103 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ],
                   ),
                   0.02.height.hSpace,
+                  Text(
+                    local.chooseSecondSpecialist,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                  ).alignTopLeft(),
+                  0.02.height.hSpace,
+                  DropdownMenu(
+                    width: double.maxFinite,
+                    onSelected: (value) {
+                      secondSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
+                    },
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      iconColor: AppColors.secondaryColor,
+                      prefixIconColor: AppColors.secondaryColor,
+                      suffixIconColor: AppColors.secondaryColor,
+                    ),
+                    dropdownMenuEntries: [
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
+                        DropdownMenuEntry(
+                          value: icon,
+                          label: icon,
+                        ),
+                    ],
+                  ),
+                  0.02.height.hSpace,
+                  Text(
+                    local.chooseThirdSpecialist,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+                  ).alignTopLeft(),
+                  0.02.height.hSpace,
+
+                  DropdownMenu(
+                    width: double.maxFinite,
+                    onSelected: (value) {
+                      thirdSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
+                    },
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      iconColor: AppColors.secondaryColor,
+                      prefixIconColor: AppColors.secondaryColor,
+                      suffixIconColor: AppColors.secondaryColor,
+                    ),
+                    dropdownMenuEntries: [
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
+                        DropdownMenuEntry(
+                          value: icon,
+                          label: icon,
+                        ),
+                    ],
+                  ),
+                  0.02.height.hSpace,
                   CustomDropdown<String>(
                     hintText: local.city,
                     items: DoctorsProfileMethods.getAllCities(),
@@ -306,6 +405,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             city: selectedCity,
                             state: selectedLocation,
                             street: streetController.text,
+                            secondSpecialist: secondSpecialist,
+                            thirdSpecialist: thirdSpecialist,
+
                           );
                           slideLeftWidget(
                             newPage: AdditionalSignUpDoctorData(),

@@ -1,0 +1,2 @@
+/Users/hishamaymen/StudioProjects/Salamtk/android/app/.cxx/Debug/533e1f4y/x86/CMakeFiles/edit_cache.dir
+/Users/hishamaymen/StudioProjects/Salamtk/android/app/.cxx/Debug/533e1f4y/x86/CMakeFiles/rebuild_cache.dir

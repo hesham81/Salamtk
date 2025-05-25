@@ -115,6 +115,10 @@ class SignUpProviders extends ChangeNotifier {
 
   String? _clinicWorkingTo;
 
+  String? _secondSpecialist;
+
+  String? _thirdSpecialist;
+
   String? get name => _name;
 
   String? get clinicWorkingFrom => _clinicWorkingFrom;
@@ -208,6 +212,8 @@ class SignUpProviders extends ChangeNotifier {
     String? distinctiveMark,
     String? city,
     String? state,
+    String? secondSpecialist,
+    String? thirdSpecialist,
   }) {
     _name = name;
     _description = description;
@@ -220,6 +226,8 @@ class SignUpProviders extends ChangeNotifier {
     _selectedLocation = state;
     _street = street;
     _distinctiveMark = distinctiveMark;
+    _secondSpecialist = secondSpecialist;
+    _thirdSpecialist = thirdSpecialist;
     notifyListeners();
   }
 
@@ -327,6 +335,8 @@ class SignUpProviders extends ChangeNotifier {
           city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
+          secondSpecialist:_secondSpecialist,
+          thirdSpecialist: _thirdSpecialist,
         ),
       ).then(
         (value) {

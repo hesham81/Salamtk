@@ -12,9 +12,12 @@
   "seeAll": "عرض الكل",
   "mostBookedDoctors": "الأطباء الأقرب",
   "heart": "القلب",
+  "sepcialists": "التخصصات",
   "lung": "الرئة",
   "teeth": "الأسنان",
   "eye": "العيون",
+  "chooseSecondSpecialist": "اختر التخصص الثاني",
+    "chooseThirdSpecialist": "اختر التخصص الثالث",
   "general": "عام",
   "theInterior": "الباطنية",
   "nerves": "الأعصاب",
@@ -56,7 +59,7 @@
   "medicalPrescription": "روشتة طبية",
   "deleteAccount": "حذف الحساب",
   "medicals": "السجلات الطبية",
-  "medicalRumor": "خرافة طبية",
+  "medicalRumor": "اشاعه طبية",
   "medicalAnalysis": "تحليل طبي",
   "noReviewsYet": "لا توجد مراجعات حتى الآن",
   "reserveDay": "يوم الحجز",
@@ -206,5 +209,9 @@
    "welcomeBack" : "مرحبا بعودتك",
    "workingTimes" : "وقت العمل",
    "workingDays" : "ايام العمل",
-   "clinicLocation" : "عنوان العياده"
+   "clinicLocation" : "عنوان العياده",
+    "allReservations" : "كل الحجوزات",
+    "youDontHaveAnyReservation" : "لايوجد لديك حجوزات حتى الان"
+
+
 }

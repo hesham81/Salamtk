@@ -181,6 +181,44 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             Divider(),
             0.01.height.hSpace,
             Text(
+              local.sepcialists,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            0.01.height.hSpace,
+            Text(
+              (language.getLanguage == "en")
+                  ? provider.getDoctor?.specialist ?? ""
+                  : TranslationServices.translateCategoriesToAr(
+                      provider.getDoctor!.specialist,
+                    ),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            0.01.height.hSpace,
+            (provider.getDoctor?.secondSpecialist != null)
+                ? Text(
+                    (language.getLanguage == "en")
+                        ? provider.getDoctor!.secondSpecialist ?? ""
+                        : TranslationServices.translateCategoriesToAr(
+                            provider.getDoctor!.secondSpecialist ?? "",
+                          ),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : SizedBox(),
+            0.01.height.hSpace,
+            (provider.getDoctor?.thirdSpecialist != null)
+                ? Text(
+                    (language.getLanguage == "en")
+                        ? provider.getDoctor!.thirdSpecialist ?? ""
+                        : TranslationServices.translateCategoriesToAr(
+                            provider.getDoctor!.thirdSpecialist ?? "",
+                          ),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : SizedBox(),
+            0.01.height.hSpace,
+            Divider(),
+            0.01.height.hSpace,
+            Text(
               local.workingTimes,
               style: Theme.of(context).textTheme.titleMedium,
             ),

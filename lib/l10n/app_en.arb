@@ -25,6 +25,8 @@
   "reserveNow": "Book Now",
   "privacy": "Privacy Policy",
   "callUs": "Contact Us",
+  "chooseSecondSpecialist": "Choose Second Specialist",
+  "chooseThirdSpecialist": "Choose Third Specialist",
   "language": "Language",
   "myAccount": "My Account",
   "noName": "No Name Available",
@@ -34,6 +36,7 @@
   "emptyPhone": "Please provide your phone number",
   "loginWithEmail": "Sign in with Email",
   "phoneNumber": "Phone Number",
+  "sepcialists": "All Specialists",
   "pay": "Pay",
   "doctor": "Doctor",
   "date": "Date",
@@ -209,7 +212,9 @@
      "welcomeBack" : "Welcome Back",
      "workingTimes" : "Working Times",
      "workingDays" : "Working Days",
-     "clinicLocation" : "Clinic Location"
+     "clinicLocation" : "Clinic Location",
+     "allReservations" : "All Reservations",
+     "youDontHaveAnyReservation" : "You Don't Have Any Reservation"
 
 
 

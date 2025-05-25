@@ -39,6 +39,10 @@ class DoctorModel {
 
   String? distinctiveMark;
 
+  String? secondSpecialist;
+
+  String? thirdSpecialist;
+
   DoctorModel({
     this.totalPrice = 0 ,
     this.distinctiveMark,
@@ -68,6 +72,8 @@ class DoctorModel {
     String? imagePath, // Made imagePath nullable for customization
     DateTime? createdAt, // Allowed createdAt to be passed during initialization
     this.isInTheClinic = false,
+    this.secondSpecialist,
+    this.thirdSpecialist
   })  : imagePath = imagePath ?? AppAssets.doctorAvatar,
         // Default value if null
         createdAt = createdAt ?? DateTime.now(); // Default value if null
@@ -111,7 +117,9 @@ class DoctorModel {
       isInTheClinic: json['isInTheClinic'] ?? false, // Default to false if null
       isHidden: json['isHidden'] ?? false,
       totalPrice: json['totalPrice'] ?? 0,
-      distinctiveMark: json['distinctiveMark'] ?? '',
+      distinctiveMark: json['distinctiveMark'] ,
+      secondSpecialist: json['secondSpecialist'] ,
+      thirdSpecialist: json['thirdSpecialist'] ,
     );
   }
 
@@ -147,6 +155,8 @@ class DoctorModel {
       'isInTheClinic': isInTheClinic,
       'isHidden': isHidden,
       'totalPrice': totalPrice,
+      'secondSpecialist': secondSpecialist,
+      'thirdSpecialist': thirdSpecialist
     };
   }
 }
