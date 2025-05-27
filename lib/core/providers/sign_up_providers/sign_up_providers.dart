@@ -26,6 +26,13 @@ class SignUpProviders extends ChangeNotifier {
 
   String? _country;
 
+  List<String> _selectedSlotsData = [];
+
+  void setSelectedSlotsData(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
+
   String? _state;
 
   String? _city;
@@ -50,6 +57,14 @@ class SignUpProviders extends ChangeNotifier {
   File? _certificate;
 
   double? _price;
+
+  List<String> get listenSlots => _selectedSlotsData;
+
+  set listenSlots(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
+
   final List<String> timeSlots = [
     "12:00 AM",
     "12:30 AM",
@@ -317,8 +332,8 @@ class SignUpProviders extends ChangeNotifier {
           clinicWorkingFrom: clinicWorkingFrom!,
           clinicWorkingTo: clinicWorkingTo!,
           clinicPhoneNumber: phoneNumber!,
-          workingFrom: workingFrom!,
-          workingTo: workingTo!,
+          workingFrom: workingFrom,
+          workingTo: workingTo,
           certificateUrl: certificateUrl,
           imageUrl: imageUrl,
           area: area ?? "",
@@ -335,8 +350,9 @@ class SignUpProviders extends ChangeNotifier {
           city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
-          secondSpecialist:_secondSpecialist,
+          secondSpecialist: _secondSpecialist,
           thirdSpecialist: _thirdSpecialist,
+          days: _selectedSlotsData
         ),
       ).then(
         (value) {
@@ -358,12 +374,9 @@ class SignUpProviders extends ChangeNotifier {
       } else if (error.code == 'email-already-in-use') {
         return ('The account already exists ');
       }
-    }
-
-    catch (error) {
+    } catch (error) {
       EasyLoading.dismiss();
       return error.toString();
     }
-
   }
 }

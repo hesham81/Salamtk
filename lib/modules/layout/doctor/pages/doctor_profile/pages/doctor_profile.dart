@@ -131,12 +131,13 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   DoctorProfileComponent(
                     icon: Icons.next_week_outlined,
                     content:
-                        "${(language.getLanguage == "ar") ? _translateDayRelation(local.workingFrom) : local.workingFrom} ${doctor!.workingFrom}",
+                        "${(language.getLanguage == "ar") ? _translateDayRelation(local.workingFrom) : local.workingFrom} ${doctor?.workingFrom ?? doctor!.days!.first}",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: Icons.next_week_rounded,
-                    content: "${local.workingTo} ${doctor!.workingTo}",
+                    content:
+                        "${local.workingTo} ${doctor?.workingTo ?? doctor!.days!.last}",
                   ),
                   0.01.height.hSpace,
                   DividersWord(

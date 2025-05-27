@@ -1,6 +1,9 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/widget/custom_text_button.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/doctor_time_plan_sign_up.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/widget/dividers_word.dart';
 import '/core/services/snack_bar_services.dart';
@@ -77,78 +80,6 @@ class _AdditionalSignUpDoctorDataState
               ),
             ),
             0.01.height.hSpace,
-            Divider().hPadding(0.1.width),
-            Row(
-              children: [
-                Text(
-                  "${local.workingFrom} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: provider.workingFrom ?? local.workingFrom,
-                    items: provider.timeSlots,
-                    onChanged: (p0) {
-                      provider.setWorkingFrom(p0!);
-                    },
-                  ),
-                )
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
-                Text(
-                  "${local.workingTo} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: provider.workingTo ?? local.workingTo,
-                    items: provider.workingToList,
-                    onChanged: (p0) {
-                      provider.setWorkingTo(p0!);
-                    },
-                  ),
-                )
-              ],
-            ),
-            0.02.height.hSpace,
-            CustomElevatedButton(
-              child: Row(
-                children: [
-                  0.02.width.vSpace,
-                  Text(
-                    local.uploadCertificate,
-                    style: theme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.camera_alt_outlined,
-                    color: AppColors.primaryColor,
-                  ),
-                  0.02.width.vSpace,
-                ],
-              ),
-              onPressed: () async {
-                await provider.uploadCertificateImage();
-              },
-            ),
-            0.02.height.hSpace,
-            (provider.certificate == null)
-                ? SizedBox()
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(provider.certificate!),
-                  ),
-            0.01.height.hSpace,
             DividersWord(
               text: local.clinicInfo,
             ),
@@ -212,6 +143,87 @@ class _AdditionalSignUpDoctorDataState
                 )
               ],
             ),
+            Divider().hPadding(0.1.width),
+            0.01.height.hSpace,
+            // CustomTextButton(
+            //   text: local.clickToCustomizeYourTime,
+            //   onPressed: () => slideLeftWidget(
+            //     newPage: DoctorTimePlanSignUp(),
+            //     context: context,
+            //   ),
+            // ),
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.workingFrom} : ",
+            //       style: theme.labelLarge!.copyWith(
+            //         color: AppColors.secondaryColor,
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: CustomDropdown(
+            //         hintText: provider.workingFrom ?? local.workingFrom,
+            //         items: provider.timeSlots,
+            //         onChanged: (p0) {
+            //           provider.setWorkingFrom(p0!);
+            //         },
+            //       ),
+            //     )
+            //   ],
+            // ),
+            // 0.01.height.hSpace,
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.workingTo} : ",
+            //       style: theme.labelLarge!.copyWith(
+            //         color: AppColors.secondaryColor,
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: CustomDropdown(
+            //         hintText: provider.workingTo ?? local.workingTo,
+            //         items: provider.workingToList,
+            //         onChanged: (p0) {
+            //           provider.setWorkingTo(p0!);
+            //         },
+            //       ),
+            //     )
+            //   ],
+            // ),
+            0.02.height.hSpace,
+            CustomElevatedButton(
+              child: Row(
+                children: [
+                  0.02.width.vSpace,
+                  Text(
+                    local.uploadCertificate,
+                    style: theme.titleSmall!.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.primaryColor,
+                  ),
+                  0.02.width.vSpace,
+                ],
+              ),
+              onPressed: () async {
+                await provider.uploadCertificateImage();
+              },
+            ),
+            0.02.height.hSpace,
+            (provider.certificate == null)
+                ? SizedBox()
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(provider.certificate!),
+                  ),
+            0.01.height.hSpace,
+
             0.02.height.hSpace,
             SizedBox(
               width: 1.width,
@@ -233,16 +245,6 @@ class _AdditionalSignUpDoctorDataState
                     SnackBarServices.showErrorMessage(
                       context,
                       message: local.pleaseUploadYourImage,
-                    );
-                  } else if (provider.workingFrom == null) {
-                    SnackBarServices.showErrorMessage(
-                      context,
-                      message: local.pleaseSelectWorkingFrom,
-                    );
-                  } else if (provider.workingTo == null) {
-                    SnackBarServices.showErrorMessage(
-                      context,
-                      message: local.pleaseSelectWorkingTo,
                     );
                   } else if (provider.clinicWorkingTo == null ||
                       provider.clinicWorkingFrom == null) {
@@ -268,7 +270,7 @@ class _AdditionalSignUpDoctorDataState
                         } else {
                           SnackBarServices.showErrorMessage(
                             context,
-                            message: value ,
+                            message: value,
                           );
                         }
                       },

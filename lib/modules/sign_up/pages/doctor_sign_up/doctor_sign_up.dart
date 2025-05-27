@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/translation_services.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/doctor_time_plan_sign_up.dart';
 import '/core/functions/doctors_profile_methods.dart';
 import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 import '/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
@@ -410,7 +411,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
 
                           );
                           slideLeftWidget(
-                            newPage: AdditionalSignUpDoctorData(),
+                            newPage: DoctorTimePlanSignUp(),
                             context: context,
                           );
                         }

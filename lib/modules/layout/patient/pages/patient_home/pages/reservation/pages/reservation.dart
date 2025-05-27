@@ -29,24 +29,29 @@ class _ReservationState extends State<Reservation> {
   bool isNotWorking = false;
 
   _checkUnAvailableSlots() {
-    dayIndexes.clear();
     var provider = Provider.of<PatientProvider>(context, listen: false);
     var doctor = provider.getDoctor!;
-    int startIndex = allSlots.indexOf(doctor.workingFrom);
-    int endIndex = allSlots.indexOf(doctor.workingTo);
-    for (var index = startIndex; index <= endIndex; index++) {
-      timeSlots.add(allSlots[index]);
+    if (doctor.workingFrom == null) {
+      timeSlots.addAll(doctor.days ?? []);
+    } else {
+      dayIndexes.clear();
+      int startIndex = allSlots.indexOf(doctor.workingFrom!);
+      int endIndex = allSlots.indexOf(doctor.workingTo!);
+      for (var index = startIndex; index <= endIndex; index++) {
+        timeSlots.add(allSlots[index]);
+      }
+      int startClinicIndex = provider.days.indexOf(doctor.clinicWorkingFrom);
+      int endClinicIndex = provider.days.indexOf(doctor.clinicWorkingTo);
+      if (startClinicIndex > endClinicIndex) {
+        int temp = startClinicIndex;
+        startClinicIndex = endClinicIndex;
+        endClinicIndex = temp;
+      }
+      for (var index = startClinicIndex; index <= endClinicIndex; index++) {
+        dayIndexes.add(provider.days[index]);
+      }
     }
-    int startClinicIndex = provider.days.indexOf(doctor.clinicWorkingFrom);
-    int endClinicIndex = provider.days.indexOf(doctor.clinicWorkingTo);
-    if (startClinicIndex > endClinicIndex) {
-      int temp = startClinicIndex;
-      startClinicIndex = endClinicIndex;
-      endClinicIndex = temp;
-    }
-    for (var index = startClinicIndex; index <= endClinicIndex; index++) {
-      dayIndexes.add(provider.days[index]);
-    }
+
     setState(() {});
   }
 

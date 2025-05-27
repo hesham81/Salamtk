@@ -233,9 +233,13 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 ),
                 0.01.width.vSpace,
                 Text(
-                  provider.getDoctor!.workingFrom
-                      .replaceFirst("AM", "ص")
-                      .replaceFirst("PM", "م"),
+                  (provider.getDoctor?.workingFrom != null)
+                      ? provider.getDoctor!.workingFrom!
+                          .replaceFirst("AM", "ص")
+                          .replaceFirst("PM", "م")
+                      : provider.getDoctor!.days!.first
+                          .replaceFirst("AM", "ص")
+                          .replaceFirst("PM", "م"),
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),
@@ -253,9 +257,14 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 ),
                 0.01.width.vSpace,
                 Text(
-                  provider.getDoctor!.workingTo
+                  (provider.getDoctor?.workingTo != null)
+                      ? provider.getDoctor!.workingTo!
+                      .replaceFirst("AM", "ص")
+                      .replaceFirst("PM", "م")
+                      : provider.getDoctor!.days!.last
                       .replaceFirst("AM", "ص")
                       .replaceFirst("PM", "م"),
+
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),

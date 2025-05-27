@@ -1,15 +1,15 @@
 import '/core/constant/app_assets.dart';
 
 class DoctorModel {
-   String name;
+  String name;
   final String? uid;
-   double price;
-   String description;
+  double price;
+  String description;
   final String country;
   final String state;
   final String city;
-   String specialist;
-   String phoneNumber;
+  String specialist;
+  String phoneNumber;
   double? rate;
   final double? lat;
   final double? long;
@@ -20,22 +20,25 @@ class DoctorModel {
   final DateTime createdAt;
   bool isInTheClinic;
   String? imageUrl;
-  String workingFrom;
+  String? workingFrom;
 
-  String workingTo;
+  String? workingTo;
 
   String certificateUrl;
 
   bool isVerified;
 
-  String clinicWorkingFrom ;
+  List<String>? days;
 
-  String clinicWorkingTo ;
+  String clinicWorkingFrom;
 
-  String clinicPhoneNumber ;
+  String clinicWorkingTo;
 
-  bool isHidden ;
-  double totalPrice ;
+  String clinicPhoneNumber;
+
+  bool isHidden;
+
+  double totalPrice;
 
   String? distinctiveMark;
 
@@ -44,7 +47,7 @@ class DoctorModel {
   String? thirdSpecialist;
 
   DoctorModel({
-    this.totalPrice = 0 ,
+    this.totalPrice = 0,
     this.distinctiveMark,
     required this.clinicWorkingFrom,
     required this.clinicWorkingTo,
@@ -73,7 +76,8 @@ class DoctorModel {
     DateTime? createdAt, // Allowed createdAt to be passed during initialization
     this.isInTheClinic = false,
     this.secondSpecialist,
-    this.thirdSpecialist
+    this.thirdSpecialist,
+    this.days,
   })  : imagePath = imagePath ?? AppAssets.doctorAvatar,
         // Default value if null
         createdAt = createdAt ?? DateTime.now(); // Default value if null
@@ -81,6 +85,9 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      days: json['days'] != null
+          ? (json['days'] as List).map((e) => e.toString()).toList()
+          : null,
       clinicWorkingFrom: json['clinicWorkingFrom'],
       clinicWorkingTo: json['clinicWorkingTo'],
       clinicPhoneNumber: json['clinicPhoneNumber'],
@@ -114,12 +121,13 @@ class DoctorModel {
           ? DateTime.parse(json['createdAt']) // Parse from JSON
           : null,
       // Use default if not provided
-      isInTheClinic: json['isInTheClinic'] ?? false, // Default to false if null
+      isInTheClinic: json['isInTheClinic'] ?? false,
+      // Default to false if null
       isHidden: json['isHidden'] ?? false,
       totalPrice: json['totalPrice'] ?? 0,
-      distinctiveMark: json['distinctiveMark'] ,
-      secondSpecialist: json['secondSpecialist'] ,
-      thirdSpecialist: json['thirdSpecialist'] ,
+      distinctiveMark: json['distinctiveMark'],
+      secondSpecialist: json['secondSpecialist'],
+      thirdSpecialist: json['thirdSpecialist'],
     );
   }
 
@@ -156,7 +164,8 @@ class DoctorModel {
       'isHidden': isHidden,
       'totalPrice': totalPrice,
       'secondSpecialist': secondSpecialist,
-      'thirdSpecialist': thirdSpecialist
+      'thirdSpecialist': thirdSpecialist,
+      'days': days
     };
   }
 }

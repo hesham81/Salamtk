@@ -211,7 +211,12 @@
    "workingDays" : "ايام العمل",
    "clinicLocation" : "عنوان العياده",
     "allReservations" : "كل الحجوزات",
-    "youDontHaveAnyReservation" : "لايوجد لديك حجوزات حتى الان"
+    "youDontHaveAnyReservation" : "لايوجد لديك حجوزات حتى الان",
+    "chooseTime" : "اختر الاوقات المناسبه",
+    "customizeYourTime" : "تخصيص الوقت الخاص بك",
+    "clickToCustomizeYourTime" : "انقر لتخصيص الوقت الخاص بك"
+
+
 
 
 }

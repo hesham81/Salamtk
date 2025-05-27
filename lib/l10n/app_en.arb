@@ -214,7 +214,11 @@
      "workingDays" : "Working Days",
      "clinicLocation" : "Clinic Location",
      "allReservations" : "All Reservations",
-     "youDontHaveAnyReservation" : "You Don't Have Any Reservation"
+     "youDontHaveAnyReservation" : "You Don't Have Any Reservation",
+     "chooseTime" : "Choose Time",
+     "customizeYourTime" : "Customize Your Time",
+     "clickToCustomizeYourTime" : "Click To Customize Your Time"
+
 
 
 
