@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/doctors_profile_methods.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/validations/validations.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -278,23 +280,74 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 initialItem: widget.doctor.specialist,
               ),
               0.01.height.hSpace,
-              CustomDropdown<String>(
-                items: allSlots,
-                onChanged: (p0) {
-                  workingFrom = p0!;
-                  setState(() {});
-                },
-                hintText: widget.doctor.workingFrom,
-              ),
-              0.01.height.hSpace,
-              CustomDropdown<String>(
-                items: (workingFrom == null)
-                    ? allSlots
-                    : DoctorsProfileMethods.handleSlots(workingFrom!),
-                onChanged: (p0) {
-                  workingTo = p0;
-                },
-                hintText: widget.doctor.workingTo,
+              Visibility(
+                  visible: widget.doctor.workingTo == null,
+                  replacement: CustomElevatedButton(
+                    child: Row(
+                      children: [
+                        Text(
+                          local.customizeYourTime,
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ).hPadding(0.03.width),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: AppColors.primaryColor,
+                        ).hPadding(0.03.width)
+                      ],
+                    ),
+                    onPressed: () => slideLeftWidget(
+                      newPage: UpdateDaysProfileDoctor(),
+                      context: context,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      CustomDropdown<String>(
+                        items: allSlots,
+                        onChanged: (p0) {
+                          workingFrom = p0!;
+                          setState(() {});
+                        },
+                        hintText: widget.doctor.workingFrom,
+                      ),
+                      0.01.height.hSpace,
+                      CustomDropdown<String>(
+                        items: (workingFrom == null)
+                            ? allSlots
+                            : DoctorsProfileMethods.handleSlots(workingFrom!),
+                        onChanged: (p0) {
+                          workingTo = p0;
+                        },
+                        hintText: widget.doctor.workingTo,
+                      ),
+                    ],
+                  )),
+              Visibility(
+                visible: widget.doctor.days != null,
+                child: CustomElevatedButton(
+                  child: Row(
+                    children: [
+                      Text(
+                        local.customizeYourTime,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ).hPadding(0.03.width),
+                      Spacer(),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors.primaryColor,
+                      ).hPadding(0.03.width)
+                    ],
+                  ),
+                  onPressed: () {},
+                ),
               ),
               0.01.height.hSpace,
               DividersWord(
@@ -344,7 +397,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                           color: AppColors.primaryColor,
                         ),
                   ),
-                  onPressed: () async{
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       await _updateDoctorProfile();
                     }
