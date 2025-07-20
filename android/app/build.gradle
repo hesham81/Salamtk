@@ -18,7 +18,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.salamtuk.app"
+    namespace = "com.application.salamtuk"
     compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.salamtuk.app"
+        applicationId = "com.application.salamtuk"
         minSdk 24
         targetSdk = 34
         versionCode = flutter.versionCode

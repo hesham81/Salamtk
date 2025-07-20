@@ -120,12 +120,10 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             0.01.height.hSpace,
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                provider.getDoctor?.imageUrl ?? "",
-              ),
-              radius: 160,
+            CachedNetworkImage(
+              imageUrl: provider.getDoctor!.imageUrl!,
             ),
+            0.01.height.hSpace,
             Row(
               children: [
                 Text(
@@ -225,12 +223,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             0.01.height.hSpace,
             Row(
               children: [
-                Text(
-                  "${local.from} : ",
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: AppColors.blackColor,
-                      ),
-                ),
                 0.01.width.vSpace,
                 Text(
                   (provider.getDoctor?.workingFrom != null)
@@ -244,13 +236,9 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                         color: AppColors.blackColor,
                       ),
                 ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
+                0.01.width.vSpace,
                 Text(
-                  "${local.to} : ",
+                  "-",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),
@@ -259,18 +247,41 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 Text(
                   (provider.getDoctor?.workingTo != null)
                       ? provider.getDoctor!.workingTo!
-                      .replaceFirst("AM", "ص")
-                      .replaceFirst("PM", "م")
+                          .replaceFirst("AM", "ص")
+                          .replaceFirst("PM", "م")
                       : provider.getDoctor!.days!.last
-                      .replaceFirst("AM", "ص")
-                      .replaceFirst("PM", "م"),
-
+                          .replaceFirst("AM", "ص")
+                          .replaceFirst("PM", "م"),
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.blackColor,
                       ),
                 ),
               ],
             ),
+            0.01.height.hSpace,
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.to} : ",
+            //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+            //             color: AppColors.blackColor,
+            //           ),
+            //     ),
+            //     0.01.width.vSpace,
+            //     Text(
+            //       (provider.getDoctor?.workingTo != null)
+            //           ? provider.getDoctor!.workingTo!
+            //               .replaceFirst("AM", "ص")
+            //               .replaceFirst("PM", "م")
+            //           : provider.getDoctor!.days!.last
+            //               .replaceFirst("AM", "ص")
+            //               .replaceFirst("PM", "م"),
+            //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+            //             color: AppColors.blackColor,
+            //           ),
+            //     ),
+            //   ],
+            // ),
             0.01.height.hSpace,
             Divider(),
             0.01.height.hSpace,
@@ -281,12 +292,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
             0.01.height.hSpace,
             Row(
               children: [
-                Text(
-                  "${local.from} : ",
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: AppColors.blackColor,
-                      ),
-                ),
                 0.01.width.vSpace,
                 Text(
                   (language.getLanguage == "en")
@@ -298,16 +303,12 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                         color: AppColors.blackColor,
                       ),
                 ),
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
+                0.01.width.vSpace,
                 Text(
-                  "${local.to} : ",
+                  "-",
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: AppColors.blackColor,
-                      ),
+                    color: AppColors.blackColor,
+                  ),
                 ),
                 0.01.width.vSpace,
                 Text(
@@ -322,6 +323,28 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 ),
               ],
             ),
+            0.01.height.hSpace,
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.to} : ",
+            //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+            //             color: AppColors.blackColor,
+            //           ),
+            //     ),
+            //     0.01.width.vSpace,
+            //     Text(
+            //       (language.getLanguage == "en")
+            //           ? provider.getDoctor?.clinicWorkingTo ?? ""
+            //           : TranslationServices.translateDaysToAr(
+            //               provider.getDoctor?.clinicWorkingTo ?? "",
+            //             ),
+            //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+            //             color: AppColors.blackColor,
+            //           ),
+            //     ),
+            //   ],
+            // ),
             0.01.height.hSpace,
             CustomTextButton(
               text: provider.getDoctor?.clinicPhoneNumber ?? "",
@@ -374,9 +397,11 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 0.01.height.vSpace,
-                Text(
-                  "${provider.getDoctor?.street} (${provider.getDoctor?.distinctiveMark})",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                Expanded(
+                  child: Text(
+                    "${provider.getDoctor?.street} (${provider.getDoctor?.distinctiveMark})",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ],
             ),

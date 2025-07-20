@@ -42,7 +42,8 @@ abstract class TranslationServices {
     "Pain Management": "إدارة الألم",
     "Cosmetic Surgery": "جراحة التجميل",
     "Nerves": "الأعصاب",
-    "General": "عام"
+    "General": "عام",
+    "physical therapy": "علاج طبيعي",
   };
   static List<String> englishSpecialists = [
     "Obstetrics",
@@ -73,6 +74,7 @@ abstract class TranslationServices {
     "Cosmetic Surgery",
     "Nerves",
     "General",
+    "physical therapy",
   ];
   static List<String> arabicSpecialists = [
     "التوليد",
@@ -102,8 +104,10 @@ abstract class TranslationServices {
     "إدارة الألم",
     "جراحة التجميل",
     "الأعصاب",
-    "عام"
+    "عام",
+    "علاج طبيعي",
   ];
+
   // Method to translate categories from English to Arabic
   static String translateCategoriesToAr(String enCategory) {
     return _specialists[enCategory] ??
@@ -114,7 +118,8 @@ abstract class TranslationServices {
   static String translateCategoriesToEn(String arCategory) {
     // Reverse lookup: Find the key for the given Arabic value
     String? enCategory = _specialists.entries
-        .firstWhere((entry) => entry.value.toLowerCase() == arCategory.toLowerCase())
+        .firstWhere(
+            (entry) => entry.value.toLowerCase() == arCategory.toLowerCase())
         .key;
     return enCategory ?? "Category not found"; // Fallback if not found
   }

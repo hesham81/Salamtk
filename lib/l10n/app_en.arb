@@ -217,7 +217,10 @@
      "youDontHaveAnyReservation" : "You Don't Have Any Reservation",
      "chooseTime" : "Choose Time",
      "customizeYourTime" : "Customize Your Time",
-     "clickToCustomizeYourTime" : "Click To Customize Your Time"
+     "clickToCustomizeYourTime" : "Click To Customize Your Time",
+     "loginFirstToSeeYourReservations" : "Login First To See Your Reservations",
+     "noReservationsFound" : "No Reservations Found",
+     "physicalTherapy" : "Physical Therapy"
 
 
 

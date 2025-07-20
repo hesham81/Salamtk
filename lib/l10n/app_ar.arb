@@ -214,7 +214,11 @@
     "youDontHaveAnyReservation" : "لايوجد لديك حجوزات حتى الان",
     "chooseTime" : "اختر الاوقات المناسبه",
     "customizeYourTime" : "تخصيص الوقت الخاص بك",
-    "clickToCustomizeYourTime" : "انقر لتخصيص الوقت الخاص بك"
+    "clickToCustomizeYourTime" : "انقر لتخصيص الوقت الخاص بك",
+     "loginFirstToSeeYourReservations" : "يجب عليك تسجيل الدخول اولا لرؤية الحجوزات",
+     "noReservationsFound" : "لايوجد لديك حجوزات",
+          "physicalTherapy" : "العلاج الطبيعي"
+
 
 
 

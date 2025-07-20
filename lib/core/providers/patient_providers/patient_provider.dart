@@ -156,6 +156,10 @@ class PatientProvider extends ChangeNotifier {
         "icon": "assets/icons/categorize/Radiology.jpg",
         "text": local?.radiology,
         "color": Colors.orangeAccent,
+      },{
+        "icon": "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "text": local?.physicalTherapy,
+        "color": Colors.orangeAccent,
       },
       {
         "icon": "assets/icons/categorize/Endocrinology.jpg",
