@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/main.dart';
+import '../app_providers/language_provider.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -30,15 +33,19 @@ class PatientProvider extends ChangeNotifier {
   String? appPhoneNumber;
 
   String? get getSelectedCity => _selectedCity;
+
   String? get getSelectedZone => _selectedZone;
+
   void setSelectedCity(String value) {
     _selectedCity = value;
     notifyListeners();
   }
+
   void setSelectedZone(String value) {
     _selectedZone = value;
     notifyListeners();
   }
+
   late int _totalReservations;
   List<ReservationModel> _reservations = [];
 
@@ -156,8 +163,10 @@ class PatientProvider extends ChangeNotifier {
         "icon": "assets/icons/categorize/Radiology.jpg",
         "text": local?.radiology,
         "color": Colors.orangeAccent,
-      },{
-        "icon": "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+      },
+      {
+        "icon":
+            "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
         "text": local?.physicalTherapy,
         "color": Colors.orangeAccent,
       },
@@ -195,7 +204,8 @@ class PatientProvider extends ChangeNotifier {
   Future<void> checkReservations() async {
     try {
       var userId = FirebaseAuth.instance.currentUser!.uid;
-      _reservations = await ReservationCollection.getReservations(patientId: userId);
+      _reservations =
+          await ReservationCollection.getReservations(patientId: userId);
       notifyListeners();
     } catch (error) {
       print("Error fetching reservations: $error");
@@ -247,8 +257,9 @@ class PatientProvider extends ChangeNotifier {
   }
 
   bool checkIsAllow(DateTime date) {
-    int startIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingFrom);
-    int endIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingTo);
+    int startIndex =
+        _sortedDays.indexOf(_selectedDoctor!.clinicWorkingFrom ?? "");
+    int endIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingTo ?? "");
     for (int index = startIndex; index <= endIndex; index++) {
       if (days[index] == date.weekday.toString()) {
         return true;
@@ -274,22 +285,39 @@ class PatientProvider extends ChangeNotifier {
 
   // Getters
   bool get getIsContainReservations => _isContainReservations;
+
   String? get reservationName => _reservationName;
+
   String? get reservationEmail => _reservationEmail;
+
   String? get reservationPhoneNumber => _reservationPhoneNumber;
+
   String get getProviderName => _providerName;
+
   String get getProviderPath => _providerPath;
+
   String? get getAppPhoneNumber => appPhoneNumber;
+
   bool? get getIsPayValid => _isPayValid;
+
   String? get getUserPhoneNumber => _userPhoneNumber;
+
   String? get getPhoneNumber => _selectedPhoneNumber;
+
   File? get getImage => _image;
+
   String? get getScreenshot => _screenshot;
+
   DoctorModel? get getDoctor => _selectedDoctor;
+
   String? get getPaymentMethod => _selectedPaymentMethod;
+
   DateTime? get getSelectedDate => _selectedDate;
+
   String? get getSelectedSlot => _selectedSlot;
+
   List<ReservationModel> get getReservations => _reservations;
+
   int get getTotalReservations => _totalReservations;
 
   void setIsContainReservations(bool value) {
@@ -368,33 +396,93 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<DoctorModel?> searchForDoctor({required String doctorPhoneNumber}) async {
+  Future<DoctorModel?> searchForDoctor(
+      {required String doctorPhoneNumber}) async {
     return await DoctorsCollection.getDoctorData(uid: doctorPhoneNumber);
   }
 
-  bool handleDoctorDayIndex() {
-    List<String> daysData = [];
-    int index = _selectedDate!.weekday;
-    String day = days[index - 1];
-    String startDay = _selectedDoctor!.clinicWorkingFrom;
-    String endDay = _selectedDoctor!.clinicWorkingTo;
-    int startIndex = days.indexOf(startDay);
-    int endIndex = days.indexOf(endDay);
+  final List<String> daysEn = [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+  ];
 
-    if (startIndex <= endIndex) {
-      for (var i = startIndex; i <= endIndex; i++) {
-        daysData.add(days[i]);
-      }
-    } else {
-      for (var i = startIndex; i < days.length; i++) {
-        daysData.add(days[i]);
-      }
-      for (var i = 0; i <= endIndex; i++) {
-        daysData.add(days[i]);
-      }
+  final List<String> daysOrder = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
+
+  final List<String> daysAr = [
+    "الأحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة",
+    "السبت"
+  ];
+  bool _handleContDays(int selectedDay) {
+    var startDay = this._selectedDoctor!.clinicWorkingFrom;
+    var endDay = this._selectedDoctor!.clinicWorkingTo;
+
+    if (startDay == null || endDay == null) return true; // No range → block all?
+
+    const List<String> daysOrder = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+
+    int startIndex = daysOrder.indexOf(startDay);
+    int endIndex = daysOrder.indexOf(endDay);
+    int selectedDayIndex = _weekdayToDayOrderIndex(selectedDay); // Convert weekday to index in daysOrder
+
+    if (startIndex == -1 || endIndex == -1 || selectedDayIndex == -1) {
+      return true; // Invalid day name → block
     }
 
-    return !daysData.contains(day);
+    if (startIndex <= endIndex) {
+      // Normal range: Sunday (0) to Thursday (4)
+      return selectedDayIndex < startIndex || selectedDayIndex > endIndex;
+    } else {
+      // Wrap-around: Friday (5) to Monday (1) → valid: 5,6,0,1 → invalid: 2,3,4
+      return selectedDayIndex > endIndex && selectedDayIndex < startIndex;
+    }
+  }
+
+// Helper: Convert DateTime.weekday (1-7) to index in daysOrder [Sun=0, ..., Sat=6]
+  int _weekdayToDayOrderIndex(int weekday) {
+    // weekday: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun
+    if (weekday == 7) return 0; // Sunday
+    return weekday; // Monday (1) → index 1, ..., Saturday (6) → index 6
+  }
+
+  bool _handleSpecDays(BuildContext context, int selectedDay) {
+    List<String> days = _selectedDoctor!.clinicDays!;
+
+    String day = (selectedDay == 0) ? daysEn.first : daysEn[selectedDay];
+
+    return !days.contains(day);
+  }
+
+
+  bool handleDoctorDayIndex(BuildContext context, int weekDay) {
+    return (this._selectedDoctor?.clinicDays != null)
+        ? _handleSpecDays(context, weekDay)
+        : _handleContDays(weekDay);
   }
 
   void initFavourites() async {

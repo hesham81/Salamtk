@@ -291,7 +291,10 @@ class SignUpProviders extends ChangeNotifier {
 
   TextEditingController phoneNumberController = TextEditingController();
 
-  Future<String?> confirm(BuildContext context) async {
+  Future<String?> confirm(
+    BuildContext context,
+    List<String>? clinicDays,
+  ) async {
     try {
       EasyLoading.show();
       UserCredential? user =
@@ -329,8 +332,8 @@ class SignUpProviders extends ChangeNotifier {
       await DoctorsCollection.setDoctor(
         DoctorModel(
           distinctiveMark: distinctiveMark,
-          clinicWorkingFrom: clinicWorkingFrom!,
-          clinicWorkingTo: clinicWorkingTo!,
+          clinicWorkingFrom: null,
+          clinicWorkingTo: null,
           clinicPhoneNumber: phoneNumber!,
           workingFrom: workingFrom,
           workingTo: workingTo,
@@ -352,7 +355,8 @@ class SignUpProviders extends ChangeNotifier {
           phoneNumber: phoneNumber!,
           secondSpecialist: _secondSpecialist,
           thirdSpecialist: _thirdSpecialist,
-          days: _selectedSlotsData
+          days: _selectedSlotsData,
+          clinicDays: clinicDays,
         ),
       ).then(
         (value) {
@@ -378,5 +382,6 @@ class SignUpProviders extends ChangeNotifier {
       EasyLoading.dismiss();
       return error.toString();
     }
+    return null;
   }
 }

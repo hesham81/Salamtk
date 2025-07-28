@@ -61,15 +61,23 @@
       "client_info": {
         "mobilesdk_app_id": "1:8747852076:android:462cc3f7f196f57ebb0c89",
         "android_client_info": {
-          "package_name": "com.application.salamtuk"
+          "package_name": "com.salamtuk.hesham"
         }
       },
       "oauth_client": [
         {
+          "client_id": "8747852076-p2b45ncroi8rogu51k8oi2ctnqpguibs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.hesham",
+            "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
+          }
+        },
+        {
           "client_id": "8747852076-slmvdh9tv7i0dpi2ho017n0gptvciu9h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.application.salamtuk",
+            "package_name": "com.salamtuk.hesham",
             "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
           }
         },
@@ -203,6 +211,50 @@
           "android_info": {
             "package_name": "com.salamtuk.app",
             "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
+          }
+        },
+        {
+          "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvXCsYhev8l-NYTaMtGiRmN7gfMIeLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.samaltuk.salamtuk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8747852076:android:0f96855b90e3b11cbb0c89",
+        "android_client_info": {
+          "package_name": "com.salamtuk.hesham"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8747852076-kbseu34c39k3rgoqaodu7eutf5s68uh0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.hesham",
+            "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
           }
         },
         {

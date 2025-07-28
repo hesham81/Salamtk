@@ -148,7 +148,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     icon: FontAwesomeIcons.timeline,
                     content:
                         "${local.clinicWorkingFrom} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingFrom,
+                            doctor!.clinicWorkingFrom ?? "",
                           ) : doctor!.clinicWorkingFrom}",
                   ),
                   0.01.height.hSpace,
@@ -156,7 +156,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     icon: FontAwesomeIcons.timeline,
                     content:
                         "${local.clinicWorkingTo} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingTo,
+                            doctor!.clinicWorkingTo ?? "",
                           ) : doctor!.clinicWorkingTo}",
                   ),
                   0.01.height.hSpace,

@@ -2,6 +2,8 @@ import '/core/constant/app_assets.dart';
 
 class DoctorModel {
   String name;
+  String? email;
+
   final String? uid;
   double price;
   String description;
@@ -22,6 +24,8 @@ class DoctorModel {
   String? imageUrl;
   String? workingFrom;
 
+  List<String>? clinicDays;
+
   String? workingTo;
 
   String certificateUrl;
@@ -30,9 +34,9 @@ class DoctorModel {
 
   List<String>? days;
 
-  String clinicWorkingFrom;
+  String? clinicWorkingFrom;
 
-  String clinicWorkingTo;
+  String? clinicWorkingTo;
 
   String clinicPhoneNumber;
 
@@ -46,16 +50,20 @@ class DoctorModel {
 
   String? thirdSpecialist;
 
+  // String
+
   DoctorModel({
     this.totalPrice = 0,
     this.distinctiveMark,
-    required this.clinicWorkingFrom,
-    required this.clinicWorkingTo,
+    this.clinicWorkingFrom,
+    this.clinicWorkingTo,
     required this.clinicPhoneNumber,
     this.isVerified = false,
     this.uid,
+    this.clinicDays,
     required this.workingFrom,
     required this.workingTo,
+    this.email,
     required this.certificateUrl,
     required this.imageUrl,
     required this.area,
@@ -91,6 +99,7 @@ class DoctorModel {
       clinicWorkingFrom: json['clinicWorkingFrom'],
       clinicWorkingTo: json['clinicWorkingTo'],
       clinicPhoneNumber: json['clinicPhoneNumber'],
+      email: json['email'],
       isVerified: json['isVerified'],
       workingFrom: json['workingFrom'],
       workingTo: json['workingTo'],
@@ -128,6 +137,10 @@ class DoctorModel {
       distinctiveMark: json['distinctiveMark'],
       secondSpecialist: json['secondSpecialist'],
       thirdSpecialist: json['thirdSpecialist'],
+      clinicDays: json['clinicDays'] != null
+          ? (json['clinicDays'] as List).map((e) => e.toString()).toList()
+          : null,
+
     );
   }
 
@@ -157,6 +170,7 @@ class DoctorModel {
       'rate': rate,
       'lat': lat,
       'long': long,
+      'email': email,
       'imagePath': imagePath,
       'createdAt': createdAt.toIso8601String(),
       // Serialize DateTime as ISO string
@@ -165,7 +179,8 @@ class DoctorModel {
       'totalPrice': totalPrice,
       'secondSpecialist': secondSpecialist,
       'thirdSpecialist': thirdSpecialist,
-      'days': days
+      'days': days,
+      'clinicDays': clinicDays,
     };
   }
 }
