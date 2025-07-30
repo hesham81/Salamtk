@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/providers/app_providers/all_app_providers_db.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -32,14 +29,54 @@ class _ReservationState extends State<Reservation> {
 
   final List<String> timeSlots = [];
   final List<String> allSlots = [
-    "12:00 AM", "12:30 AM", "01:00 AM", "01:30 AM", "02:00 AM", "02:30 AM",
-    "03:00 AM", "03:30 AM", "04:00 AM", "04:30 AM", "05:00 AM", "05:30 AM",
-    "06:00 AM", "06:30 AM", "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM",
-    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
-    "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
-    "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM",
-    "09:00 PM", "09:30 PM", "10:00 PM", "10:30 PM", "11:00 PM", "11:30 PM"
+    "12:00 AM",
+    "12:30 AM",
+    "01:00 AM",
+    "01:30 AM",
+    "02:00 AM",
+    "02:30 AM",
+    "03:00 AM",
+    "03:30 AM",
+    "04:00 AM",
+    "04:30 AM",
+    "05:00 AM",
+    "05:30 AM",
+    "06:00 AM",
+    "06:30 AM",
+    "07:00 AM",
+    "07:30 AM",
+    "08:00 AM",
+    "08:30 AM",
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
+    "03:00 PM",
+    "03:30 PM",
+    "04:00 PM",
+    "04:30 PM",
+    "05:00 PM",
+    "05:30 PM",
+    "06:00 PM",
+    "06:30 PM",
+    "07:00 PM",
+    "07:30 PM",
+    "08:00 PM",
+    "08:30 PM",
+    "09:00 PM",
+    "09:30 PM",
+    "10:00 PM",
+    "10:30 PM",
+    "11:00 PM",
+    "11:30 PM"
   ];
 
   final List<DateTime> slots = [];
@@ -59,7 +96,7 @@ class _ReservationState extends State<Reservation> {
         timeSlots.add(allSlots[index]);
       }
       int startClinicIndex =
-      provider.days.indexOf(doctor.clinicWorkingFrom ?? "");
+          provider.days.indexOf(doctor.clinicWorkingFrom ?? "");
       int endClinicIndex = provider.days.indexOf(doctor.clinicWorkingTo ?? "");
       if (startClinicIndex > endClinicIndex) {
         int temp = startClinicIndex;
@@ -111,8 +148,8 @@ class _ReservationState extends State<Reservation> {
         title: Text(
           local!.reserve,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: AppColors.primaryColor,
-          ),
+                color: AppColors.primaryColor,
+              ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -128,27 +165,27 @@ class _ReservationState extends State<Reservation> {
         padding: EdgeInsets.all(0.01.height),
         child: CustomElevatedButton(
           onPressed: (provider.getSelectedSlot == null ||
-              provider.getSelectedDate == null ||
-              isNotWorking)
+                  provider.getSelectedDate == null ||
+                  isNotWorking)
               ? null
               : () {
-            if (user == null) {
-              slideLeftWidget(
-                newPage: SignIn(),
-                context: context,
-              );
-            } else {
-              slideLeftWidget(
-                newPage: ConfirmPayment(),
-                context: context,
-              );
-            }
-          },
+                  if (user == null) {
+                    slideLeftWidget(
+                      newPage: SignIn(),
+                      context: context,
+                    );
+                  } else {
+                    slideLeftWidget(
+                      newPage: ConfirmPayment(),
+                      context: context,
+                    );
+                  }
+                },
           child: Text(
             local.reserve,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: AppColors.primaryColor,
-            ),
+                  color: AppColors.primaryColor,
+                ),
           ),
         ),
       ),
@@ -160,7 +197,8 @@ class _ReservationState extends State<Reservation> {
             // Allow only two months: today to +60 days
             firstDay: DateTime.now(),
             lastDay: DateTime.now().add(const Duration(days: 60)),
-            selectedDayPredicate: (day) => isSameDay(provider.getSelectedDate, day),
+            selectedDayPredicate: (day) =>
+                isSameDay(provider.getSelectedDate, day),
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _focusedDay = focusedDay;
@@ -170,7 +208,8 @@ class _ReservationState extends State<Reservation> {
               //   message: selectedDay.weekday.toString(),
               // );
               provider.setSelectedDate(selectedDay);
-              isNotWorking = provider.handleDoctorDayIndex(context, selectedDay.weekday);
+              isNotWorking =
+                  provider.handleDoctorDayIndex(context, selectedDay.weekday);
               _checkSlots();
             },
             onPageChanged: (focusedDay) {
@@ -195,7 +234,9 @@ class _ReservationState extends State<Reservation> {
               ),
             ),
           ),
-          SizedBox(height: 0.01.height),
+          SizedBox(
+            height: 0.01.height,
+          ),
           Expanded(
             child: GridView.builder(
               shrinkWrap: true,
@@ -216,35 +257,35 @@ class _ReservationState extends State<Reservation> {
                   onTap: isNotWorking
                       ? null
                       : isBooked
-                      ? null
-                      : () {
-                    provider.setSelectedSlot(slot);
-                  },
+                          ? null
+                          : () {
+                              provider.setSelectedSlot(slot);
+                            },
                   child: isNotWorking
                       ? const SizedBox()
                       : Container(
-                    decoration: BoxDecoration(
-                      color: isBooked
-                          ? Colors.red
-                          : isSelected
-                          ? AppColors.secondaryColor
-                          : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        slot,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isSelected
-                              ? Colors.white
-                              : isBooked
-                              ? AppColors.primaryColor
-                              : Colors.black,
+                          decoration: BoxDecoration(
+                            color: isBooked
+                                ? Colors.red
+                                : isSelected
+                                    ? AppColors.secondaryColor
+                                    : Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              slot,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: isSelected
+                                    ? Colors.white
+                                    : isBooked
+                                        ? AppColors.primaryColor
+                                        : Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 );
               },
             ),
