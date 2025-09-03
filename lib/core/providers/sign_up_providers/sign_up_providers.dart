@@ -8,6 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
+import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
 
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/storage/doctors_storage.dart';
@@ -25,6 +26,31 @@ class SignUpProviders extends ChangeNotifier {
   Marker? _marker;
 
   String? _country;
+
+  String? _secondClinicCity;
+  String? _secondClinicState;
+  String? _secondClinicStreet;
+
+  String? get secondClinicCity => _secondClinicCity;
+
+  String? get secondClinicState => _secondClinicState;
+
+  String? get secondClinicStreet => _secondClinicStreet;
+
+  setSecondClinicCity(String? value) {
+    _secondClinicCity = value;
+    notifyListeners();
+  }
+
+  setSecondClinicState(String? value) {
+    _secondClinicState = value;
+    notifyListeners();
+  }
+
+  setSecondClinicStreet(String? value) {
+    _secondClinicStreet = value;
+    notifyListeners();
+  }
 
   List<String> _selectedSlotsData = [];
 
@@ -290,13 +316,34 @@ class SignUpProviders extends ChangeNotifier {
   }
 
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController clinicPhoneNumberController = TextEditingController();
+
+  String? _clinicPhoneNumber;
+
+  ClinicDataModel? _secondClinicDataModel;
+
+  ClinicDataModel? get secondClinicDataModel => _secondClinicDataModel;
+
+  void setSecondClinicDataModel(ClinicDataModel value) {
+    _secondClinicDataModel = value;
+    notifyListeners();
+  }
+
+  String? get clinicPhoneNumber => _clinicPhoneNumber;
+
+  void setClinicPhoneNumber(String value) {
+    _clinicPhoneNumber = value;
+    notifyListeners();
+  }
 
   Future<String?> confirm(
     BuildContext context,
-    List<String>? clinicDays,
-  ) async {
+    List<String>? clinicDays, {
+    ClinicDataModel? secondClinic,
+  }) async {
     try {
       EasyLoading.show();
+      _clinicPhoneNumber = clinicPhoneNumberController.text;
       UserCredential? user =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!,
@@ -334,7 +381,7 @@ class SignUpProviders extends ChangeNotifier {
           distinctiveMark: distinctiveMark,
           clinicWorkingFrom: null,
           clinicWorkingTo: null,
-          clinicPhoneNumber: phoneNumber!,
+          clinicPhoneNumber: _clinicPhoneNumber!,
           workingFrom: workingFrom,
           workingTo: workingTo,
           certificateUrl: certificateUrl,
@@ -357,6 +404,7 @@ class SignUpProviders extends ChangeNotifier {
           thirdSpecialist: _thirdSpecialist,
           days: _selectedSlotsData,
           clinicDays: clinicDays,
+          secondClinic: secondClinic,
         ),
       ).then(
         (value) {

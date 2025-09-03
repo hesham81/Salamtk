@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/second_clinic_info.dart';
 import '../../../../core/providers/app_providers/language_provider.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/widget/dividers_word.dart';
@@ -88,7 +90,7 @@ class _AdditionalSignUpDoctorDataState
             0.02.height.hSpace,
             CustomTextFormField(
               hintText: local.phoneNumber,
-              controller: provider.phoneNumberController,
+              controller: provider.clinicPhoneNumberController,
               suffixIcon: Icons.phone_android_outlined,
               keyboardType: TextInputType.number,
               validate: (value) {
@@ -221,7 +223,9 @@ class _AdditionalSignUpDoctorDataState
               width: 1.width,
               child: CustomElevatedButton(
                 child: Text(
-                  local.confirm,
+                  (provider.secondClinicCity != null)
+                      ? local.goToSecondClinicProfile
+                      : local.confirm,
                   style: theme.titleSmall!.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -242,6 +246,11 @@ class _AdditionalSignUpDoctorDataState
                     SnackBarServices.showErrorMessage(
                       context,
                       message: local.pleaseCheckClinicInfo,
+                    );
+                  } else if (provider.secondClinicCity != null) {
+                    slideLeftWidget(
+                      newPage: SecondClinicInfo(),
+                      context: context,
                     );
                   } else {
                     provider.confirm(context, data).then(

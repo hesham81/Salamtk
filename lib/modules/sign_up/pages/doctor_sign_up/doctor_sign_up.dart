@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/translation_services.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
+import 'package:salamtk/core/widget/dividers_word.dart';
 import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/doctor_time_plan_sign_up.dart';
 import '/core/functions/doctors_profile_methods.dart';
 import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
@@ -28,6 +29,9 @@ class DoctorSignUp extends StatefulWidget {
 }
 
 class _DoctorSignUpState extends State<DoctorSignUp> {
+  TextEditingController clinicCityController = TextEditingController();
+  TextEditingController clinicStateController = TextEditingController();
+  TextEditingController clinicStreetController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -40,6 +44,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController city = TextEditingController();
   TextEditingController streetController = TextEditingController();
   TextEditingController distinctiveMarkController = TextEditingController();
+  TextEditingController secondCityController = TextEditingController();
+  TextEditingController secondStateController = TextEditingController();
+  TextEditingController secondStreetController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<String> specialistsEn = [
@@ -267,11 +274,10 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   Text(
                     local.chooseThirdSpecialist,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.blackColor,
-                    ),
+                          color: AppColors.blackColor,
+                        ),
                   ).alignTopLeft(),
                   0.02.height.hSpace,
-
                   DropdownMenu(
                     width: double.maxFinite,
                     onSelected: (value) {
@@ -383,6 +389,25 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                         )
                       : SizedBox(),
                   0.02.height.hSpace,
+                  DividersWord(text: "Second Clinic"),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.city,
+                    controller: clinicCityController,
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.state,
+                    controller: clinicStateController,
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.address,
+                    controller: clinicStreetController,
+                  ),
+                  0.01.height.hSpace,
+
+                  /// Ending of the custom text form field
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomElevatedButton(
@@ -391,6 +416,19 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             selectedSpecialist != null &&
                             selectedCity != null &&
                             selectedLocation != null) {
+                          // if (secondC != null ||
+                          //     provider.secondClinicStreet != null ||
+                          //     provider.secondClinicState != null) {}
+                          provider.setSecondClinicCity(
+                            clinicCityController.text,
+                          );
+                          provider.setSecondClinicState(
+                            clinicStateController.text,
+                          );
+                          provider.setSecondClinicStreet(
+                            clinicStreetController.text,
+                          );
+
                           provider.setDoctorData(
                             distinctiveMark:
                                 distinctiveMarkController.text.isEmpty

@@ -61,7 +61,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:8747852076:android:462cc3f7f196f57ebb0c89",
         "android_client_info": {
-          "package_name": "com.salamtuk.hesham"
+          "package_name": "com.application.salamtuk"
         }
       },
       "oauth_client": [
@@ -69,7 +69,7 @@
           "client_id": "8747852076-p2b45ncroi8rogu51k8oi2ctnqpguibs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.salamtuk.hesham",
+            "package_name": "com.application.salamtuk",
             "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
           }
         },
@@ -77,7 +77,7 @@
           "client_id": "8747852076-slmvdh9tv7i0dpi2ho017n0gptvciu9h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.salamtuk.hesham",
+            "package_name": "com.application.salamtuk",
             "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
           }
         },
@@ -255,6 +255,14 @@
           "android_info": {
             "package_name": "com.salamtuk.hesham",
             "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
+          }
+        },
+        {
+          "client_id": "8747852076-s08tu2ou2i6241h7vucncf19qpsg8d8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.hesham",
+            "certificate_hash": "8cb79a8e7b98569ec4ff69497fabd31cc40f57cb"
           }
         },
         {

@@ -217,7 +217,9 @@
     "clickToCustomizeYourTime" : "انقر لتخصيص الوقت الخاص بك",
      "loginFirstToSeeYourReservations" : "يجب عليك تسجيل الدخول اولا لرؤية الحجوزات",
      "noReservationsFound" : "لايوجد لديك حجوزات",
-          "physicalTherapy" : "العلاج الطبيعي"
+          "physicalTherapy" : "العلاج الطبيعي",
+          "goToSecondClinicProfile"  : "الذهاب الي اعدادات العياده الثانيه ",
+          "clinic": "عياده"
 
 
 

@@ -5,11 +5,13 @@ import 'package:salamtk/core/theme/app_colors.dart';
 class IconRow extends StatelessWidget {
   final IconData icon;
   final String text;
+  final Color? color;
 
   const IconRow({
     super.key,
     required this.icon,
     required this.text,
+    this.color,
   });
 
   @override
@@ -18,13 +20,13 @@ class IconRow extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: AppColors.blackColor.withAlpha(80),
+          color: color ?? AppColors.blackColor.withAlpha(80),
         ),
         0.01.width.vSpace,
         Text(
           text,
           style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                color: AppColors.blackColor.withAlpha(80),
+                color: color ?? AppColors.blackColor.withAlpha(80),
               ),
         ),
       ],

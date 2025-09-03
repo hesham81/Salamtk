@@ -220,7 +220,9 @@
      "clickToCustomizeYourTime" : "Click To Customize Your Time",
      "loginFirstToSeeYourReservations" : "Login First To See Your Reservations",
      "noReservationsFound" : "No Reservations Found",
-     "physicalTherapy" : "Physical Therapy"
+     "physicalTherapy" : "Physical Therapy",
+     "goToSecondClinicProfile" : "Go To Second Clinic Profile",
+     "clinic":"Clinic"
 
 
 

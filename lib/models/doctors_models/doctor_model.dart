@@ -1,3 +1,5 @@
+import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
+
 import '/core/constant/app_assets.dart';
 
 class DoctorModel {
@@ -50,6 +52,8 @@ class DoctorModel {
 
   String? thirdSpecialist;
 
+  ClinicDataModel? secondClinic;
+
   // String
 
   DoctorModel({
@@ -86,6 +90,7 @@ class DoctorModel {
     this.secondSpecialist,
     this.thirdSpecialist,
     this.days,
+    this.secondClinic,
   })  : imagePath = imagePath ?? AppAssets.doctorAvatar,
         // Default value if null
         createdAt = createdAt ?? DateTime.now(); // Default value if null
@@ -93,6 +98,9 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      secondClinic: (json['secondClinic'] == null)
+          ? null
+          : ClinicDataModel.fromJson(json['secondClinic']),
       days: json['days'] != null
           ? (json['days'] as List).map((e) => e.toString()).toList()
           : null,
@@ -140,7 +148,6 @@ class DoctorModel {
       clinicDays: json['clinicDays'] != null
           ? (json['clinicDays'] as List).map((e) => e.toString()).toList()
           : null,
-
     );
   }
 
@@ -173,6 +180,7 @@ class DoctorModel {
       'email': email,
       'imagePath': imagePath,
       'createdAt': createdAt.toIso8601String(),
+      'secondClinic': secondClinic?.toMap(),
       // Serialize DateTime as ISO string
       'isInTheClinic': isInTheClinic,
       'isHidden': isHidden,

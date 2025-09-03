@@ -45,6 +45,7 @@ class _PatientDatesTabState extends State<PatientDatesTab> {
                   (FirebaseAuth.instance.currentUser?.uid != null)
                       ? local!.noReservationsFound
                       : local!.loginFirstToSeeYourReservations,
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: AppColors.blackColor,
                       ),

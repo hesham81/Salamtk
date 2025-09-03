@@ -65,6 +65,14 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     super.initState();
   }
 
+  int _currentIndex = 0;
+
+  _changeTab(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var language = Provider.of<LanguageProvider>(context);
@@ -116,107 +124,197 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
           ),
         ],
       ).hPadding(0.03.width).vPadding(0.01.height),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: provider.getDoctor?.imageUrl ?? "",
-                    height: 0.2.height,
+      body: DefaultTabController(
+        length: (provider.getDoctor!.secondClinic == null) ? 1 : 2,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black.withAlpha(80),
                   ),
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                0.03.width.vSpace,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      provider.getDoctor?.name ?? "No Name",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: provider.getDoctor?.imageUrl ?? "",
+                        width: 0.3.width,
+                        height: 0.2.height,
+                      ),
                     ),
-                    0.01.height.hSpace,
-                    Text(
-                      (language.getLanguage == "en")
-                          ? provider.getDoctor?.specialist ?? "No Specialist"
-                          : TranslationServices.translateCategoriesToAr(
-                              provider.getDoctor?.specialist ??
-                                  "No Specialist"),
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
-                          .copyWith(color: Colors.black.withAlpha(80)),
-                    ),
-                    0.01.height.hSpace,
-                    SelectedDoctorRateWidget(
-                      rate: provider.getDoctor?.rate ?? 0.0,
-                    ),
-                    0.01.height.hSpace,
-                    IconRow(
-                      icon: Icons.location_on_outlined,
-                      text:
-                          " ${provider.getDoctor?.state} , ${provider.getDoctor?.city} ",
+                    0.02.width.vSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          provider.getDoctor?.name ?? "No Name",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(),
+                        ),
+                        0.01.height.hSpace,
+                        IconRow(
+                          color: Colors.black,
+                          icon: Icons.phone,
+                          text: provider.getDoctor?.phoneNumber ?? "No Phone",
+                        ),
+                        0.01.height.hSpace,
+                        Text(
+                          (language.getLanguage == "en")
+                              ? provider.getDoctor?.specialist ??
+                                  "No Specialist"
+                              : TranslationServices.translateCategoriesToAr(
+                                  provider.getDoctor?.specialist ??
+                                      "No Specialist"),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(color: Colors.black.withAlpha(80)),
+                        ),
+                        0.01.height.hSpace,
+                        IconRow(
+                          icon: Icons.location_on_outlined,
+                          text:
+                              " ${provider.getDoctor?.state} , ${provider.getDoctor?.city} ",
+                        ),
+                        0.01.height.hSpace,
+                        SelectedDoctorRateWidget(
+                          rate: provider.getDoctor?.rate ?? 0.0,
+                        ),
+                      ],
                     ),
                   ],
-                )
-              ],
-            ),
-            0.02.height.hSpace,
-            Text(
-              local.aboutDoctor,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColors.blackColor,
-                  ),
-            ),
-            0.01.height.hSpace,
-            Text(
-              provider.getDoctor?.description ?? "No Description",
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColors.blackColor,
-                  ),
-            ),
-            0.02.height.hSpace,
-            Text(
-              local.reviews,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColors.blackColor,
-                  ),
-            ),
-            0.01.height.hSpace,
-
-            0.01.height.hSpace,
-            (_reviews == null)
-                ? (isLoading == true)
-                    ? CircularProgressIndicator(
-                        color: AppColors.secondaryColor,
-                      ).center
-                    : Row(
-                        children: [
-                          Text(
-                            local.noReviewsYet,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              0.02.height.hSpace,
+              TabBar(
+                onTap: _changeTab,
+                indicatorColor: AppColors.secondaryColor,
+                tabs: [
+                  Tab(
+                    child: Text(
+                      "${local.clinic} 1",
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: AppColors.blackColor,
                           ),
-                        ],
-                      )
-                : ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => ReviewsWidget(
-                      name: _reviews!.reviews![index].name,
-                      rate: _reviews!.reviews![index].rating,
-                      date: _reviews!.reviews![index].date,
-                      review: _reviews!.reviews![index].review,
                     ),
-                    separatorBuilder: (context, index) => 0.01.height.hSpace,
-                    itemCount: _reviews!.reviews!.length,
                   ),
-          ],
-        ),
-      ).allPadding(10),
+                  (provider.getDoctor!.secondClinic != null)
+                      ? Tab(
+                          child: Text(
+                            "${local.clinic} 2",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: AppColors.blackColor,
+                                ),
+                          ),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+              0.02.height.hSpace,
+              Text(
+                local.clinicInfo,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+              ),
+              0.02.height.hSpace,
+              IconRow(
+                color: AppColors.blackColor,
+                icon: Icons.date_range,
+                text: (language.getLanguage == "en")
+                    ? (_currentIndex == 0 &&
+                            provider.getDoctor!.secondClinic == null)
+                        ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.clinicWorkingTo ?? ""}"
+                        : "${provider.getDoctor?.secondClinic?.clinicDays.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicDays.last ?? ""}"
+                    : "${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingTo ?? "")}",
+              ),
+              0.02.height.hSpace,
+              IconRow(
+                color: AppColors.blackColor,
+                icon: Icons.alarm,
+                text: (language.getLanguage == "en")
+                    ? (_currentIndex == 0)
+                        ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.workingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.workingTo ?? ""}"
+                        : (_currentIndex == 1)
+                            ? "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
+                            : "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
+                    : "${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingTo ?? "")}",
+              ),
+              0.02.height.hSpace,
+              IconRow(
+                color: AppColors.blackColor,
+                icon: Icons.phone_android,
+                text: (_currentIndex == 0)
+                    ? provider.getDoctor?.clinicPhoneNumber ??
+                        local.noPhoneNumberSet
+                    : provider.getDoctor?.secondClinic?.clinicPhone ??
+                        local.noPhoneNumberSet,
+              ),
+              0.02.height.hSpace,
+              Text(
+                local.aboutDoctor,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+              ),
+              0.01.height.hSpace,
+              Text(
+                provider.getDoctor?.description ?? "No Description",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+              ),
+              0.02.height.hSpace,
+              Text(
+                local.reviews,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+              ),
+              0.01.height.hSpace,
+              0.01.height.hSpace,
+              (_reviews == null)
+                  ? (isLoading == true)
+                      ? CircularProgressIndicator(
+                          color: AppColors.secondaryColor,
+                        ).center
+                      : Row(
+                          children: [
+                            Text(
+                              local.noReviewsYet,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => ReviewsWidget(
+                        name: _reviews!.reviews![index].name,
+                        rate: _reviews!.reviews![index].rating,
+                        date: _reviews!.reviews![index].date,
+                        review: _reviews!.reviews![index].review,
+                      ),
+                      separatorBuilder: (context, index) => 0.01.height.hSpace,
+                      itemCount: _reviews!.reviews!.length,
+                    ),
+            ],
+          ),
+        ).allPadding(10),
+      ),
     );
   }
 }
