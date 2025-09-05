@@ -31,6 +31,288 @@ class PatientProvider extends ChangeNotifier {
   String? _screenshot;
   File? _image;
   String? appPhoneNumber;
+  List<Map<String, dynamic>> getCategories(AppLocalizations local) {
+    return [
+      {
+        "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
+        "text": local.obstetrics,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/dentist.jpg",
+        "text": local.teeth,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Urology.jpg",
+        "text": local.urology,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/lung.png",
+        "text": local.lung,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pediatrics.jpg",
+        "text": local.pediatrics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/psychologist.jpg",
+        "text": local.psychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/ENT.jpg",
+        "text": local.ent,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Dermatology.jpg",
+        "text": local.dermatology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Orthopedics.jpg",
+        "text": local.orthopedics,
+        "color": AppColors.secondaryColor,
+      },
+      {
+        "icon": "assets/icons/categorize/Ophthalmology.jpg",
+        "text": local.eye,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cardiology.jpg",
+        "text": local.heart,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/categorize/Nutritionist.jpg",
+        "text": local.nutritionist,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
+        "text": local.familyMedicineAndAllergy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Gastroenterology.jpg",
+        "text": local.gastroenterology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/elbatna_icon.jpg",
+        "text": local.theInterior,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/surgery_icon.jpg",
+        "text": local.surgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/Acupuncture.jpg",
+        "text": local.acupuncture,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Vascular Surgery.jpg",
+        "text": local.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Nephrology.jpg",
+        "text": local.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Radiology.jpg",
+        "text": local.radiology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon":
+        "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "text": local.physicalTherapy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Endocrinology.jpg",
+        "text": local.endocrinology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Genetics.jpg",
+        "text": local.genetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Speech Therapy.jpg",
+        "text": local.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pain Management.jpg",
+        "text": local.painManagement,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
+        "text": local.cosmeticSurgery,
+        "color": Colors.green,
+      },
+
+      // === Categories without icons ===
+      {
+        "icon": null,
+        "text": local.familyMedicine,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.rheumatology,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": null,
+        "text": local.endocrinologyAndDiabetes,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.physiotherapyAndSportsInjuries,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.hematology,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local.oncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.infectiousDiseases,
+        "color": Colors.orange,
+      },
+      {
+        "icon": null,
+        "text": local.addictionMedicine,
+        "color": Colors.blueGrey,
+      },
+      {
+        "icon": null,
+        "text": local.childAdolescentPsychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.anesthesiology,
+        "color": Colors.cyan,
+      },
+      {
+        "icon": null,
+        "text": local.nuclearMedicine,
+        "color": Colors.purpleAccent,
+      },
+      {
+        "icon": null,
+        "text": local.radiotherapy,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local.nutritionAndDietetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.audiology,
+        "color": Colors.lightBlue,
+      },
+      {
+        "icon": null,
+        "text": local.geriatrics,
+        "color": Colors.teal,
+      },
+      {
+        "icon": null,
+        "text": local.rehabilitationMedicine,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.generalSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.plasticSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local.surgicalOncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.breastOncology,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local.cardiothoracicSurgery,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local.spineSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.bariatricSurgery,
+        "color": Colors.indigo,
+      },
+      {
+        "icon": null,
+        "text": local.pediatricSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.neurosurgery,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local.maxillofacialSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.dermatovenereology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.ivfAndFertility,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.andrologyAndInfertility,
+        "color": Colors.pinkAccent,
+      },
+    ];
+  }
 
   String? get getSelectedCity => _selectedCity;
 
@@ -64,6 +346,7 @@ class PatientProvider extends ChangeNotifier {
   List<Map<String, dynamic>> get categories {
     _checkLocal();
     return [
+
       {
         "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
         "text": local?.obstetrics,
@@ -193,6 +476,171 @@ class PatientProvider extends ChangeNotifier {
       {
         "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
         "text": local?.cosmeticSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.familyMedicine,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.rheumatology,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.endocrinologyAndDiabetes,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.physiotherapyAndSportsInjuries,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.hematology,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local?.oncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.infectiousDiseases,
+        "color": Colors.orange,
+      },
+      {
+        "icon":null,
+        "text": local?.addictionMedicine,
+        "color": Colors.blueGrey,
+      },
+      {
+        "icon": null,
+        "text": local?.childAdolescentPsychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.anesthesiology,
+        "color": Colors.cyan,
+      },
+      {
+        "icon": null,
+        "text": local?.nuclearMedicine,
+        "color": Colors.purpleAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.radiotherapy,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local?.nutritionAndDietetics,
+        "color": Colors.green,
+      },
+      {
+        "icon":null,
+        "text": local?.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.audiology,
+        "color": Colors.lightBlue,
+      },
+      {
+        "icon": null,
+        "text": local?.geriatrics,
+        "color": Colors.teal,
+      },
+      {
+        "icon": null,
+        "text": local?.rehabilitationMedicine,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.generalSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.plasticSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.surgicalOncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.breastOncology,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.cardiothoracicSurgery,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local?.spineSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.bariatricSurgery,
+        "color": Colors.indigo,
+      },
+      {
+        "icon": null,
+        "text": local?.pediatricSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.neurosurgery,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local?.maxillofacialSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.dermatovenereology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.ivfAndFertility,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.andrologyAndInfertility,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.painManagement,
         "color": Colors.green,
       },
     ];
