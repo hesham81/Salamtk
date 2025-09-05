@@ -116,7 +116,9 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               ),
               onPressed: (provider.getDoctor!.isVerified)
                   ? () => slideLeftWidget(
-                        newPage: Reservation(),
+                        newPage: Reservation(
+                          isSecondClinic: (_currentIndex == 1),
+                        ),
                         context: context,
                       )
                   : null,
@@ -196,22 +198,15 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 ),
               ),
               0.02.height.hSpace,
-              TabBar(
-                onTap: _changeTab,
-                indicatorColor: AppColors.secondaryColor,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      "${local.clinic} 1",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: AppColors.blackColor,
-                          ),
-                    ),
-                  ),
-                  (provider.getDoctor!.secondClinic != null)
-                      ? Tab(
+              (provider.getDoctor!.secondClinic == null)
+                  ? SizedBox()
+                  : TabBar(
+                      onTap: _changeTab,
+                      indicatorColor: AppColors.secondaryColor,
+                      tabs: [
+                        Tab(
                           child: Text(
-                            "${local.clinic} 2",
+                            "${local.clinic} 1",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
@@ -219,10 +214,22 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                                   color: AppColors.blackColor,
                                 ),
                           ),
-                        )
-                      : SizedBox(),
-                ],
-              ),
+                        ),
+                        (provider.getDoctor!.secondClinic != null)
+                            ? Tab(
+                                child: Text(
+                                  "${local.clinic} 2",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                        color: AppColors.blackColor,
+                                      ),
+                                ),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
               0.02.height.hSpace,
               Text(
                 local.clinicInfo,

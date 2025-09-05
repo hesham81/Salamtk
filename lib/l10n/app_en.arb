@@ -222,7 +222,8 @@
      "noReservationsFound" : "No Reservations Found",
      "physicalTherapy" : "Physical Therapy",
      "goToSecondClinicProfile" : "Go To Second Clinic Profile",
-     "clinic":"Clinic"
+     "clinic":"Clinic",
+     "passwordResetEmailSent" : "Password Reset Email Sent"
 
 
 

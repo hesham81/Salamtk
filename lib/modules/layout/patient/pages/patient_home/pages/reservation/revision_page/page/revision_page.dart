@@ -16,7 +16,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/core/utils/storage/screenshots.dart';
 
 class RevisionPage extends StatefulWidget {
-  const RevisionPage({super.key});
+  bool isSecondClinic;
+
+  RevisionPage({
+    super.key,
+    this.isSecondClinic = false,
+  });
 
   @override
   State<RevisionPage> createState() => _RevisionPageState();
@@ -143,6 +148,7 @@ class _RevisionPageState extends State<RevisionPage> {
                         paymentMethod: "Electronic Wallet",
                         email: provider.reservationEmail ?? "No Email",
                         patientName: provider.reservationName ?? "No Name",
+                        isSecondClinic: (widget.isSecondClinic) ? true : null,
                       );
 
                       await ReservationCollection.addReservation(model).then(

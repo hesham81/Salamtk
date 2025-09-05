@@ -12,7 +12,12 @@ import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConfirmPayment extends StatefulWidget {
-  const ConfirmPayment({super.key});
+  bool isSecondClinic;
+
+   ConfirmPayment({
+    super.key,
+    this.isSecondClinic = false,
+  });
 
   @override
   State<ConfirmPayment> createState() => _ConfirmPaymentState();
@@ -61,7 +66,9 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
             provider.setReservationName(nameController.text);
             provider.setReservationEmail(emailController.text);
             slideLeftWidget(
-              newPage: PayWithElectronicWallet(),
+              newPage: PayWithElectronicWallet(
+                isSecondClinic: widget.isSecondClinic,
+              ),
               context: context,
             );
           }
@@ -197,7 +204,6 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                         nameController.text =
                             FirebaseAuth.instance.currentUser?.displayName ??
                                 local.noName;
-
                       } else {
                         nameController.text = "";
                         phoneNumberController.text = "";

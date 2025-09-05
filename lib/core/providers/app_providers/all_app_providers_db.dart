@@ -45,7 +45,6 @@ class AllAppProvidersDb extends ChangeNotifier {
   String? get country => _country;
   bool _serviceEnabled = false;
 
-
   Future<void> _getCurrentLocation() async {
     try {
       LocationPermission permission;
@@ -111,6 +110,7 @@ class AllAppProvidersDb extends ChangeNotifier {
   Future<void> _getAllCitiesOfDoctors() async {
     _doctors = await DoctorsCollection.doctors();
     _citiesOfDoctors.clear(); // Clear existing cities to avoid duplicates
+
     for (var doctor in _doctors) {
       if (!_citiesOfDoctors.contains(doctor.city)) {
         _citiesOfDoctors.add(doctor.city);
@@ -121,15 +121,20 @@ class AllAppProvidersDb extends ChangeNotifier {
   Future<void> checkSlots({
     required DateTime date,
     required DoctorModel doctor,
+    bool isSecondClinic = false,
   }) async {
     _date = date;
     _doctor = doctor;
     await _getAllReservations();
-    await _getAllSlots();
+    await _getAllSlots(
+      isSecondClinic: true,
+    );
     notifyListeners();
   }
 
-  Future<void> _getAllSlots() async {
+  Future<void> _getAllSlots({
+    bool isSecondClinic = false,
+  }) async {
     if (_reservations.isEmpty) {
       _reservations = await ReservationCollection.getAllReservations();
     }
@@ -139,6 +144,14 @@ class AllAppProvidersDb extends ChangeNotifier {
             element.date.isAtSameMomentAs(_date) &&
             element.doctorId == _doctor!.uid)
         .toList();
+
+    if (isSecondClinic) {
+      filteredReservations = filteredReservations
+          .where(
+            (element) => element.isSecondClinic == true,
+          )
+          .toList();
+    }
 
     _slots.clear();
 

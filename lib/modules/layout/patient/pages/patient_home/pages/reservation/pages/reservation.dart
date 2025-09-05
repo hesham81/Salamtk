@@ -14,7 +14,12 @@ import '/core/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Reservation extends StatefulWidget {
-  const Reservation({super.key});
+  bool isSecondClinic;
+
+  Reservation({
+    super.key,
+    this.isSecondClinic = false,
+  });
 
   @override
   State<Reservation> createState() => _ReservationState();
@@ -87,7 +92,9 @@ class _ReservationState extends State<Reservation> {
     var provider = Provider.of<PatientProvider>(context, listen: false);
     var doctor = provider.getDoctor!;
     timeSlots.clear(); // Clear before adding
-    if (doctor.workingFrom == null) {
+    if (widget.isSecondClinic) {
+      timeSlots.addAll(provider.getDoctor!.secondClinic!.clinicTimeSlots);
+    } else if (doctor.workingFrom == null) {
       timeSlots.addAll(doctor.days ?? []);
     } else {
       int startIndex = allSlots.indexOf(doctor.workingFrom!);
@@ -176,7 +183,9 @@ class _ReservationState extends State<Reservation> {
                     );
                   } else {
                     slideLeftWidget(
-                      newPage: ConfirmPayment(),
+                      newPage: ConfirmPayment(
+                        isSecondClinic: widget.isSecondClinic,
+                      ),
                       context: context,
                     );
                   }
@@ -208,8 +217,11 @@ class _ReservationState extends State<Reservation> {
               //   message: selectedDay.weekday.toString(),
               // );
               provider.setSelectedDate(selectedDay);
-              isNotWorking =
-                  provider.handleDoctorDayIndex(context, selectedDay.weekday);
+              isNotWorking = provider.handleDoctorDayIndex(
+                context,
+                selectedDay.weekday,
+                isSecondClinic: widget.isSecondClinic,
+              );
               _checkSlots();
             },
             onPageChanged: (focusedDay) {

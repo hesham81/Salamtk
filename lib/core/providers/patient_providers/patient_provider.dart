@@ -430,11 +430,16 @@ class PatientProvider extends ChangeNotifier {
     "الجمعة",
     "السبت"
   ];
-  bool _handleContDays(int selectedDay) {
-    var startDay = this._selectedDoctor!.clinicWorkingFrom;
+
+  bool _handleContDays(
+    int selectedDay, {
+    bool isSecondClinic = false,
+  }) {
+    var startDay =  this._selectedDoctor!.clinicWorkingFrom;
     var endDay = this._selectedDoctor!.clinicWorkingTo;
 
-    if (startDay == null || endDay == null) return true; // No range → block all?
+    if (startDay == null || endDay == null)
+      return true; // No range → block all?
 
     const List<String> daysOrder = [
       "Sunday",
@@ -448,7 +453,8 @@ class PatientProvider extends ChangeNotifier {
 
     int startIndex = daysOrder.indexOf(startDay);
     int endIndex = daysOrder.indexOf(endDay);
-    int selectedDayIndex = _weekdayToDayOrderIndex(selectedDay); // Convert weekday to index in daysOrder
+    int selectedDayIndex = _weekdayToDayOrderIndex(
+        selectedDay); // Convert weekday to index in daysOrder
 
     if (startIndex == -1 || endIndex == -1 || selectedDayIndex == -1) {
       return true; // Invalid day name → block
@@ -470,16 +476,30 @@ class PatientProvider extends ChangeNotifier {
     return weekday; // Monday (1) → index 1, ..., Saturday (6) → index 6
   }
 
-  bool _handleSpecDays(BuildContext context, int selectedDay) {
-    List<String> days = _selectedDoctor!.clinicDays!;
+  bool _handleSpecDays(
+    BuildContext context,
+    int selectedDay, {
+    bool isSecondClinic = false,
+  }) {
+    List<String> days = (isSecondClinic)
+        ? _selectedDoctor!.secondClinic!.clinicDays!
+        : _selectedDoctor!.clinicDays!;
 
     String day = (selectedDay == 0) ? daysEn.first : daysEn[selectedDay];
 
     return !days.contains(day);
   }
 
-
-  bool handleDoctorDayIndex(BuildContext context, int weekDay) {
+  bool handleDoctorDayIndex(
+    BuildContext context,
+    int weekDay, {
+    bool isSecondClinic = false,
+  }) {
+    if (isSecondClinic) {
+      return (this._selectedDoctor?.secondClinic!.clinicDays != null)
+          ? _handleSpecDays(context, weekDay)
+          : _handleContDays(weekDay);
+    }
     return (this._selectedDoctor?.clinicDays != null)
         ? _handleSpecDays(context, weekDay)
         : _handleContDays(weekDay);

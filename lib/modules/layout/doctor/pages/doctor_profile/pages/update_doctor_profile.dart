@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/doctors_profile_methods.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:salamtk/core/utils/auth/login_auth.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/validations/validations.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
@@ -196,6 +197,36 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
             color: AppColors.primaryColor,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              try {
+                EasyLoading.show();
+                var message = await LoginAuth.deleteAccount();
+                (message == null)
+                    ? SnackBarServices.showSuccessMessage(
+                        context,
+                        message: "Delete Email Request Sent Successfully",
+                      )
+                    : SnackBarServices.showErrorMessage(
+                        context,
+                        message: message,
+                      );
+              } catch (error) {
+                SnackBarServices.showErrorMessage(
+                  context,
+                  message: error.toString(),
+                );
+              } finally {
+                EasyLoading.dismiss();
+              }
+            },
+            icon: Icon(
+              Icons.delete_forever_outlined,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -327,6 +358,44 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                       ),
                     ],
                   )),
+              CustomElevatedButton(
+                child: Row(
+                  children: [
+                    Text(
+                      local.password,
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ).hPadding(0.03.width),
+                    Spacer(),
+                    Icon(
+                      Icons.lock,
+                      color: AppColors.primaryColor,
+                    ).hPadding(0.03.width)
+                  ],
+                ),
+                onPressed: () async {
+                  try {
+                    EasyLoading.show();
+                    await LoginAuth.forgetPassword(
+                      email: user!.email!,
+                    );
+                    SnackBarServices.showSuccessMessage(
+                      context,
+                      message: local.passwordResetEmailSent,
+                    );
+                  } catch (error) {
+                    SnackBarServices.showErrorMessage(
+                      context,
+                      message: error.toString(),
+                    );
+                  } finally {
+                    EasyLoading.dismiss();
+                  }
+                },
+              ),
+              0.02.height.hSpace,
               Visibility(
                 visible: widget.doctor.days != null,
                 child: CustomElevatedButton(

@@ -219,7 +219,8 @@
      "noReservationsFound" : "لايوجد لديك حجوزات",
           "physicalTherapy" : "العلاج الطبيعي",
           "goToSecondClinicProfile"  : "الذهاب الي اعدادات العياده الثانيه ",
-          "clinic": "عياده"
+          "clinic": "عياده",
+          "passwordResetEmailSent" : "تم ارسال اللينك برجاء التحقق من البريد"
 
 
 
