@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/main.dart';
+import 'package:salamtk/models/payments/coins_data_model.dart';
+import '../../utils/payment/payments_collections.dart';
+import '../app_providers/language_provider.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -11,297 +16,659 @@ import '/models/doctors_models/doctor_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientProvider extends ChangeNotifier {
+  PatientProvider() {
+    Future.wait(
+      [
+        _getCoinsDataModelFromFireStore(),
+      ],
+    );
+  }
+
   DoctorModel? _selectedDoctor;
   String? _selectedSlot;
   List<String> favourites = [];
   String? _selectedPhoneNumber;
   String? _reservationPhoneNumber;
-  bool _isContainReservations = false ;
-
-  bool get getIsContainReservations => _isContainReservations;
-
-
-  void setIsContainReservations(bool value) {
-    _isContainReservations = value;
-    notifyListeners();
-  }
+  bool _isContainReservations = false;
   String? _reservationName;
-
   String? _reservationEmail;
-
-  String? get reservationName => _reservationName;
-
-  String? get reservationEmail => _reservationEmail;
-
-  String? get reservationPhoneNumber => _reservationPhoneNumber;
-
   String _providerPath = "";
-
   String _providerName = "";
-
-  String get getProviderName => _providerName;
-
-  void setReservationName(String value) {
-    _reservationName = value;
-    notifyListeners();
-  }
-  void setReservationEmail(String value) {
-    _reservationEmail = value;
-    notifyListeners();
-  }
-  void setReservationPhoneNumber(String value) {
-    _reservationPhoneNumber = value;
-    notifyListeners();
-  }
-  void setProviderName(String value) {
-    _providerName = value;
-    notifyListeners();
-  }
-
-  void setProviderPath(String value) {
-    _providerPath = value;
-    notifyListeners();
-  }
-
-  String get getProviderPath => _providerPath;
   String? _userPhoneNumber;
-
   bool? _isPayValid;
-
   String? _selectedCity;
   String? _selectedZone;
-
   String? _screenshot;
-
   File? _image;
-
-  String? get getScreenshot => _screenshot;
-
   String? appPhoneNumber;
+
+  List<Map<String, dynamic>> getCategories(AppLocalizations local) {
+    return [
+      {
+        "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
+        "text": local.obstetrics,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/dentist.jpg",
+        "text": local.teeth,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Urology.jpg",
+        "text": local.urology,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/lung.png",
+        "text": local.lung,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pediatrics.jpg",
+        "text": local.pediatrics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/psychologist.jpg",
+        "text": local.psychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/ENT.jpg",
+        "text": local.ent,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Dermatology.jpg",
+        "text": local.dermatology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Orthopedics.jpg",
+        "text": local.orthopedics,
+        "color": AppColors.secondaryColor,
+      },
+      {
+        "icon": "assets/icons/categorize/Ophthalmology.jpg",
+        "text": local.eye,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cardiology.jpg",
+        "text": local.heart,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/categorize/Nutritionist.jpg",
+        "text": local.nutritionist,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
+        "text": local.familyMedicineAndAllergy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Gastroenterology.jpg",
+        "text": local.gastroenterology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/elbatna_icon.jpg",
+        "text": local.theInterior,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/surgery_icon.jpg",
+        "text": local.surgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/Acupuncture.jpg",
+        "text": local.acupuncture,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Vascular Surgery.jpg",
+        "text": local.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Nephrology.jpg",
+        "text": local.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Radiology.jpg",
+        "text": local.radiology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon":
+            "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "text": local.physicalTherapy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Endocrinology.jpg",
+        "text": local.endocrinology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Genetics.jpg",
+        "text": local.genetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Speech Therapy.jpg",
+        "text": local.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pain Management.jpg",
+        "text": local.painManagement,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
+        "text": local.cosmeticSurgery,
+        "color": Colors.green,
+      },
+
+      // === Categories without icons ===
+      {
+        "icon": null,
+        "text": local.familyMedicine,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.rheumatology,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": null,
+        "text": local.endocrinologyAndDiabetes,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.physiotherapyAndSportsInjuries,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.hematology,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local.oncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.infectiousDiseases,
+        "color": Colors.orange,
+      },
+      {
+        "icon": null,
+        "text": local.addictionMedicine,
+        "color": Colors.blueGrey,
+      },
+      {
+        "icon": null,
+        "text": local.childAdolescentPsychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.anesthesiology,
+        "color": Colors.cyan,
+      },
+      {
+        "icon": null,
+        "text": local.nuclearMedicine,
+        "color": Colors.purpleAccent,
+      },
+      {
+        "icon": null,
+        "text": local.radiotherapy,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local.nutritionAndDietetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.audiology,
+        "color": Colors.lightBlue,
+      },
+      {
+        "icon": null,
+        "text": local.geriatrics,
+        "color": Colors.teal,
+      },
+      {
+        "icon": null,
+        "text": local.rehabilitationMedicine,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.generalSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.plasticSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local.surgicalOncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.breastOncology,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local.cardiothoracicSurgery,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local.spineSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.bariatricSurgery,
+        "color": Colors.indigo,
+      },
+      {
+        "icon": null,
+        "text": local.pediatricSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local.neurosurgery,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local.maxillofacialSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local.dermatovenereology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local.ivfAndFertility,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local.andrologyAndInfertility,
+        "color": Colors.pinkAccent,
+      },
+    ];
+  }
 
   String? get getSelectedCity => _selectedCity;
 
   String? get getSelectedZone => _selectedZone;
 
-  void setSelectedCity(String? value) {
+  void setSelectedCity(String value) {
     _selectedCity = value;
     notifyListeners();
   }
 
-  void setSelectedZone(String? value) {
+  void setSelectedZone(String value) {
     _selectedZone = value;
     notifyListeners();
   }
 
-  void setAppPhoneNumber(String? value) {
-    appPhoneNumber = value;
-    notifyListeners();
-  }
-
-  String? get getAppPhoneNumber => appPhoneNumber;
-
-  void setIsPayValid(bool? value) {
-    _isPayValid = value;
-    notifyListeners();
-  }
-
-  void disposeData() {
-    _image = null;
-    _screenshot = null;
-    _userPhoneNumber = null;
-    _selectedPhoneNumber = null;
-    _isPayValid = null;
-    _selectedPhoneNumber = null;
-    _selectedSlot = null;
-    _selectedDate = null;
-    notifyListeners();
-  }
-
-  bool? get getIsPayValid => _isPayValid;
-
-  void setScreenshot(String value) {
-    _screenshot = value;
-    notifyListeners();
-  }
-
-  void setUserPhoneNumber(String value) {
-    _userPhoneNumber = value;
-    notifyListeners();
-  }
-
-  String? get getUserPhoneNumber => _userPhoneNumber;
-
-  void setPhoneNumber(String value) {
-    _selectedPhoneNumber = value;
-    notifyListeners();
-  }
-
-  String? get getPhoneNumber => _selectedPhoneNumber;
-
-  void setImage(File? value) {
-    _image = value;
-    notifyListeners();
-  }
-
-  File? get getImage => _image;
-  static var local = AppLocalizations.of(navigationKey.currentContext!);
-
+  late int _totalReservations;
   List<ReservationModel> _reservations = [];
-  List<Map<String, dynamic>> categories = [
-    // First Screen
-    {
-      "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
-      "text": local!.obstetrics,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/dentist.jpg",
-      "text": local!.teeth,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Urology.jpg",
-      // Assuming this is for Urology
-      "text": local!.urology,
-      "color": Colors.red,
-    },
-    {
-      "icon": "assets/icons/lung.png",
-      "text": local!.lung,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Pediatrics.jpg",
-      // Assuming this is for Pediatrics
-      "text": local!.pediatrics,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/psychologist.jpg",
-      "text": local!.psychiatry,
-      "color": Colors.blue,
-    },
-    {
-      "icon": "assets/icons/categorize/ENT.jpg", // Assuming this is for ENT
-      "text": local!.ent,
-      "color": Colors.redAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Dermatology.jpg",
-      "text": local!.dermatology,
-      "color": Colors.orangeAccent,
-    },
 
-    // Second Screen
-    {
-      "icon": "assets/icons/categorize/Orthopedics.jpg",
-      "text": local!.orthopedics,
-      "color": AppColors.secondaryColor,
-    },
-    {
-      "icon": "assets/icons/categorize/Ophthalmology.jpg",
-      "text": local!.eye,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Cardiology.jpg",
-      "text": local!.heart,
-      "color": Colors.red,
-    },
-    {
-      "icon": "assets/icons/categorize/Nutritionist.jpg",
-      "text": local!.nutritionist,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
-      // Assuming this is for Family Medicine & Allergy
-      "text": local!.familyMedicineAndAllergy,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Orthopedic & Spinal Surgery.jpg",
-      // Assuming this is for Orthopedic & Spinal Surgery
-      "text": local!.orthopedics,
-      "color": Colors.redAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Gastroenterology.jpg",
-      // Assuming this is for Gastroenterology
-      "text": local!.gastroenterology,
-      "color": Colors.orangeAccent,
-    },
+  AppLocalizations? local;
 
-    // Third Screen
-    {
-      "icon": "assets/icons/elbatna_icon.jpg",
-      "text": local!.theInterior,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/surgery_icon.jpg",
-      "text": local!.surgery,
-      "color": Colors.blue,
-    },
-    {
-      "icon": "assets/icons/categorize/Acupuncture.jpg",
-      // Assuming this is for Acupuncture
-      "text": local!.acupuncture,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Vascular Surgery.jpg",
-      // Assuming this is for Vascular Surgery
-      "text": local!.vascularSurgery,
-      "color": Colors.blueAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Nephrology.jpg",
-      // Assuming this is for Nephrology
-      "text": local!.nephrology,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Radiology.jpg",
-      // Assuming this is for Radiology
-      "text": local!.radiology,
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": "assets/icons/categorize/Endocrinology.jpg",
-      // Assuming this is for Endocrinology
-      "text": local!.endocrinology,
-      "color": Colors.orangeAccent,
-    },
+  void _checkLocal() {
+    local = AppLocalizations.of(navigationKey.currentContext!);
+    notifyListeners();
+  }
 
-    // Fourth Screen
-    {
-      "icon": "assets/icons/categorize/Genetics.jpg",
-      // Assuming this is for Genetics
-      "text": local!.genetics,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Speech Therapy.jpg",
-      // Assuming this is for Speech Therapy
-      "text": local!.speechTherapy,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Pain Management.jpg",
-      // Assuming this is for Pain Management
-      "text": local!.painManagement,
-      "color": Colors.green,
-    },
-    {
-      "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
-      // Assuming this is for Cosmetic Surgery
-      "text": local!.cosmeticSurgery,
-      "color": Colors.green,
-    },
-  ];
+  void reUpdateProvider() {
+    _checkLocal();
+  }
+
+  // Categories Getter with dynamic localization
+  List<Map<String, dynamic>> get categories {
+    _checkLocal();
+    return [
+      {
+        "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
+        "text": local?.obstetrics,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/dentist.jpg",
+        "text": local?.teeth,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Urology.jpg",
+        "text": local?.urology,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/lung.png",
+        "text": local?.lung,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pediatrics.jpg",
+        "text": local?.pediatrics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/psychologist.jpg",
+        "text": local?.psychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/ENT.jpg",
+        "text": local?.ent,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Dermatology.jpg",
+        "text": local?.dermatology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Orthopedics.jpg",
+        "text": local?.orthopedics,
+        "color": AppColors.secondaryColor,
+      },
+      {
+        "icon": "assets/icons/categorize/Ophthalmology.jpg",
+        "text": local?.eye,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cardiology.jpg",
+        "text": local?.heart,
+        "color": Colors.red,
+      },
+      {
+        "icon": "assets/icons/categorize/Nutritionist.jpg",
+        "text": local?.nutritionist,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Family Medicine & Allergy.jpg",
+        "text": local?.familyMedicineAndAllergy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Gastroenterology.jpg",
+        "text": local?.gastroenterology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/elbatna_icon.jpg",
+        "text": local?.theInterior,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/surgery_icon.jpg",
+        "text": local?.surgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": "assets/icons/categorize/Acupuncture.jpg",
+        "text": local?.acupuncture,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Vascular Surgery.jpg",
+        "text": local?.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Nephrology.jpg",
+        "text": local?.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Radiology.jpg",
+        "text": local?.radiology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon":
+            "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "text": local?.physicalTherapy,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Endocrinology.jpg",
+        "text": local?.endocrinology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": "assets/icons/categorize/Genetics.jpg",
+        "text": local?.genetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Speech Therapy.jpg",
+        "text": local?.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Pain Management.jpg",
+        "text": local?.painManagement,
+        "color": Colors.green,
+      },
+      {
+        "icon": "assets/icons/categorize/Cosmetic Surgery.jpg",
+        "text": local?.cosmeticSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.familyMedicine,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.rheumatology,
+        "color": Colors.redAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.endocrinologyAndDiabetes,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.physiotherapyAndSportsInjuries,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.hematology,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local?.oncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.nephrology,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.infectiousDiseases,
+        "color": Colors.orange,
+      },
+      {
+        "icon": null,
+        "text": local?.addictionMedicine,
+        "color": Colors.blueGrey,
+      },
+      {
+        "icon": null,
+        "text": local?.childAdolescentPsychiatry,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.anesthesiology,
+        "color": Colors.cyan,
+      },
+      {
+        "icon": null,
+        "text": local?.nuclearMedicine,
+        "color": Colors.purpleAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.radiotherapy,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local?.nutritionAndDietetics,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.speechTherapy,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.audiology,
+        "color": Colors.lightBlue,
+      },
+      {
+        "icon": null,
+        "text": local?.geriatrics,
+        "color": Colors.teal,
+      },
+      {
+        "icon": null,
+        "text": local?.rehabilitationMedicine,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.generalSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.plasticSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.surgicalOncology,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.breastOncology,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.vascularSurgery,
+        "color": Colors.blueAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.cardiothoracicSurgery,
+        "color": Colors.red,
+      },
+      {
+        "icon": null,
+        "text": local?.spineSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.bariatricSurgery,
+        "color": Colors.indigo,
+      },
+      {
+        "icon": null,
+        "text": local?.pediatricSurgery,
+        "color": Colors.green,
+      },
+      {
+        "icon": null,
+        "text": local?.neurosurgery,
+        "color": Colors.deepPurple,
+      },
+      {
+        "icon": null,
+        "text": local?.maxillofacialSurgery,
+        "color": Colors.blue,
+      },
+      {
+        "icon": null,
+        "text": local?.dermatovenereology,
+        "color": Colors.orangeAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.ivfAndFertility,
+        "color": Colors.pink,
+      },
+      {
+        "icon": null,
+        "text": local?.andrologyAndInfertility,
+        "color": Colors.pinkAccent,
+      },
+      {
+        "icon": null,
+        "text": local?.painManagement,
+        "color": Colors.green,
+      },
+    ];
+  }
+
   DateTime? _selectedDate;
   String? _selectedPaymentMethod;
+
+  Future<void> checkReservations() async {
+    try {
+      var userId = FirebaseAuth.instance.currentUser!.uid;
+      _reservations =
+          await ReservationCollection.getReservations(patientId: userId);
+      notifyListeners();
+    } catch (error) {
+      print("Error fetching reservations: $error");
+    }
+  }
 
   void addReservation(ReservationModel reservation) {
     _reservations.add(reservation);
@@ -313,44 +680,6 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  PatientProvider() {
-    _totalReservations = 0;
-    checkReservations();
-  }
-
-  void removeData() {
-    _selectedDoctor = null;
-    _selectedSlot = null;
-    _selectedDate = null;
-    _selectedPaymentMethod = null;
-  }
-
-  Future<void> checkReservations() async {
-    try {
-      _reservations.clear();
-      var userId = await FirebaseAuth.instance.currentUser!.uid;
-      _reservations = await ReservationCollection.getReservations(
-        patientId: userId,
-      );
-      notifyListeners();
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  //setters
-
-  _initFavourites() async {
-    User? user = await FirebaseAuth.instance.currentUser;
-    await FavouriteCollections.getFavourite(user!.uid).listen(
-      (event) {
-        for (var element in event.data()?.favouriteDoctors ?? []) {
-          favourites = element;
-        }
-      },
-    );
-  }
-
   void setSelectedPaymentMethod(String paymentMethod) {
     _selectedPaymentMethod = paymentMethod;
     notifyListeners();
@@ -358,7 +687,6 @@ class PatientProvider extends ChangeNotifier {
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
-
     notifyListeners();
   }
 
@@ -370,9 +698,8 @@ class PatientProvider extends ChangeNotifier {
     "Friday", // 4
     "Saturday", // 5
     "Sunday", //6
-    ///Saturday to Tuesday
-    /// 6 -- 1
   ];
+
   List<String> _sortedDays = [
     "Saturday",
     "Sunday",
@@ -388,8 +715,9 @@ class PatientProvider extends ChangeNotifier {
   }
 
   bool checkIsAllow(DateTime date) {
-    int startIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingFrom);
-    int endIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingTo);
+    int startIndex =
+        _sortedDays.indexOf(_selectedDoctor!.clinicWorkingFrom ?? "");
+    int endIndex = _sortedDays.indexOf(_selectedDoctor!.clinicWorkingTo ?? "");
     for (int index = startIndex; index <= endIndex; index++) {
       if (days[index] == date.weekday.toString()) {
         return true;
@@ -413,9 +741,30 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //getter
+  // Getters
+  bool get getIsContainReservations => _isContainReservations;
 
-  bool get isDoctorSelected => _selectedDoctor != null ? true : false;
+  String? get reservationName => _reservationName;
+
+  String? get reservationEmail => _reservationEmail;
+
+  String? get reservationPhoneNumber => _reservationPhoneNumber;
+
+  String get getProviderName => _providerName;
+
+  String get getProviderPath => _providerPath;
+
+  String? get getAppPhoneNumber => appPhoneNumber;
+
+  bool? get getIsPayValid => _isPayValid;
+
+  String? get getUserPhoneNumber => _userPhoneNumber;
+
+  String? get getPhoneNumber => _selectedPhoneNumber;
+
+  File? get getImage => _image;
+
+  String? get getScreenshot => _screenshot;
 
   DoctorModel? get getDoctor => _selectedDoctor;
 
@@ -427,50 +776,230 @@ class PatientProvider extends ChangeNotifier {
 
   List<ReservationModel> get getReservations => _reservations;
 
-  late int _totalReservations;
+  int get getTotalReservations => _totalReservations;
+
+  void setIsContainReservations(bool value) {
+    _isContainReservations = value;
+    notifyListeners();
+  }
+
+  void setReservationName(String value) {
+    _reservationName = value;
+    notifyListeners();
+  }
+
+  void setReservationEmail(String value) {
+    _reservationEmail = value;
+    notifyListeners();
+  }
+
+  void setReservationPhoneNumber(String value) {
+    _reservationPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setProviderName(String value) {
+    _providerName = value;
+    notifyListeners();
+  }
+
+  void setProviderPath(String value) {
+    _providerPath = value;
+    notifyListeners();
+  }
+
+  void setAppPhoneNumber(String? value) {
+    appPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setIsPayValid(bool? value) {
+    _isPayValid = value;
+    notifyListeners();
+  }
+
+  void setUserPhoneNumber(String value) {
+    _userPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setPhoneNumber(String value) {
+    _selectedPhoneNumber = value;
+    notifyListeners();
+  }
+
+  void setImage(File? value) {
+    _image = value;
+    notifyListeners();
+  }
+
+  void setScreenshot(String value) {
+    _screenshot = value;
+    notifyListeners();
+  }
+
+  void disposeData() {
+    _image = null;
+    _screenshot = null;
+    _userPhoneNumber = null;
+    _selectedPhoneNumber = null;
+    _isPayValid = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    notifyListeners();
+  }
 
   void setTotalReservations(int value) {
     _totalReservations = value;
     notifyListeners();
   }
 
-  void notify() {
+  Future<DoctorModel?> searchForDoctor(
+      {required String doctorPhoneNumber}) async {
+    return await DoctorsCollection.getDoctorData(uid: doctorPhoneNumber);
+  }
+
+  final List<String> daysEn = [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+  ];
+
+  final List<String> daysOrder = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
+
+  final List<String> daysAr = [
+    "الأحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة",
+    "السبت"
+  ];
+
+  bool _handleContDays(
+    int selectedDay, {
+    bool isSecondClinic = false,
+  }) {
+    var startDay = this._selectedDoctor!.clinicWorkingFrom;
+    var endDay = this._selectedDoctor!.clinicWorkingTo;
+
+    if (startDay == null || endDay == null)
+      return true; // No range → block all?
+
+    const List<String> daysOrder = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+
+    int startIndex = daysOrder.indexOf(startDay);
+    int endIndex = daysOrder.indexOf(endDay);
+    int selectedDayIndex = _weekdayToDayOrderIndex(
+        selectedDay); // Convert weekday to index in daysOrder
+
+    if (startIndex == -1 || endIndex == -1 || selectedDayIndex == -1) {
+      return true; // Invalid day name → block
+    }
+
+    if (startIndex <= endIndex) {
+      // Normal range: Sunday (0) to Thursday (4)
+      return selectedDayIndex < startIndex || selectedDayIndex > endIndex;
+    } else {
+      // Wrap-around: Friday (5) to Monday (1) → valid: 5,6,0,1 → invalid: 2,3,4
+      return selectedDayIndex > endIndex && selectedDayIndex < startIndex;
+    }
+  }
+
+// Helper: Convert DateTime.weekday (1-7) to index in daysOrder [Sun=0, ..., Sat=6]
+  int _weekdayToDayOrderIndex(int weekday) {
+    // weekday: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun
+    if (weekday == 7) return 0; // Sunday
+    return weekday; // Monday (1) → index 1, ..., Saturday (6) → index 6
+  }
+
+  bool _handleSpecDays(
+    BuildContext context,
+    int selectedDay, {
+    bool isSecondClinic = false,
+  }) {
+    List<String> days = (isSecondClinic)
+        ? _selectedDoctor!.secondClinic!.clinicDays!
+        : _selectedDoctor!.clinicDays!;
+
+    String day = (selectedDay == 0) ? daysEn.first : daysEn[selectedDay];
+
+    return !days.contains(day);
+  }
+
+  bool handleDoctorDayIndex(
+    BuildContext context,
+    int weekDay, {
+    bool isSecondClinic = false,
+  }) {
+    if (isSecondClinic) {
+      return (this._selectedDoctor?.secondClinic!.clinicDays != null)
+          ? _handleSpecDays(context, weekDay)
+          : _handleContDays(weekDay);
+    }
+    return (this._selectedDoctor?.clinicDays != null)
+        ? _handleSpecDays(context, weekDay)
+        : _handleContDays(weekDay);
+  }
+
+  void initFavourites() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FavouriteCollections.getFavourite(user.uid).listen((snapshot) {
+        favourites = snapshot.data()?.favouriteDoctors ?? [];
+        notifyListeners();
+      });
+    }
+  }
+
+  void removeData() {
+    _selectedDoctor = null;
+    _selectedSlot = null;
+    _selectedDate = null;
+    _selectedPaymentMethod = null;
     notifyListeners();
   }
 
-  int get getTotalReservations => _totalReservations;
+  CoinsDataModel? _coinsDataModel;
 
-  Future<DoctorModel?> searchForDoctor({
-    required String doctorPhoneNumber,
-  }) async {
-    DoctorModel? doctor = await DoctorsCollection.getDoctorData(
-      uid: doctorPhoneNumber,
-    );
-    return doctor;
+  CoinsDataModel? get getCoinsDataModel => _coinsDataModel;
+
+  Future<void> _getCoinsDataModelFromFireStore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var response = await PaymentsCollections.getAllCoins();
+
+      response.fold(
+        (l) => throw Exception(l),
+        (r) => _coinsDataModel = r,
+      );
+
+      notifyListeners();
+    }
   }
 
-  bool handleDoctorDayIndex() {
-    List<String> daysData = [];
-    int index = _selectedDate!.weekday;
-    String day = days[index - 1];
-    String startDay = _selectedDoctor!.clinicWorkingFrom;
-    String endDay = _selectedDoctor!.clinicWorkingTo;
-    int startIndex = days.indexOf(startDay);
-    int endIndex = days.indexOf(endDay);
-
-    if (startIndex <= endIndex) {
-      for (var i = startIndex; i <= endIndex; i++) {
-        daysData.add(days[i]);
-      }
-    } else {
-      for (var i = startIndex; i < days.length; i++) {
-        daysData.add(days[i]);
-      }
-      for (var i = 0; i <= endIndex; i++) {
-        daysData.add(days[i]);
-      }
-    }
-
-    return !daysData.contains(day);
+  void notify() {
+    notifyListeners();
   }
 }

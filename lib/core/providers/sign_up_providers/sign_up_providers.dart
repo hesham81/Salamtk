@@ -8,6 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
+import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
 
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/storage/doctors_storage.dart';
@@ -25,6 +26,38 @@ class SignUpProviders extends ChangeNotifier {
   Marker? _marker;
 
   String? _country;
+
+  String? _secondClinicCity;
+  String? _secondClinicState;
+  String? _secondClinicStreet;
+
+  String? get secondClinicCity => _secondClinicCity;
+
+  String? get secondClinicState => _secondClinicState;
+
+  String? get secondClinicStreet => _secondClinicStreet;
+
+  setSecondClinicCity(String? value) {
+    _secondClinicCity = value;
+    notifyListeners();
+  }
+
+  setSecondClinicState(String? value) {
+    _secondClinicState = value;
+    notifyListeners();
+  }
+
+  setSecondClinicStreet(String? value) {
+    _secondClinicStreet = value;
+    notifyListeners();
+  }
+
+  List<String> _selectedSlotsData = [];
+
+  void setSelectedSlotsData(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
 
   String? _state;
 
@@ -50,6 +83,14 @@ class SignUpProviders extends ChangeNotifier {
   File? _certificate;
 
   double? _price;
+
+  List<String> get listenSlots => _selectedSlotsData;
+
+  set listenSlots(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
+
   final List<String> timeSlots = [
     "12:00 AM",
     "12:30 AM",
@@ -102,18 +143,22 @@ class SignUpProviders extends ChangeNotifier {
   ];
 
   final List<String> days = [
+    "Saturday",
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
-    "Sunday"
   ];
 
   String? _clinicWorkingFrom;
 
   String? _clinicWorkingTo;
+
+  String? _secondSpecialist;
+
+  String? _thirdSpecialist;
 
   String? get name => _name;
 
@@ -140,6 +185,22 @@ class SignUpProviders extends ChangeNotifier {
   File? get image => _image;
 
   File? get certificate => _certificate;
+
+  String? _distinctiveMark;
+
+  String? get distinctiveMark => _distinctiveMark;
+
+  void setDistinctiveMark(String value) {
+    _distinctiveMark = value;
+    notifyListeners();
+  }
+
+  String? _selectedCity;
+  String? _selectedLocation;
+
+  String get selectedLocation => _selectedLocation ?? "";
+
+  String get selectedCity => _selectedCity ?? "";
 
   Future<void> uploadImage() async {
     final ImagePicker picker = ImagePicker();
@@ -188,6 +249,12 @@ class SignUpProviders extends ChangeNotifier {
     required String phoneNumber,
     required double price,
     required String specialist,
+    required String street,
+    String? distinctiveMark,
+    String? city,
+    String? state,
+    String? secondSpecialist,
+    String? thirdSpecialist,
   }) {
     _name = name;
     _description = description;
@@ -196,6 +263,12 @@ class SignUpProviders extends ChangeNotifier {
     _phoneNumber = phoneNumber;
     _price = price;
     _specialist = specialist;
+    _selectedCity = city;
+    _selectedLocation = state;
+    _street = street;
+    _distinctiveMark = distinctiveMark;
+    _secondSpecialist = secondSpecialist;
+    _thirdSpecialist = thirdSpecialist;
     notifyListeners();
   }
 
@@ -224,12 +297,6 @@ class SignUpProviders extends ChangeNotifier {
 
   String? get area => _area;
 
-  void setMarker(Marker marker) {
-    _marker = marker;
-    notifyListeners();
-    _analyseMarkerLocation();
-  }
-
   String? get country => _country;
 
   String? get state => _state;
@@ -248,24 +315,35 @@ class SignUpProviders extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _analyseMarkerLocation() async {
-    LatLng point = _marker!.point;
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(point.latitude, point.longitude);
-    _country = placemark.first.country ?? "Not Located";
-    _state = placemark.first.administrativeArea ?? "Not Located";
-    _city = placemark.first.locality ?? "Not Located";
-    _street = placemark.first.street ?? "Not Located";
-    _area = placemark.first.subAdministrativeArea ?? "Not Located";
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController clinicPhoneNumberController = TextEditingController();
 
+  String? _clinicPhoneNumber;
+
+  ClinicDataModel? _secondClinicDataModel;
+
+  ClinicDataModel? get secondClinicDataModel => _secondClinicDataModel;
+
+  void setSecondClinicDataModel(ClinicDataModel value) {
+    _secondClinicDataModel = value;
     notifyListeners();
   }
 
-  TextEditingController phoneNumberController = TextEditingController();
+  String? get clinicPhoneNumber => _clinicPhoneNumber;
 
-  Future<bool> confirm(BuildContext context) async {
+  void setClinicPhoneNumber(String value) {
+    _clinicPhoneNumber = value;
+    notifyListeners();
+  }
+
+  Future<String?> confirm(
+    BuildContext context,
+    List<String>? clinicDays, {
+    ClinicDataModel? secondClinic,
+  }) async {
     try {
       EasyLoading.show();
+      _clinicPhoneNumber = clinicPhoneNumberController.text;
       UserCredential? user =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!,
@@ -300,28 +378,40 @@ class SignUpProviders extends ChangeNotifier {
       );
       await DoctorsCollection.setDoctor(
         DoctorModel(
-          clinicWorkingFrom: clinicWorkingFrom!,
-          clinicWorkingTo: clinicWorkingTo!,
-          clinicPhoneNumber: phoneNumber!,
-          workingFrom: workingFrom!,
-          workingTo: workingTo!,
+          distinctiveMark: distinctiveMark,
+          clinicWorkingFrom: null,
+          clinicWorkingTo: null,
+          clinicPhoneNumber: _clinicPhoneNumber!,
+          workingFrom: workingFrom,
+          workingTo: workingTo,
           certificateUrl: certificateUrl,
           imageUrl: imageUrl,
-          area: area!,
+          area: area ?? "",
           rate: 2.5,
           uid: uid,
           lat: _marker?.point.latitude ?? 0,
           long: _marker?.point.longitude ?? 0,
-          street: street!,
+          street: street ?? "",
           name: name!,
           price: price!,
           description: description!,
-          country: country!,
-          state: state!,
-          city: city!,
+          country: country ?? "مصر",
+          state: _selectedCity ?? _state ?? "",
+          city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
+          secondSpecialist: _secondSpecialist,
+          thirdSpecialist: _thirdSpecialist,
+          days: _selectedSlotsData,
+          clinicDays: clinicDays,
+          secondClinic: secondClinic,
         ),
+      ).then(
+        (value) {
+          if (value != null) {
+            return value;
+          }
+        },
       );
       await SharedPreference.setString(
         SharedPreferenceKey.role,
@@ -329,10 +419,17 @@ class SignUpProviders extends ChangeNotifier {
       );
       EasyLoading.dismiss();
       resetDoctorData();
-      return true;
+      return null;
+    } on FirebaseException catch (error) {
+      if (error.code == 'weak-password') {
+        return ('The password provided is too weak.');
+      } else if (error.code == 'email-already-in-use') {
+        return ('The account already exists ');
+      }
     } catch (error) {
       EasyLoading.dismiss();
-      return false;
+      return error.toString();
     }
+    return null;
   }
 }

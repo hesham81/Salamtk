@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:salamtk/core/functions/translation_services.dart';
+import '../../../../../../core/providers/app_providers/language_provider.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/functions/favourites.dart';
 import '/core/utils/patients/favoutie_collections.dart';
@@ -79,6 +81,7 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
   Widget build(BuildContext context) {
     var provider = Provider.of<AllAppProvidersDb>(context);
     var local = AppLocalizations.of(context);
+    var languageProvider = Provider.of<LanguageProvider>(context);
 
     return CustomContainer(
       padding: EdgeInsets.zero,
@@ -103,7 +106,10 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
                 Text(
-                  widget.model.specialist,
+                  (languageProvider.getLanguage == "en")
+                      ? widget.model.specialist
+                      : TranslationServices.translateCategoriesToAr(
+                          widget.model.specialist),
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
@@ -141,21 +147,21 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                     ),
                   ],
                 ),
-                (!widget.displayFavouriteIcon)
-                    ? Text(
-                        LocationServices.calculateDistance(
-                          provider.lo,
-                          LatLng(
-                            widget.model.lat ?? 0,
-                            widget.model.long ?? 0,
-                          ),
-                        ),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(color: Colors.grey),
-                      )
-                    : SizedBox(),
+                // (!widget.displayFavouriteIcon)
+                //     ? Text(
+                //         LocationServices.calculateDistance(
+                //           provider.lo,
+                //           LatLng(
+                //             widget.model.lat ?? 0,
+                //             widget.model.long ?? 0,
+                //           ),
+                //         ),
+                //         style: Theme.of(context)
+                //             .textTheme
+                //             .titleSmall!
+                //             .copyWith(color: Colors.grey),
+                //       )
+                //     : SizedBox(),
               ],
             ).allPadding(10),
           ),
@@ -164,14 +170,8 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
             flex: 1,
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.model.imageUrl!,
-                  ),
+                CachedNetworkImage(
+                  imageUrl: widget.model.imageUrl!,
                 ),
                 (widget.displayFavouriteIcon)
                     ? IconButton(

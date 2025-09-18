@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_ar.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_en.dart';
+import 'package:salamtk/modules/layout/patient/pages/wallet/pages/salamtuk_wallet.dart';
+import 'package:salamtk/modules/splash_screen/pages/splash_screen.dart';
+import '../../../../../../../../core/providers/patient_providers/patient_provider.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/favourite_tab/pages/favourite_tab.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_reviews/pages/my_reviews_tab.dart';
@@ -65,7 +70,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignIn(),
+                          builder: (context) => SplashScreen(),
                         ),
                         (route) => false,
                       );
@@ -93,10 +98,29 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                 ),
               ),
               Divider(),
-              Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(vertical: 0.013.height),
-                child: Text(local.privacy),
+              GestureDetector(
+                onTap: () => (provider.getLanguage != "en")
+                    ? slideLeftWidget(
+                        newPage: PatientPrivacyAndPolicyAr(), context: context)
+                    : slideLeftWidget(
+                        newPage: PatientPrivacyAndPolicyEn(), context: context),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text(local.privacy),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: SalamtukWallet(),
+                  context: context,
+                ),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text(local.salamtukWallet),
+                ),
               ),
               Divider(),
               GestureDetector(
@@ -150,6 +174,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                     if (provider.getLanguage != "ar") {
                       provider.setLang("ar");
                     }
+                    Provider.of<PatientProvider>(context).reUpdateProvider();
                   }
                 },
               ),

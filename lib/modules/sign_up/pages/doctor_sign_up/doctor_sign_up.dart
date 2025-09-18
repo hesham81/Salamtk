@@ -1,14 +1,16 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
+import 'package:salamtk/core/functions/translation_services.dart';
+import 'package:salamtk/core/providers/app_providers/language_provider.dart';
+import 'package:salamtk/core/widget/dividers_word.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/doctor_time_plan_sign_up.dart';
+import '/core/functions/doctors_profile_methods.dart';
+import '/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
+import '/modules/sign_up/pages/doctor_sign_up/additional_sign_up_doctor_data.dart';
 import '/core/providers/sign_up_providers/sign_up_providers.dart';
-import '/core/widget/custom_container.dart';
-import '/core/widget/select_map.dart';
 import '/core/constant/app_assets.dart';
 import '/core/extensions/align.dart';
 import '/core/extensions/extensions.dart';
@@ -16,7 +18,6 @@ import '/core/validations/validations.dart';
 import '/core/widget/custom_text_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/core/theme/app_colors.dart';
-import '/core/utils/auth/sign_up_auth.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_button.dart';
 
@@ -28,6 +29,9 @@ class DoctorSignUp extends StatefulWidget {
 }
 
 class _DoctorSignUpState extends State<DoctorSignUp> {
+  TextEditingController clinicCityController = TextEditingController();
+  TextEditingController clinicStateController = TextEditingController();
+  TextEditingController clinicStreetController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -38,42 +42,51 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController price = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  TextEditingController distinctiveMarkController = TextEditingController();
+  TextEditingController secondCityController = TextEditingController();
+  TextEditingController secondStateController = TextEditingController();
+  TextEditingController secondStreetController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<String> specialists = [
-    "Obstetrics",
-    "Teeth",
-    "Urology",
-    "Lung",
-    "Pediatrics",
-    "Psychiatry",
-    "Ear, Nose & Throat (ENT)",
-    "Dermatology",
-    "Orthopedics",
-    "Eye",
-    "Heart",
-    "Nutritionist",
-    "Family Medicine & Allergy",
-    "Orthopedic",
-    "Gastroenterology",
-    "Internal Medicine",
-    "Surgery",
-    "Acupuncture",
-    "Vascular Surgery",
-    "Nephrology",
-    "Radiology",
-    "Endocrinology",
-    "Genetics",
-    "Speech Therapy",
-    "Pain Management",
-    "Cosmetic Surgery"
+  List<String> specialistsEn = [
+    'Obstetrics',
+    'Teeth',
+    'Urology',
+    'Lung',
+    'Pediatrics',
+    'Psychiatry',
+    'ENT',
+    'Dermatology',
+    'Orthopedics',
+    'Eye',
+    'Heart',
+    'Nutritionist',
+    'Family Medicine & Allergy',
+    'Gastroenterology',
+    'The Interior',
+    'Surgery',
+    'Acupuncture',
+    'Vascular Surgery',
+    'Nephrology',
+    'Radiology',
+    'Endocrinology',
+    'Genetics',
+    'Speech Therapy',
+    'Pain Management',
+    'Cosmetic Surgery',
   ];
   String? selectedSpecialist;
+  String? selectedCity;
+  String? selectedLocation;
+  String? secondSpecialist;
+  String? thirdSpecialist;
 
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<SignUpProviders>(context);
+    var lang = Provider.of<LanguageProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -156,7 +169,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     suffixIcon: Icons.attach_money_rounded,
                     validate: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please Enter Price";
+                        return local.pleaseEnterPrice;
                       }
                       return null;
                     },
@@ -172,7 +185,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   DropdownMenu(
                     width: double.maxFinite,
                     onSelected: (value) {
-                      selectedSpecialist = value;
+                      selectedSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
                     },
                     inputDecorationTheme: InputDecorationTheme(
                       border: OutlineInputBorder(
@@ -198,7 +213,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                       suffixIconColor: AppColors.secondaryColor,
                     ),
                     dropdownMenuEntries: [
-                      for (var icon in specialists)
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
                         DropdownMenuEntry(
                           value: icon,
                           label: icon,
@@ -206,52 +223,217 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ],
                   ),
                   0.02.height.hSpace,
-                  GestureDetector(
-                    onTap: () => slideLeftWidget(
-                      newPage: SelectMap(),
-                      context: context,
-                    ),
-                    child: CustomContainer(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.map_outlined,
-                            color: AppColors.secondaryColor,
-                          ),
-                          Text(
-                            local.selectClinicLocation,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  color: AppColors.blackColor,
-                                ),
-                          ),
-                          0.01.width.vSpace,
-                          Icon(
-                            Icons.arrow_forward_ios_sharp,
-                            color: AppColors.secondaryColor,
-                          ),
-                        ],
+                  Text(
+                    local.chooseSecondSpecialist,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                  ).alignTopLeft(),
+                  0.02.height.hSpace,
+                  DropdownMenu(
+                    width: double.maxFinite,
+                    onSelected: (value) {
+                      secondSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
+                    },
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      iconColor: AppColors.secondaryColor,
+                      prefixIconColor: AppColors.secondaryColor,
+                      suffixIconColor: AppColors.secondaryColor,
                     ),
+                    dropdownMenuEntries: [
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
+                        DropdownMenuEntry(
+                          value: icon,
+                          label: icon,
+                        ),
+                    ],
                   ),
                   0.02.height.hSpace,
+                  Text(
+                    local.chooseThirdSpecialist,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.blackColor,
+                        ),
+                  ).alignTopLeft(),
+                  0.02.height.hSpace,
+                  DropdownMenu(
+                    width: double.maxFinite,
+                    onSelected: (value) {
+                      thirdSpecialist = (lang.getLanguage == "en")
+                          ? value
+                          : TranslationServices.translateCategoriesToEn(value!);
+                    },
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColors.secondaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      iconColor: AppColors.secondaryColor,
+                      prefixIconColor: AppColors.secondaryColor,
+                      suffixIconColor: AppColors.secondaryColor,
+                    ),
+                    dropdownMenuEntries: [
+                      for (var icon in (lang.getLanguage == 'en')
+                          ? TranslationServices.englishSpecialists
+                          : TranslationServices.arabicSpecialists)
+                        DropdownMenuEntry(
+                          value: icon,
+                          label: icon,
+                        ),
+                    ],
+                  ),
+                  0.02.height.hSpace,
+                  CustomDropdown<String>(
+                    hintText: local.city,
+                    items: DoctorsProfileMethods.getAllCities(),
+                    decoration: CustomDropdownDecoration(
+                      closedBorder: Border.all(
+                        color: AppColors.secondaryColor,
+                      ),
+                      closedBorderRadius: BorderRadius.circular(25),
+                    ),
+                    onChanged: (p0) {
+                      setState(() {
+                        selectedCity = p0;
+                      });
+                    },
+                  ),
+                  0.01.height.hSpace,
+                  CustomDropdown<String>(
+                    hintText: local.zones,
+                    items:
+                        DoctorsProfileMethods.getGov(city: selectedCity ?? ""),
+                    onChanged: (p0) {
+                      setState(() {
+                        selectedLocation = p0;
+                      });
+                    },
+                    decoration: CustomDropdownDecoration(
+                        closedBorder: Border.all(
+                          color: AppColors.secondaryColor,
+                        ),
+                        closedBorderRadius: BorderRadius.circular(25)),
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.street,
+                    controller: streetController,
+                    validate: (value) {
+                      if (value == null || value.isEmpty) {
+                        return local.pleaseEnterStreet;
+                      }
+                      return null;
+                    },
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.distinctiveMark,
+                    controller: distinctiveMarkController,
+                  ),
+                  0.01.height.hSpace,
+                  (provider.state != null)
+                      ? Column(
+                          children: [
+                            MixedTextColors(
+                              title: local.city,
+                              value:
+                                  provider.state!.replaceAll("Governorate", ""),
+                            ),
+                            0.01.height.hSpace,
+                            MixedTextColors(
+                              title: local.state,
+                              value: provider.city!,
+                            ),
+                            0.01.height.hSpace,
+                            MixedTextColors(
+                              title: local.address,
+                              value: provider.street!,
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
+                  0.02.height.hSpace,
+                  DividersWord(text: "Second Clinic"),
+                  0.02.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.city,
+                    controller: clinicCityController,
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.state,
+                    controller: clinicStateController,
+                  ),
+                  0.01.height.hSpace,
+                  CustomTextFormField(
+                    hintText: local.address,
+                    controller: clinicStreetController,
+                  ),
+                  0.01.height.hSpace,
+
+                  /// Ending of the custom text form field
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate() &&
-                            selectedSpecialist != null) {
-                          if (provider.marker == null) {
-                            SnackBarServices.showErrorMessage(
-                              context,
-                              message: local.selectClinicLocation,
-                            );
-                            return;
-                          }
+                            selectedSpecialist != null &&
+                            selectedCity != null &&
+                            selectedLocation != null) {
+                          // if (secondC != null ||
+                          //     provider.secondClinicStreet != null ||
+                          //     provider.secondClinicState != null) {}
+                          provider.setSecondClinicCity(
+                            clinicCityController.text,
+                          );
+                          provider.setSecondClinicState(
+                            clinicStateController.text,
+                          );
+                          provider.setSecondClinicStreet(
+                            clinicStreetController.text,
+                          );
+
                           provider.setDoctorData(
+                            distinctiveMark:
+                                distinctiveMarkController.text.isEmpty
+                                    ? null
+                                    : distinctiveMarkController.text,
                             name: nameController.text,
                             description: description.text,
                             email: emailController.text,
@@ -259,9 +441,15 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             phoneNumber: phoneNumberController.text,
                             price: double.tryParse(price.text) ?? 0.0,
                             specialist: selectedSpecialist!,
+                            city: selectedCity,
+                            state: selectedLocation,
+                            street: streetController.text,
+                            secondSpecialist: secondSpecialist,
+                            thirdSpecialist: thirdSpecialist,
+
                           );
                           slideLeftWidget(
-                            newPage: AdditionalSignUpDoctorData(),
+                            newPage: DoctorTimePlanSignUp(),
                             context: context,
                           );
                         }

@@ -14,12 +14,12 @@ abstract class DoctorsCollection {
     );
   }
 
-  static Future<bool> setDoctor(DoctorModel doctor) async {
+  static Future<String?> setDoctor(DoctorModel doctor) async {
     try {
       await _collectionReference().doc(doctor.uid).set(doctor);
-      return true;
+      return null;
     } catch (error) {
-      return false;
+      return error.toString();
     }
   }
 

@@ -56,6 +56,8 @@ abstract class SignUpAuth {
     required String clinicWorkingFrom,
     required String clinicWorkingTo,
     required String clinicPhoneNumber,
+    required List<String> days,
+    String? distanctiveMark,
     double? lat,
     double? long,
   }) async {
@@ -75,6 +77,7 @@ abstract class SignUpAuth {
       );
       var user = _firebase.currentUser!.uid;
       var doctor = DoctorModel(
+        days: days,
         clinicWorkingFrom: clinicWorkingFrom,
         clinicWorkingTo: clinicWorkingTo,
         clinicPhoneNumber: clinicPhoneNumber,
@@ -96,6 +99,7 @@ abstract class SignUpAuth {
         lat: lat,
         long: long,
         area: area,
+        distinctiveMark: distanctiveMark,
       );
       await DoctorsCollection.setDoctor(doctor).then(
         (value) {

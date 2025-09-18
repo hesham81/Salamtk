@@ -2,6 +2,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/providers/patient_providers/patient_provider.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/core/providers/app_providers/language_provider.dart';
@@ -84,24 +85,6 @@ class UnLoginPatientProfile extends StatelessWidget {
                 ),
               ),
               0.01.height.hSpace,
-              CustomContainer(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.email_outlined,
-                      color: AppColors.secondaryColor,
-                    ),
-                    0.01.width.vSpace,
-                    Text(
-                      local.contactUs,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.blackColor,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              0.01.height.hSpace,
               GestureDetector(
                 onTap: () => slideLeftWidget(
                   newPage: CallUs(),
@@ -142,9 +125,13 @@ class UnLoginPatientProfile extends StatelessWidget {
                           if (provider.getLanguage != "en") {
                             provider.setLang("en");
                           }
+                          Provider.of<PatientProvider>(context)
+                              .reUpdateProvider();
                         } else {
                           if (provider.getLanguage != "ar") {
                             provider.setLang("ar");
+                            Provider.of<PatientProvider>(context)
+                                .reUpdateProvider();
                           }
                         }
                       },

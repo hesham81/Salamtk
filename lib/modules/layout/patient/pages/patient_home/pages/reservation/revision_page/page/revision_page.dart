@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:salamtk/core/utils/fcm_service.dart';
 import '/core/extensions/extensions.dart';
 import '/core/route/route_names.dart';
 import '/core/services/snack_bar_services.dart';
@@ -15,7 +16,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/core/utils/storage/screenshots.dart';
 
 class RevisionPage extends StatefulWidget {
-  const RevisionPage({super.key});
+  bool isSecondClinic;
+
+  RevisionPage({
+    super.key,
+    this.isSecondClinic = false,
+  });
 
   @override
   State<RevisionPage> createState() => _RevisionPageState();
@@ -142,10 +148,11 @@ class _RevisionPageState extends State<RevisionPage> {
                         paymentMethod: "Electronic Wallet",
                         email: provider.reservationEmail ?? "No Email",
                         patientName: provider.reservationName ?? "No Name",
+                        isSecondClinic: (widget.isSecondClinic) ? true : null,
                       );
 
                       await ReservationCollection.addReservation(model).then(
-                        (value) {
+                        (value) async {
                           if (value) {
                             EasyLoading.dismiss();
                             SnackBarServices.showSuccessMessage(
@@ -162,6 +169,8 @@ class _RevisionPageState extends State<RevisionPage> {
                                   route.settings.name ==
                                   RouteNames.revisionPage,
                             );
+                            await FCMService.subscribeToTopic(
+                                provider.getDoctor!.uid!);
                             provider.disposeData();
                           } else {
                             EasyLoading.dismiss();

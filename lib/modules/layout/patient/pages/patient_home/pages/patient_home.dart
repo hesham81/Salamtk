@@ -37,7 +37,7 @@ class _PatientHomeState extends State<PatientHome> {
               Icons.home_outlined,
               color: AppColors.secondaryColor,
             ),
-            label: local!.home,
+            label: local!.userHome,
             activeIcon: Icon(
               Icons.home_filled,
               color: AppColors.secondaryColor,

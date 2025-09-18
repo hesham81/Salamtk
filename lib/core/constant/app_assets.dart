@@ -1,5 +1,5 @@
 abstract class AppAssets{
-  static const String logo = 'assets/images/new_removed_logo.png';
+  static const String logo = 'assets/images/logooo.png';
   static const String halfCircleLeft = 'assets/images/half_circle.svg';
   static const String halfCircleRight = 'assets/images/half_circle_right.svg';
   static const String google = 'assets/icons/google.svg';
@@ -24,4 +24,6 @@ abstract class AppAssets{
   static const String doctorAvatar = 'assets/images/doctor_avatar.jpg';
   static const String patientAvatar = 'assets/images/patient_avatar.jpg';
   static const String forgetPassword = 'assets/images/forget_password.jpg';
+
+  static const String coinsIcon = 'assets/icons/43d24052d0674a4e31e14eac66d2c677-2.jpg';
 }

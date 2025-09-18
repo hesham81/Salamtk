@@ -35,36 +35,10 @@ class CallUs extends StatelessWidget {
             color: AppColors.primaryColor,
           ),
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            0.01.height.hSpace,
-            GestureDetector(
-              onTap: () async {
-                await LaunchersClasses.call(
-                  phoneNumber: AppConstants.phoneNumber2,
-                );
-              },
-              child: CustomContainer(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.call,
-                      color: AppColors.secondaryColor,
-                    ),
-                    0.01.width.vSpace,
-                    Text(
-                      AppConstants.phoneNumber2,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.blackColor,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             0.01.height.hSpace,
             GestureDetector(
               onTap: () async {
@@ -80,7 +54,9 @@ class CallUs extends StatelessWidget {
                     ),
                     0.01.width.vSpace,
                     Text(
-                      AppConstants.phoneNumber1,
+                      (isPatient)
+                          ? AppConstants.phoneNumber1
+                          : AppConstants.phoneNumber2,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.blackColor,
                           ),
@@ -107,9 +83,9 @@ class CallUs extends StatelessWidget {
                     ),
                     0.01.width.vSpace,
                     Text(
-                        (isPatient)
-                            ? AppConstants.phoneNumber1
-                            : AppConstants.phoneNumber2,
+                      (isPatient)
+                          ? AppConstants.phoneNumber1
+                          : AppConstants.phoneNumber2,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: AppColors.blackColor,
                           ),

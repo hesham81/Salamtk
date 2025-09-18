@@ -1,0 +1,2 @@
+/Users/hishamaymen/StudioProjects/Salamtk/android/app/.cxx/RelWithDebInfo/2b6y1f2k/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/hishamaymen/StudioProjects/Salamtk/android/app/.cxx/RelWithDebInfo/2b6y1f2k/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -89,7 +89,7 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
                     )
                     .toList();
                 doctors = doctors
-                    .where((element) => element.specialist == modal)
+                    .where((element) => element.specialist == modal || element.secondSpecialist == modal || element.thirdSpecialist == modal)
                     .toList();
                 return (doctors.isEmpty)
                     ? Column(

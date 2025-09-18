@@ -11,7 +11,7 @@ class LanguageProvider extends ChangeNotifier {
 
   Future<void> _init() async {
     _lang =
-        (await SharedPreference.getString(SharedPreferenceKey.lang)) ?? "en";
+        (await SharedPreference.getString(SharedPreferenceKey.lang)) ?? "ar";
     String? value =
         await SharedPreference.getString(SharedPreferenceKey.lang).then(
       (value) => value,
@@ -22,7 +22,7 @@ class LanguageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get getLanguage => _lang?? "en";
+  String get getLanguage => _lang?? "ar";
 
   void setLang(String lang) {
     _lang = lang;

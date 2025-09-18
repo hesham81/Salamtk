@@ -108,6 +108,7 @@ class _DoctorsMoneyState extends State<DoctorsMoney> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           local!.money,

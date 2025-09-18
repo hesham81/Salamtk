@@ -13,7 +13,12 @@ import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.da
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ViewAllDoctors extends StatefulWidget {
-  const ViewAllDoctors({super.key});
+  final bool isSeeAll;
+
+  const ViewAllDoctors({
+    super.key,
+    this.isSeeAll = false,
+  });
 
   @override
   State<ViewAllDoctors> createState() => _ViewAllDoctorsState();
@@ -97,11 +102,20 @@ class _ViewAllDoctorsState extends State<ViewAllDoctors> {
                 List<DoctorModel> newDoctors =
                     snapshot.data!.docs.map((e) => e.data()).toList();
 
-                doctors = newDoctors.where((doctor) {
-                  return doctor.state.contains(provider.getSelectedCity!) &&
-                      (doctor.city.contains(provider.getSelectedZone!) ||
-                          doctor.area.contains(provider.getSelectedZone!));
-                }).toList();
+                doctors = (widget.isSeeAll)
+                    ? newDoctors.where((doctor) {
+                        return doctor.state
+                                .contains(provider.getSelectedCity!) &&
+                            doctor.isHidden == false;
+                      }).toList()
+                    : newDoctors.where((doctor) {
+                        return doctor.state
+                                .contains(provider.getSelectedCity!) &&
+                            (doctor.city.contains(provider.getSelectedZone!) ||
+                                doctor.area
+                                        .contains(provider.getSelectedZone!) &&
+                                    doctor.isHidden == false);
+                      }).toList();
                 ;
                 return ListView.separated(
                   shrinkWrap: true,

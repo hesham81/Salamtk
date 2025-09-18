@@ -1,49 +1,67 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
 
-abstract class PhoneAuth {
-  static final _auth = FirebaseAuth.instance;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  static Future<void> verifyPhoneNumber({
+abstract class PhoneNumberAuth {
+  static final _firestore =
+      FirebaseFirestore.instance.collection("PhoneNumbers");
+
+  static Future<bool> checkIfExist({
     required String phoneNumber,
-    required void Function(String verificationId) onCodeSent,
-    required void Function(FirebaseAuthException error) onVerificationFailed,
-    required void Function(PhoneAuthCredential credential) onVerificationCompleted,
-    required void Function(String verificationId) onCodeAutoRetrievalTimeout,
   }) async {
     try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) {
-          onVerificationCompleted(credential);
-        },
-        verificationFailed: (FirebaseAuthException error) {
-          onVerificationFailed(error);
-        },
-        codeSent: (String verificationId, int? forceResendingToken) {
-          onCodeSent(verificationId);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          onCodeAutoRetrievalTimeout(verificationId);
-        },
-      );
-    } catch (e) {
-      print("Error during phone verification: $e");
+      var res = await _firestore.doc(phoneNumber).get();
+      return res.exists
+          ? (res.data()!["isVerified"])
+              ? true
+              : false
+          : false;
+    } catch (error) {
+      return false;
     }
   }
 
-  static Future<UserCredential?> signInWithOTP({
-    required String verificationId,
-    required String smsCode,
+  static String _generateRandomString(int length) {
+    const chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    final rnd = Random();
+    final buffer = StringBuffer();
+
+    for (var i = 0; i < length; i++) {
+      buffer.write(chars[rnd.nextInt(chars.length)]);
+    }
+
+    return buffer.toString();
+  }
+
+  static Future<String?> signUpWithPhoneNumber({
+    required String phoneNumber,
+    required String name,
   }) async {
     try {
-      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: smsCode,
-      );
-      return await _auth.signInWithCredential(credential);
-    } catch (e) {
-      print("Error signing in with OTP: $e");
+      await _firestore.doc(phoneNumber).set({
+        "phoneNumber": phoneNumber,
+        "name": name,
+        "uid": _generateRandomString(28),
+        "isVerified": false,
+      });
+      log(1);
       return null;
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  static Future<String?> getToken({
+    required String phoneNumber,
+  }) async {
+    try {
+      var res = await _firestore.doc(phoneNumber).get().then(
+            (value) => value.data()?["uid"],
+          );
+      return res;
+    } catch (error) {
+      throw Exception(error.toString());
     }
   }
 }

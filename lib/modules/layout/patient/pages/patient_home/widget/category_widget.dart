@@ -42,7 +42,11 @@ class CategoryWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => CategorizedDoctors(),
-              settings: RouteSettings(arguments:(languageProvider.getLanguage == 'ar')? TranslationServices.translateCategoriesToEn(text) :text), // Pass the arguments here
+              settings: RouteSettings(
+                arguments: (languageProvider.getLanguage == 'ar')
+                    ? TranslationServices.translateCategoriesToEn(text)
+                    : text,
+              ), // Pass the arguments here
             ),
           ),
           child: Container(

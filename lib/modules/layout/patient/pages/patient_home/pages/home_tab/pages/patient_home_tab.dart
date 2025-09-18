@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -60,6 +61,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
     var provider = Provider.of<PatientProvider>(context);
     var appProvider = Provider.of<AllAppProvidersDb>(context);
     var local = AppLocalizations.of(context);
+    var userId = FirebaseAuth.instance.currentUser?.uid;
     List<Map<String, dynamic>> categories = [
       {
         "icon": "assets/icons/heart.jpg",
@@ -225,32 +227,33 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
-            CustomElevatedButton(
-              child: Row(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.userDoctor,
-                    color: AppColors.primaryColor,
-                  ),
-                  0.01.width.vSpace,
-                  Text(
-                    local.joinUs,
-                    style: theme.textTheme.labelLarge!.copyWith(
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.primaryColor,
-                  ),
-                ],
-              ).hPadding(0.1.width),
-              onPressed: () => slideLeftWidget(
-                newPage: DoctorSignUp(),
-                context: context,
-              ),
-            ),
+            // (searchList.isEmpty) ?CustomElevatedButton(
+            //   child: Row(
+            //     children: [
+            //       Icon(
+            //         FontAwesomeIcons.userDoctor,
+            //         color: AppColors.primaryColor,
+            //       ),
+            //       0.01.width.vSpace,
+            //       Text(
+            //         local.joinUs,
+            //         style: theme.textTheme.labelLarge!.copyWith(
+            //           color: AppColors.primaryColor,
+            //         ),
+            //       ),
+            //       Spacer(),
+            //       Icon(
+            //         Icons.arrow_forward_ios,
+            //         color: AppColors.primaryColor,
+            //       ),
+            //     ],
+            //   ).hPadding(0.1.width),
+            //   onPressed: () =>
+            //       slideLeftWidget(
+            //         newPage: DoctorSignUp(),
+            //         context: context,
+            //       ),
+            // ) : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
                     children: [
@@ -291,6 +294,11 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   );
                   return distanceA.compareTo(distanceB);
                 });
+                doctors = doctors
+                    .where(
+                      (element) => element.isHidden == false,
+                    )
+                    .toList();
 
                 return ListView.separated(
                   shrinkWrap: true,
@@ -338,8 +346,8 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                                   )
                                   .toList()
                                   .length >
-                              3)
-                          ? 3
+                              5)
+                          ? 5
                           : doctors
                               .where(
                                 (element) => element.isVerified == true,

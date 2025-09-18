@@ -27,7 +27,10 @@ class ReservationModel {
 
   String status;
 
-   ReservationModel({
+  final bool? isSecondClinic;
+
+  ReservationModel({
+    this.isSecondClinic,
     required this.cashedPhoneNumber,
     required this.selectedPhoneNumber,
     required this.screenshotUrl,
@@ -60,6 +63,7 @@ class ReservationModel {
       screenshotUrl: json['screenshotUrl'],
       cashedPhoneNumber: json['cashedPhoneNumber'],
       selectedPhoneNumber: json['selectedPhoneNumber'],
+      isSecondClinic: json['isSecondClinic'],
     );
   }
 
@@ -79,6 +83,7 @@ class ReservationModel {
       'screenshotUrl': screenshotUrl,
       'cashedPhoneNumber': cashedPhoneNumber,
       'selectedPhoneNumber': selectedPhoneNumber,
+      'isSecondClinic': isSecondClinic,
     };
   }
 }

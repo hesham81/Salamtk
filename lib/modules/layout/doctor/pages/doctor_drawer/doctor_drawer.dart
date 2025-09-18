@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_privacy_and_policy/pages/doctor_privacy_and_policy_ar.dart';
+import 'package:salamtk/modules/layout/doctor/pages/notifications/pages/doctor_notify_requests.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
+import 'package:salamtk/modules/splash_screen/pages/splash_screen.dart';
 import '../../../../../core/providers/app_providers/language_provider.dart';
+import '../doctor_privacy_and_policy/pages/doctor_privacy_and_policy_en.dart';
+import '../doctors_data_screen/pages/doctors_data_screen.dart';
 import '/core/constant/app_assets.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -19,7 +25,6 @@ import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_
 import '/modules/sign_in/pages/sign_in.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class DoctorDrawer extends StatefulWidget {
   const DoctorDrawer({super.key});
@@ -148,6 +153,33 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                 ),
                 Divider(),
                 ListTile(
+                  onTap: () => slideLeftWidget(
+                    newPage: DoctorsDataScreen(),
+                    context: context,
+                  ),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.person_4,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.addAssistantDoctor,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  onTap: () => slideLeftWidget(
+                      newPage: (provider.getLanguage == "en")
+                          ? DoctorPrivacyAndPolicyEn()
+                          : DoctorPrivacyAndPolicyAr(),
+                      context: context),
                   title: Row(
                     children: [
                       Icon(
@@ -165,8 +197,49 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                   ),
                 ),
                 Divider(),
+                ListTile(
+                  onTap: () => slideLeftWidget(
+                      newPage: DoctorNotifyRequests(), context: context),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.notifications,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.assistantDoctorNotifications,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  onTap: () =>
+                      slideLeftWidget(newPage: PatientHome(), context: context),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.travel_explore_outlined,
+                        color: AppColors.secondaryColor,
+                      ),
+                      0.01.width.vSpace,
+                      Text(
+                        local.explore,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.blackColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
                 CustomDropdown(
-                  hintText: (provider.getLanguage == "en") ? "English" : "Arabic",
+                  hintText:
+                      (provider.getLanguage == "en") ? "English" : "Arabic",
                   items: [
                     "English",
                     "Arabic",
@@ -184,7 +257,6 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                   },
                 ),
                 Divider(),
-
                 CustomElevatedButton(
                   child: Row(
                     children: [
@@ -194,7 +266,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       ),
                       0.02.width.vSpace,
                       Text(
-                        local.logout  ,
+                        local.logout,
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.primaryColor,
                             ),
@@ -207,12 +279,13 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignIn(),
+                        builder: (context) => SplashScreen(),
                       ),
                       (route) => false,
                     );
                   },
                 ),
+                0.03.height.hSpace
               ],
             ).hPadding(0.03.width)
           ],

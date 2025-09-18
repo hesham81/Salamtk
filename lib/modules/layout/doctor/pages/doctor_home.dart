@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
+import 'package:salamtk/modules/layout/doctor/pages/all_doctor_reservation/pages/all_doctors_reservations.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../core/providers/app_providers/language_provider.dart';
 import '/modules/layout/doctor/pages/doctor_drawer/doctor_drawer.dart';
@@ -101,6 +102,17 @@ class _DoctorHomeState extends State<DoctorHome> {
         ),
       ),
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => slideLeftWidget(
+              newPage: AllDoctorsReservations(),
+              context: context,
+            ),
+            icon: Icon(
+              Icons.task,
+            ),
+          )
+        ],
         title: Text(
           local!.home,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -164,16 +176,12 @@ class _DoctorHomeState extends State<DoctorHome> {
                         doctorId: user!.uid,
                       ),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
                         if (snapshot.hasError) {
                           return Center(
-                              child: Text("Error loading reservations"));
+                            child: Text(
+                              "Error loading reservations",
+                            ),
+                          );
                         }
 
                         List<ReservationModel> reservations =
@@ -181,10 +189,12 @@ class _DoctorHomeState extends State<DoctorHome> {
                                 [];
 
                         List<ReservationModel> dateReservations = reservations
-                            .where((element) =>
-                                element.date.day == _focusedDay!.day &&
-                                element.date.month == _focusedDay!.month &&
-                                element.status == "Approved")
+                            .where(
+                              (element) =>
+                                  element.date.day == _focusedDay!.day &&
+                                  element.date.month == _focusedDay!.month &&
+                                  element.status == "Approved",
+                            )
                             .toList();
 
                         provider.setTotalReservations(dateReservations.length);
@@ -192,17 +202,21 @@ class _DoctorHomeState extends State<DoctorHome> {
                         (dateReservations.isEmpty)
                             ? isContainReservations = true
                             : isContainReservations = false;
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => PatientsList(
-                            model: dateReservations[index],
-                            reservation: dateReservations[index],
-                          ),
-                          separatorBuilder: (context, index) =>
-                              0.01.height.hSpace,
-                          itemCount: dateReservations.length,
-                        );
+                        return (dateReservations.isEmpty)
+                            ? Image.asset(
+                                "assets/icons/no_doctors.jpg",
+                              )
+                            : ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) => PatientsList(
+                                  model: dateReservations[index],
+                                  reservation: dateReservations[index],
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    0.01.height.hSpace,
+                                itemCount: dateReservations.length,
+                              );
                       },
                     ),
                     0.01.height.hSpace,

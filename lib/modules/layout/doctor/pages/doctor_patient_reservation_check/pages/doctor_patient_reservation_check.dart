@@ -6,6 +6,8 @@ import '/core/extensions/extensions.dart';
 import '/core/widget/custom_container.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/theme/app_colors.dart';
+import 'dart:io';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DoctorPatientReservationCheck extends StatefulWidget {
   const DoctorPatientReservationCheck({super.key});
@@ -36,12 +38,13 @@ class _DoctorPatientReservationCheckState
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       bottomNavigationBar: Expanded(
         child: CustomElevatedButton(
           onPressed: () {},
           child: Text(
-            "Confirm",
+            local!.confirm,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppColors.primaryColor,
                 ),
@@ -50,7 +53,7 @@ class _DoctorPatientReservationCheckState
       ).allPadding(0.01.height),
       appBar: AppBar(
         title: Text(
-          "Patient Name",
+          local.patientName,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -71,7 +74,7 @@ class _DoctorPatientReservationCheckState
                 children: [
                   0.01.height.hSpace,
                   Text(
-                    "Patient Name",
+                    local.patientName,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: AppColors.blackColor,
                         ),
@@ -80,7 +83,7 @@ class _DoctorPatientReservationCheckState
                   Row(
                     children: [
                       Text(
-                        "Date : ",
+                        "${local.date} : ",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.blackColor,
                             ),
@@ -98,7 +101,7 @@ class _DoctorPatientReservationCheckState
                   Row(
                     children: [
                       Text(
-                        "Time : ",
+                        "${local.time} : ",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.blackColor,
                             ),
