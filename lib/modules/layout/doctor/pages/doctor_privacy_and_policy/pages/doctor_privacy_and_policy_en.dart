@@ -67,7 +67,7 @@ We use doctors' data for the following purposes:
 •	Creating a professional profile for the doctor that is visible to users.
 •	Enabling patients to book appointments and communicate with the doctor.
 •	Sending notifications about bookings and changes.
-•	Settling financial payments (if applicable).
+•	Settling financial payment (if applicable).
 •	Communicating regarding technical, contractual, or administrative matters.
 """,
               style: Theme.of(context).textTheme.titleSmall,

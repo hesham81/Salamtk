@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_ar.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_en.dart';
+import 'package:salamtk/modules/layout/patient/pages/wallet/pages/salamtuk_wallet.dart';
 import 'package:salamtk/modules/splash_screen/pages/splash_screen.dart';
 import '../../../../../../../../core/providers/patient_providers/patient_provider.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
@@ -107,6 +108,18 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                   width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
                   child: Text(local.privacy),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: SalamtukWallet(),
+                  context: context,
+                ),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text(local.salamtukWallet),
                 ),
               ),
               Divider(),

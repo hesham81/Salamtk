@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/main.dart';
+import 'package:salamtk/models/payments/coins_data_model.dart';
+import '../../utils/payment/payments_collections.dart';
 import '../app_providers/language_provider.dart';
 import '/core/utils/patients/favoutie_collections.dart';
 import '/core/theme/app_colors.dart';
@@ -14,6 +16,14 @@ import '/models/doctors_models/doctor_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatientProvider extends ChangeNotifier {
+  PatientProvider() {
+    Future.wait(
+      [
+        _getCoinsDataModelFromFireStore(),
+      ],
+    );
+  }
+
   DoctorModel? _selectedDoctor;
   String? _selectedSlot;
   List<String> favourites = [];
@@ -31,6 +41,7 @@ class PatientProvider extends ChangeNotifier {
   String? _screenshot;
   File? _image;
   String? appPhoneNumber;
+
   List<Map<String, dynamic>> getCategories(AppLocalizations local) {
     return [
       {
@@ -135,7 +146,7 @@ class PatientProvider extends ChangeNotifier {
       },
       {
         "icon":
-        "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+            "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
         "text": local.physicalTherapy,
         "color": Colors.orangeAccent,
       },
@@ -346,7 +357,6 @@ class PatientProvider extends ChangeNotifier {
   List<Map<String, dynamic>> get categories {
     _checkLocal();
     return [
-
       {
         "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
         "text": local?.obstetrics,
@@ -519,7 +529,7 @@ class PatientProvider extends ChangeNotifier {
         "color": Colors.orange,
       },
       {
-        "icon":null,
+        "icon": null,
         "text": local?.addictionMedicine,
         "color": Colors.blueGrey,
       },
@@ -549,7 +559,7 @@ class PatientProvider extends ChangeNotifier {
         "color": Colors.green,
       },
       {
-        "icon":null,
+        "icon": null,
         "text": local?.speechTherapy,
         "color": Colors.green,
       },
@@ -883,7 +893,7 @@ class PatientProvider extends ChangeNotifier {
     int selectedDay, {
     bool isSecondClinic = false,
   }) {
-    var startDay =  this._selectedDoctor!.clinicWorkingFrom;
+    var startDay = this._selectedDoctor!.clinicWorkingFrom;
     var endDay = this._selectedDoctor!.clinicWorkingTo;
 
     if (startDay == null || endDay == null)
@@ -969,6 +979,24 @@ class PatientProvider extends ChangeNotifier {
     _selectedDate = null;
     _selectedPaymentMethod = null;
     notifyListeners();
+  }
+
+  CoinsDataModel? _coinsDataModel;
+
+  CoinsDataModel? get getCoinsDataModel => _coinsDataModel;
+
+  Future<void> _getCoinsDataModelFromFireStore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var response = await PaymentsCollections.getAllCoins();
+
+      response.fold(
+        (l) => throw Exception(l),
+        (r) => _coinsDataModel = r,
+      );
+
+      notifyListeners();
+    }
   }
 
   void notify() {

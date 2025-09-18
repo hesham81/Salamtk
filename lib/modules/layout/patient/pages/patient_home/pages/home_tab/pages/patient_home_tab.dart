@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,8 +47,8 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
       if (doctor.city.isNotEmpty &&
           (doctor.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
               doctor.city.toLowerCase().contains(
-                searchQuery.toLowerCase(),
-              ))) {
+                    searchQuery.toLowerCase(),
+                  ))) {
         searchList.add(doctor);
       }
     }
@@ -60,6 +61,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
     var provider = Provider.of<PatientProvider>(context);
     var appProvider = Provider.of<AllAppProvidersDb>(context);
     var local = AppLocalizations.of(context);
+    var userId = FirebaseAuth.instance.currentUser?.uid;
     List<Map<String, dynamic>> categories = [
       {
         "icon": "assets/icons/heart.jpg",
@@ -124,106 +126,105 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
             ),
             (searchList.isEmpty)
                 ? Row(
-              children: [
-                Text(
-                  local.categories,
-                  style: theme.textTheme.titleMedium,
-                ),
-                Spacer(),
-                CustomTextButton(
-                  text: local.seeAll,
-                  onPressed: () =>
-                      slideLeftWidget(
-                        newPage: AllCategories(),
-                        context: context,
+                    children: [
+                      Text(
+                        local.categories,
+                        style: theme.textTheme.titleMedium,
                       ),
-                ),
-              ],
-            )
+                      Spacer(),
+                      CustomTextButton(
+                        text: local.seeAll,
+                        onPressed: () => slideLeftWidget(
+                          newPage: AllCategories(),
+                          context: context,
+                        ),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CategoryWidget.child(
-                  text: provider.categories[10]["text"],
-                  color: provider.categories[10]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      provider.categories[10]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: categories[1]["text"],
-                  color: categories[1]["color"],
-                  child: ImageIcon(
-                    AssetImage(
-                      categories[1]["icon"],
-                    ),
-                    color: AppColors.primaryColor,
-                  ).allPadding(15),
-                ),
-                CategoryWidget.child(
-                  text: provider.categories[1]["text"],
-                  color: provider.categories[1]["color"],
-                  child: ImageIcon(
-                    AssetImage(provider.categories[1]["icon"]),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: provider.categories[9]["text"],
-                  color: provider.categories[9]["color"],
-                  child: ImageIcon(
-                    AssetImage(provider.categories[9]["icon"]),
-                    color: AppColors.primaryColor,
-                  ).allPadding(15),
-                ),
-              ],
-            )
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CategoryWidget.child(
+                        text: provider.categories[10]["text"],
+                        color: provider.categories[10]["color"],
+                        child: ImageIcon(
+                          AssetImage(
+                            provider.categories[10]["icon"],
+                          ),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[1]["text"],
+                        color: categories[1]["color"],
+                        child: ImageIcon(
+                          AssetImage(
+                            categories[1]["icon"],
+                          ),
+                          color: AppColors.primaryColor,
+                        ).allPadding(15),
+                      ),
+                      CategoryWidget.child(
+                        text: provider.categories[1]["text"],
+                        color: provider.categories[1]["color"],
+                        child: ImageIcon(
+                          AssetImage(provider.categories[1]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: provider.categories[9]["text"],
+                        color: provider.categories[9]["color"],
+                        child: ImageIcon(
+                          AssetImage(provider.categories[9]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(15),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CategoryWidget.child(
-                  text: categories[4]["text"],
-                  color: categories[4]["color"],
-                  child: ImageIcon(
-                    AssetImage(categories[4]["icon"]),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: categories[5]["text"],
-                  color: categories[5]["color"],
-                  child: ImageIcon(
-                    AssetImage(categories[5]["icon"]),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                CategoryWidget.child(
-                  text: categories[6]["text"],
-                  color: categories[6]["color"],
-                  child: ImageIcon(
-                    AssetImage(categories[6]["icon"]),
-                    color: AppColors.primaryColor,
-                  ).allPadding(10),
-                ),
-                CategoryWidget.child(
-                  text: categories[7]["text"],
-                  color: categories[7]["color"],
-                  child: ImageIcon(
-                    AssetImage(categories[7]["icon"]),
-                    color: AppColors.primaryColor,
-                  ).allPadding(10),
-                ),
-              ],
-            )
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CategoryWidget.child(
+                        text: categories[4]["text"],
+                        color: categories[4]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[4]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[5]["text"],
+                        color: categories[5]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[5]["icon"]),
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[6]["text"],
+                        color: categories[6]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[6]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(10),
+                      ),
+                      CategoryWidget.child(
+                        text: categories[7]["text"],
+                        color: categories[7]["color"],
+                        child: ImageIcon(
+                          AssetImage(categories[7]["icon"]),
+                          color: AppColors.primaryColor,
+                        ).allPadding(10),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
             // (searchList.isEmpty) ?CustomElevatedButton(
@@ -255,19 +256,18 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
             // ) : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
-              children: [
-                CustomTextButton(
-                  text: local.seeAll,
-                  onPressed: () =>
-                      slideLeftWidget(
-                        newPage: FilteredCities(),
-                        context: context,
+                    children: [
+                      CustomTextButton(
+                        text: local.seeAll,
+                        onPressed: () => slideLeftWidget(
+                          newPage: FilteredCities(),
+                          context: context,
+                        ),
                       ),
-                ),
-                Spacer(),
-                Text(local.mostBookedDoctors).alignRight(),
-              ],
-            )
+                      Spacer(),
+                      Text(local.mostBookedDoctors).alignRight(),
+                    ],
+                  )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.01.height.hSpace : SizedBox(),
             StreamBuilder(
@@ -294,70 +294,72 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   );
                   return distanceA.compareTo(distanceB);
                 });
-                doctors = doctors.where((element) => element.isHidden == false,)
+                doctors = doctors
+                    .where(
+                      (element) => element.isHidden == false,
+                    )
                     .toList();
 
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) =>
-                      GestureDetector(
-                        onTap: () {
-                          provider.setSelectedDoctor(
-                            searchList.isEmpty
-                                ? doctors
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      provider.setSelectedDoctor(
+                        searchList.isEmpty
+                            ? doctors
                                 .where(
                                   (element) => element.isVerified == true,
-                            )
+                                )
                                 .toList()[index]
-                                : searchList
+                            : searchList
                                 .where(
                                   (element) => element.isVerified == true,
-                            )
+                                )
                                 .toList()[index],
-                          );
-                          slideLeftWidget(
-                            newPage: SelectedDoctor(),
-                            context: context,
-                          );
-                        },
-                        child: MostDoctorsBooked(
-                          displayFavouriteIcon: true,
-                          model: searchList.isEmpty
-                              ? doctors
+                      );
+                      slideLeftWidget(
+                        newPage: SelectedDoctor(),
+                        context: context,
+                      );
+                    },
+                    child: MostDoctorsBooked(
+                      displayFavouriteIcon: true,
+                      model: searchList.isEmpty
+                          ? doctors
                               .where(
                                 (element) => element.isVerified == true,
-                          )
+                              )
                               .toList()[index]
-                              : searchList
+                          : searchList
                               .where(
                                 (element) => element.isVerified == true,
-                          )
+                              )
                               .toList()[index],
-                        ),
-                      ),
+                    ),
+                  ),
                   separatorBuilder: (context, index) => 0.01.height.hSpace,
                   itemCount: searchList.isEmpty
                       ? (doctors
-                      .where(
-                        (element) => element.isVerified == true,
-                  )
-                      .toList()
-                      .length >
-                      5)
-                      ? 5
-                      : doctors
-                      .where(
-                        (element) => element.isVerified == true,
-                  )
-                      .toList()
-                      .length
+                                  .where(
+                                    (element) => element.isVerified == true,
+                                  )
+                                  .toList()
+                                  .length >
+                              5)
+                          ? 5
+                          : doctors
+                              .where(
+                                (element) => element.isVerified == true,
+                              )
+                              .toList()
+                              .length
                       : searchList
-                      .where(
-                        (element) => element.isVerified == true,
-                  )
-                      .toList()
-                      .length,
+                          .where(
+                            (element) => element.isVerified == true,
+                          )
+                          .toList()
+                          .length,
                 );
               },
             ),

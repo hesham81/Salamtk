@@ -220,7 +220,12 @@
           "physicalTherapy" : "العلاج الطبيعي",
           "goToSecondClinicProfile"  : "الذهاب الي اعدادات العياده الثانيه ",
           "clinic": "عياده",
-          "passwordResetEmailSent" : "تم ارسال اللينك برجاء التحقق من البريد"
+          "passwordResetEmailSent" : "تم ارسال اللينك برجاء التحقق من البريد",
+     "salamtukWallet":"محفظه سلامتك",
+     "welcomeBack": "مرحبا بك",
+     "balance":"الرصيد",
+     "requestMoney":"طلب تحويل مالي"
+
 
 
 
