@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/constant/shared_preference_key.dart';
 import 'package:salamtk/core/functions/otp_services.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
@@ -102,8 +103,12 @@ class _PatientSignUpState extends State<PatientSignUp> {
                         password: passwordController.text,
                         name: nameController.text,
                       ).then(
-                        (value) {
+                        (value) async {
                           if (value == null) {
+                            SharedPreference.setString(
+                              SharedPreferenceKey.role,
+                              "patient",
+                            );
                             slideLeftWidget(
                               newPage: PatientHome(),
                               context: context,

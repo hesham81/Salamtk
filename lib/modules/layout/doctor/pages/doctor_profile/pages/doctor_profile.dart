@@ -131,12 +131,13 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   DoctorProfileComponent(
                     icon: Icons.next_week_outlined,
                     content:
-                        "${(language.getLanguage == "ar") ? _translateDayRelation(local.workingFrom) : local.workingFrom} ${doctor!.workingFrom}",
+                        "${(language.getLanguage == "ar") ? _translateDayRelation(local.workingFrom) : local.workingFrom} ${doctor?.workingFrom ?? doctor!.days!.first}",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: Icons.next_week_rounded,
-                    content: "${local.workingTo} ${doctor!.workingTo}",
+                    content:
+                        "${local.workingTo} ${doctor?.workingTo ?? doctor!.days!.last}",
                   ),
                   0.01.height.hSpace,
                   DividersWord(
@@ -147,7 +148,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     icon: FontAwesomeIcons.timeline,
                     content:
                         "${local.clinicWorkingFrom} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingFrom,
+                            doctor!.clinicWorkingFrom ?? "",
                           ) : doctor!.clinicWorkingFrom}",
                   ),
                   0.01.height.hSpace,
@@ -155,7 +156,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     icon: FontAwesomeIcons.timeline,
                     content:
                         "${local.clinicWorkingTo} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingTo,
+                            doctor!.clinicWorkingTo ?? "",
                           ) : doctor!.clinicWorkingTo}",
                   ),
                   0.01.height.hSpace,

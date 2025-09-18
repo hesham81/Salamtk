@@ -8,6 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
+import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
 
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/storage/doctors_storage.dart';
@@ -25,6 +26,38 @@ class SignUpProviders extends ChangeNotifier {
   Marker? _marker;
 
   String? _country;
+
+  String? _secondClinicCity;
+  String? _secondClinicState;
+  String? _secondClinicStreet;
+
+  String? get secondClinicCity => _secondClinicCity;
+
+  String? get secondClinicState => _secondClinicState;
+
+  String? get secondClinicStreet => _secondClinicStreet;
+
+  setSecondClinicCity(String? value) {
+    _secondClinicCity = value;
+    notifyListeners();
+  }
+
+  setSecondClinicState(String? value) {
+    _secondClinicState = value;
+    notifyListeners();
+  }
+
+  setSecondClinicStreet(String? value) {
+    _secondClinicStreet = value;
+    notifyListeners();
+  }
+
+  List<String> _selectedSlotsData = [];
+
+  void setSelectedSlotsData(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
 
   String? _state;
 
@@ -50,6 +83,14 @@ class SignUpProviders extends ChangeNotifier {
   File? _certificate;
 
   double? _price;
+
+  List<String> get listenSlots => _selectedSlotsData;
+
+  set listenSlots(List<String> slots) {
+    _selectedSlotsData = slots;
+    notifyListeners();
+  }
+
   final List<String> timeSlots = [
     "12:00 AM",
     "12:30 AM",
@@ -114,6 +155,10 @@ class SignUpProviders extends ChangeNotifier {
   String? _clinicWorkingFrom;
 
   String? _clinicWorkingTo;
+
+  String? _secondSpecialist;
+
+  String? _thirdSpecialist;
 
   String? get name => _name;
 
@@ -208,6 +253,8 @@ class SignUpProviders extends ChangeNotifier {
     String? distinctiveMark,
     String? city,
     String? state,
+    String? secondSpecialist,
+    String? thirdSpecialist,
   }) {
     _name = name;
     _description = description;
@@ -220,6 +267,8 @@ class SignUpProviders extends ChangeNotifier {
     _selectedLocation = state;
     _street = street;
     _distinctiveMark = distinctiveMark;
+    _secondSpecialist = secondSpecialist;
+    _thirdSpecialist = thirdSpecialist;
     notifyListeners();
   }
 
@@ -267,10 +316,34 @@ class SignUpProviders extends ChangeNotifier {
   }
 
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController clinicPhoneNumberController = TextEditingController();
 
-  Future<String?> confirm(BuildContext context) async {
+  String? _clinicPhoneNumber;
+
+  ClinicDataModel? _secondClinicDataModel;
+
+  ClinicDataModel? get secondClinicDataModel => _secondClinicDataModel;
+
+  void setSecondClinicDataModel(ClinicDataModel value) {
+    _secondClinicDataModel = value;
+    notifyListeners();
+  }
+
+  String? get clinicPhoneNumber => _clinicPhoneNumber;
+
+  void setClinicPhoneNumber(String value) {
+    _clinicPhoneNumber = value;
+    notifyListeners();
+  }
+
+  Future<String?> confirm(
+    BuildContext context,
+    List<String>? clinicDays, {
+    ClinicDataModel? secondClinic,
+  }) async {
     try {
       EasyLoading.show();
+      _clinicPhoneNumber = clinicPhoneNumberController.text;
       UserCredential? user =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!,
@@ -306,11 +379,11 @@ class SignUpProviders extends ChangeNotifier {
       await DoctorsCollection.setDoctor(
         DoctorModel(
           distinctiveMark: distinctiveMark,
-          clinicWorkingFrom: clinicWorkingFrom!,
-          clinicWorkingTo: clinicWorkingTo!,
-          clinicPhoneNumber: phoneNumber!,
-          workingFrom: workingFrom!,
-          workingTo: workingTo!,
+          clinicWorkingFrom: null,
+          clinicWorkingTo: null,
+          clinicPhoneNumber: _clinicPhoneNumber!,
+          workingFrom: workingFrom,
+          workingTo: workingTo,
           certificateUrl: certificateUrl,
           imageUrl: imageUrl,
           area: area ?? "",
@@ -327,6 +400,11 @@ class SignUpProviders extends ChangeNotifier {
           city: _selectedLocation ?? _city ?? "",
           specialist: specialist!,
           phoneNumber: phoneNumber!,
+          secondSpecialist: _secondSpecialist,
+          thirdSpecialist: _thirdSpecialist,
+          days: _selectedSlotsData,
+          clinicDays: clinicDays,
+          secondClinic: secondClinic,
         ),
       ).then(
         (value) {
@@ -348,12 +426,10 @@ class SignUpProviders extends ChangeNotifier {
       } else if (error.code == 'email-already-in-use') {
         return ('The account already exists ');
       }
-    }
-
-    catch (error) {
+    } catch (error) {
       EasyLoading.dismiss();
       return error.toString();
     }
-
+    return null;
   }
 }

@@ -1,6 +1,9 @@
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/modules/sign_up/pages/doctor_sign_up/second_clinic_info.dart';
+import '../../../../core/providers/app_providers/language_provider.dart';
 import '/core/widget/custom_text_form_field.dart';
 import '/core/widget/dividers_word.dart';
 import '/core/services/snack_bar_services.dart';
@@ -22,11 +25,15 @@ class AdditionalSignUpDoctorData extends StatefulWidget {
 
 class _AdditionalSignUpDoctorDataState
     extends State<AdditionalSignUpDoctorData> {
+  List<String> data = [];
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
     var provider = Provider.of<SignUpProviders>(context);
     var local = AppLocalizations.of(context);
+    var lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -77,46 +84,107 @@ class _AdditionalSignUpDoctorDataState
               ),
             ),
             0.01.height.hSpace,
-            Divider().hPadding(0.1.width),
-            Row(
-              children: [
-                Text(
-                  "${local.workingFrom} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: provider.workingFrom ?? local.workingFrom,
-                    items: provider.timeSlots,
-                    onChanged: (p0) {
-                      provider.setWorkingFrom(p0!);
-                    },
-                  ),
-                )
-              ],
+            DividersWord(
+              text: local.clinicInfo,
+            ),
+            0.02.height.hSpace,
+            CustomTextFormField(
+              hintText: local.phoneNumber,
+              controller: provider.clinicPhoneNumberController,
+              suffixIcon: Icons.phone_android_outlined,
+              keyboardType: TextInputType.number,
+              validate: (value) {
+                if (value == null || value.isEmpty) {
+                  return local.emptyPhone;
+                }
+
+                final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                if (!egyptPhoneRegex.hasMatch(value)) {
+                  return local.phoneError;
+                }
+
+                return null;
+              },
             ),
             0.01.height.hSpace,
-            Row(
-              children: [
-                Text(
-                  "${local.workingTo} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: provider.workingTo ?? local.workingTo,
-                    items: provider.workingToList,
-                    onChanged: (p0) {
-                      provider.setWorkingTo(p0!);
-                    },
-                  ),
-                )
-              ],
+            0.01.height.hSpace,
+            GroupButton(
+              options: GroupButtonOptions(
+                borderRadius: BorderRadius.circular(10),
+                unselectedBorderColor: AppColors.secondaryColor,
+                selectedColor: AppColors.secondaryColor,
+                groupingType: GroupingType.wrap,
+              ),
+              onSelected: (value, index, isSelected) => setState(() {
+                (isSelected) ? data.add(value) : data.remove(value);
+                data.map(
+                  (e) => print(e),
+                );
+              }),
+              maxSelected: 7,
+              isRadio: false,
+              enableDeselect: true,
+              buttons: (lang.getLanguage == "en")
+                  ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  : [
+                      "الاثنين",
+                      "الثلاثاء",
+                      "الاربعاء",
+                      "الخميس",
+                      "الجمعة",
+                      "السبت",
+                      "الاحد"
+                    ],
             ),
+            0.01.height.hSpace,
+            Divider().hPadding(0.1.width),
+            0.01.height.hSpace,
+            // CustomTextButton(
+            //   text: local.clickToCustomizeYourTime,
+            //   onPressed: () => slideLeftWidget(
+            //     newPage: DoctorTimePlanSignUp(),
+            //     context: context,
+            //   ),
+            // ),
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.workingFrom} : ",
+            //       style: theme.labelLarge!.copyWith(
+            //         color: AppColors.secondaryColor,
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: CustomDropdown(
+            //         hintText: provider.workingFrom ?? local.workingFrom,
+            //         items: provider.timeSlots,
+            //         onChanged: (p0) {
+            //           provider.setWorkingFrom(p0!);
+            //         },
+            //       ),
+            //     )
+            //   ],
+            // ),
+            // 0.01.height.hSpace,
+            // Row(
+            //   children: [
+            //     Text(
+            //       "${local.workingTo} : ",
+            //       style: theme.labelLarge!.copyWith(
+            //         color: AppColors.secondaryColor,
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: CustomDropdown(
+            //         hintText: provider.workingTo ?? local.workingTo,
+            //         items: provider.workingToList,
+            //         onChanged: (p0) {
+            //           provider.setWorkingTo(p0!);
+            //         },
+            //       ),
+            //     )
+            //   ],
+            // ),
             0.02.height.hSpace,
             CustomElevatedButton(
               child: Row(
@@ -149,75 +217,15 @@ class _AdditionalSignUpDoctorDataState
                     child: Image.file(provider.certificate!),
                   ),
             0.01.height.hSpace,
-            DividersWord(
-              text: local.clinicInfo,
-            ),
-            0.02.height.hSpace,
-            CustomTextFormField(
-              hintText: local!.phoneNumber,
-              controller: provider.phoneNumberController,
-              suffixIcon: Icons.phone_android_outlined,
-              keyboardType: TextInputType.number,
-              validate: (value) {
-                if (value == null || value.isEmpty) {
-                  return local.emptyPhone;
-                }
 
-                final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                if (!egyptPhoneRegex.hasMatch(value)) {
-                  return local.phoneError;
-                }
-
-                return null;
-              },
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
-                Text(
-                  "${local.from} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText:
-                        provider.clinicWorkingFrom ?? local.clinicWorkingFrom,
-                    items: provider.days,
-                    onChanged: (p0) {
-                      provider.setClinicWorkingFrom(p0!);
-                    },
-                  ),
-                )
-              ],
-            ),
-            0.01.height.hSpace,
-            Row(
-              children: [
-                Text(
-                  "${local.to} : ",
-                  style: theme.labelLarge!.copyWith(
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: provider.clinicWorkingTo ?? local.clinicWorkingTo,
-                    items: provider.days,
-                    onChanged: (p0) {
-                      provider.setClinicWorkingTo(p0!);
-                    },
-                  ),
-                )
-              ],
-            ),
             0.02.height.hSpace,
             SizedBox(
               width: 1.width,
               child: CustomElevatedButton(
                 child: Text(
-                  local.confirm,
+                  (provider.secondClinicCity != null)
+                      ? local.goToSecondClinicProfile
+                      : local.confirm,
                   style: theme.titleSmall!.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -234,24 +242,18 @@ class _AdditionalSignUpDoctorDataState
                       context,
                       message: local.pleaseUploadYourImage,
                     );
-                  } else if (provider.workingFrom == null) {
-                    SnackBarServices.showErrorMessage(
-                      context,
-                      message: local.pleaseSelectWorkingFrom,
-                    );
-                  } else if (provider.workingTo == null) {
-                    SnackBarServices.showErrorMessage(
-                      context,
-                      message: local.pleaseSelectWorkingTo,
-                    );
-                  } else if (provider.clinicWorkingTo == null ||
-                      provider.clinicWorkingFrom == null) {
+                  } else if (data.isEmpty) {
                     SnackBarServices.showErrorMessage(
                       context,
                       message: local.pleaseCheckClinicInfo,
                     );
+                  } else if (provider.secondClinicCity != null) {
+                    slideLeftWidget(
+                      newPage: SecondClinicInfo(),
+                      context: context,
+                    );
                   } else {
-                    provider.confirm(context).then(
+                    provider.confirm(context, data).then(
                       (value) {
                         if (value == null) {
                           SnackBarServices.showSuccessMessage(
@@ -268,7 +270,7 @@ class _AdditionalSignUpDoctorDataState
                         } else {
                           SnackBarServices.showErrorMessage(
                             context,
-                            message: value ,
+                            message: value,
                           );
                         }
                       },

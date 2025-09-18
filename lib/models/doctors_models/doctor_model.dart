@@ -1,15 +1,19 @@
+import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
+
 import '/core/constant/app_assets.dart';
 
 class DoctorModel {
-   String name;
+  String name;
+  String? email;
+
   final String? uid;
-   double price;
-   String description;
+  double price;
+  String description;
   final String country;
   final String state;
   final String city;
-   String specialist;
-   String phoneNumber;
+  String specialist;
+  String phoneNumber;
   double? rate;
   final double? lat;
   final double? long;
@@ -20,35 +24,50 @@ class DoctorModel {
   final DateTime createdAt;
   bool isInTheClinic;
   String? imageUrl;
-  String workingFrom;
+  String? workingFrom;
 
-  String workingTo;
+  List<String>? clinicDays;
+
+  String? workingTo;
 
   String certificateUrl;
 
   bool isVerified;
 
-  String clinicWorkingFrom ;
+  List<String>? days;
 
-  String clinicWorkingTo ;
+  String? clinicWorkingFrom;
 
-  String clinicPhoneNumber ;
+  String? clinicWorkingTo;
 
-  bool isHidden ;
-  double totalPrice ;
+  String clinicPhoneNumber;
+
+  bool isHidden;
+
+  double totalPrice;
 
   String? distinctiveMark;
 
+  String? secondSpecialist;
+
+  String? thirdSpecialist;
+
+  ClinicDataModel? secondClinic;
+
+  // String
+
   DoctorModel({
-    this.totalPrice = 0 ,
+    this.totalPrice = 0,
     this.distinctiveMark,
-    required this.clinicWorkingFrom,
-    required this.clinicWorkingTo,
+    this.clinicWorkingFrom,
+    this.clinicWorkingTo,
     required this.clinicPhoneNumber,
     this.isVerified = false,
     this.uid,
+    this.clinicDays,
     required this.workingFrom,
     required this.workingTo,
+    this.email,
     required this.certificateUrl,
     required this.imageUrl,
     required this.area,
@@ -68,6 +87,10 @@ class DoctorModel {
     String? imagePath, // Made imagePath nullable for customization
     DateTime? createdAt, // Allowed createdAt to be passed during initialization
     this.isInTheClinic = false,
+    this.secondSpecialist,
+    this.thirdSpecialist,
+    this.days,
+    this.secondClinic,
   })  : imagePath = imagePath ?? AppAssets.doctorAvatar,
         // Default value if null
         createdAt = createdAt ?? DateTime.now(); // Default value if null
@@ -75,9 +98,16 @@ class DoctorModel {
   // Factory constructor for deserializing from JSON
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      secondClinic: (json['secondClinic'] == null)
+          ? null
+          : ClinicDataModel.fromJson(json['secondClinic']),
+      days: json['days'] != null
+          ? (json['days'] as List).map((e) => e.toString()).toList()
+          : null,
       clinicWorkingFrom: json['clinicWorkingFrom'],
       clinicWorkingTo: json['clinicWorkingTo'],
       clinicPhoneNumber: json['clinicPhoneNumber'],
+      email: json['email'],
       isVerified: json['isVerified'],
       workingFrom: json['workingFrom'],
       workingTo: json['workingTo'],
@@ -108,10 +138,16 @@ class DoctorModel {
           ? DateTime.parse(json['createdAt']) // Parse from JSON
           : null,
       // Use default if not provided
-      isInTheClinic: json['isInTheClinic'] ?? false, // Default to false if null
+      isInTheClinic: json['isInTheClinic'] ?? false,
+      // Default to false if null
       isHidden: json['isHidden'] ?? false,
       totalPrice: json['totalPrice'] ?? 0,
-      distinctiveMark: json['distinctiveMark'] ?? '',
+      distinctiveMark: json['distinctiveMark'],
+      secondSpecialist: json['secondSpecialist'],
+      thirdSpecialist: json['thirdSpecialist'],
+      clinicDays: json['clinicDays'] != null
+          ? (json['clinicDays'] as List).map((e) => e.toString()).toList()
+          : null,
     );
   }
 
@@ -141,12 +177,18 @@ class DoctorModel {
       'rate': rate,
       'lat': lat,
       'long': long,
+      'email': email,
       'imagePath': imagePath,
       'createdAt': createdAt.toIso8601String(),
+      'secondClinic': secondClinic?.toMap(),
       // Serialize DateTime as ISO string
       'isInTheClinic': isInTheClinic,
       'isHidden': isHidden,
       'totalPrice': totalPrice,
+      'secondSpecialist': secondSpecialist,
+      'thirdSpecialist': thirdSpecialist,
+      'days': days,
+      'clinicDays': clinicDays,
     };
   }
 }

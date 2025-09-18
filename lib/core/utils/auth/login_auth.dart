@@ -59,4 +59,12 @@ abstract class LoginAuth {
       return false;
     }
   }
+  static Future<String?> deleteAccount()async{
+    try {
+      await _firebase.currentUser!.delete();
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message!;
+    }
+  }
 }

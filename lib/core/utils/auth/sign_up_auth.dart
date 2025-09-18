@@ -56,6 +56,7 @@ abstract class SignUpAuth {
     required String clinicWorkingFrom,
     required String clinicWorkingTo,
     required String clinicPhoneNumber,
+    required List<String> days,
     String? distanctiveMark,
     double? lat,
     double? long,
@@ -76,6 +77,7 @@ abstract class SignUpAuth {
       );
       var user = _firebase.currentUser!.uid;
       var doctor = DoctorModel(
+        days: days,
         clinicWorkingFrom: clinicWorkingFrom,
         clinicWorkingTo: clinicWorkingTo,
         clinicPhoneNumber: clinicPhoneNumber,

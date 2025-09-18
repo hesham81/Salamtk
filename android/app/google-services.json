@@ -7,6 +7,110 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:8747852076:android:049fdb0d2e029481bb0c89",
+        "android_client_info": {
+          "package_name": "com.app.salamtuk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8747852076-4v1e0v58ere09h4ta7udra7itcbkqj5p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.salamtuk",
+            "certificate_hash": "d111841d5ee73afbada300bdb1749abf3b228fae"
+          }
+        },
+        {
+          "client_id": "8747852076-95rl8a1os3qflf03426paqkq6u15l9mr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.salamtuk",
+            "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
+          }
+        },
+        {
+          "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvXCsYhev8l-NYTaMtGiRmN7gfMIeLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.samaltuk.salamtuk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8747852076:android:462cc3f7f196f57ebb0c89",
+        "android_client_info": {
+          "package_name": "com.application.salamtuk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8747852076-p2b45ncroi8rogu51k8oi2ctnqpguibs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.application.salamtuk",
+            "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
+          }
+        },
+        {
+          "client_id": "8747852076-slmvdh9tv7i0dpi2ho017n0gptvciu9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.application.salamtuk",
+            "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
+          }
+        },
+        {
+          "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvXCsYhev8l-NYTaMtGiRmN7gfMIeLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.samaltuk.salamtuk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:8747852076:android:16db3f5226309c49bb0c89",
         "android_client_info": {
           "package_name": "com.example.salamk_business"
@@ -31,10 +135,10 @@
               "client_type": 3
             },
             {
-              "client_id": "8747852076-e7f44d7jcg35u57a4dvp6fcqr1idmaa8.apps.googleusercontent.com",
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.twseef"
+                "bundle_id": "com.samaltuk.salamtuk"
               }
             }
           ]
@@ -50,11 +154,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "8747852076-eib3kfoi2k6se2hr9j4efdtbijfjfcn5.apps.googleusercontent.com",
+          "client_id": "8747852076-6fjt26vk65hbnmbpnunqsgtvuio5ruln.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.twseef",
-            "certificate_hash": "8b8a89fcf3e98f8c7c793f2e31dd7027fb26ab6c"
+            "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
           }
         },
         {
@@ -75,10 +179,114 @@
               "client_type": 3
             },
             {
-              "client_id": "8747852076-e7f44d7jcg35u57a4dvp6fcqr1idmaa8.apps.googleusercontent.com",
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.twseef"
+                "bundle_id": "com.samaltuk.salamtuk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8747852076:android:4941a4306610efbfbb0c89",
+        "android_client_info": {
+          "package_name": "com.salamtuk.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8747852076-4e65tc42jvg83b264eq7q0gjl8t61grk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.app",
+            "certificate_hash": "d111841d5ee73afbada300bdb1749abf3b228fae"
+          }
+        },
+        {
+          "client_id": "8747852076-6c32f00umfrbnejr4s4lbf4on5ke0lub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.app",
+            "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
+          }
+        },
+        {
+          "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvXCsYhev8l-NYTaMtGiRmN7gfMIeLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.samaltuk.salamtuk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8747852076:android:0f96855b90e3b11cbb0c89",
+        "android_client_info": {
+          "package_name": "com.salamtuk.hesham"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8747852076-kbseu34c39k3rgoqaodu7eutf5s68uh0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.hesham",
+            "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
+          }
+        },
+        {
+          "client_id": "8747852076-s08tu2ou2i6241h7vucncf19qpsg8d8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salamtuk.hesham",
+            "certificate_hash": "8cb79a8e7b98569ec4ff69497fabd31cc40f57cb"
+          }
+        },
+        {
+          "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvXCsYhev8l-NYTaMtGiRmN7gfMIeLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8747852076-k5mv2f3f5bd11j65ssnc7t1h0mg8sab0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8747852076-7aa0vjli0htqbnr7jumitneohpi5gli8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.samaltuk.salamtuk"
               }
             }
           ]

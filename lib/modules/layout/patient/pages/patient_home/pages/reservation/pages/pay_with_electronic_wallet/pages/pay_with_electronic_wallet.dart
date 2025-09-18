@@ -19,7 +19,12 @@ import '/core/widget/custom_text_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PayWithElectronicWallet extends StatefulWidget {
-  const PayWithElectronicWallet({super.key});
+  bool isSecondClinic;
+
+  PayWithElectronicWallet({
+    super.key,
+    this.isSecondClinic = false,
+  });
 
   @override
   State<PayWithElectronicWallet> createState() =>
@@ -178,7 +183,9 @@ class _PayWithElectronicWalletState extends State<PayWithElectronicWallet> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RevisionPage(),
+                        builder: (context) => RevisionPage(
+                          isSecondClinic: widget.isSecondClinic,
+                        ),
                       ));
                 }
               },
