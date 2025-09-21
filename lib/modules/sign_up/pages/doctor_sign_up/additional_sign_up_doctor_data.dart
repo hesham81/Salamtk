@@ -125,7 +125,15 @@ class _AdditionalSignUpDoctorDataState
               isRadio: false,
               enableDeselect: true,
               buttons: (lang.getLanguage == "en")
-                  ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  ? [
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                      "Sunday",
+                    ]
                   : [
                       "الاثنين",
                       "الثلاثاء",
@@ -214,7 +222,9 @@ class _AdditionalSignUpDoctorDataState
                 ? SizedBox()
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.file(provider.certificate!),
+                    child: Image.file(
+                      provider.certificate!,
+                    ),
                   ),
             0.01.height.hSpace,
 

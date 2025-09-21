@@ -1,9 +1,12 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/constant/app_constants.dart';
+import 'package:salamtk/core/extensions/align.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_ar.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_en.dart';
 import 'package:salamtk/modules/layout/patient/pages/wallet/pages/salamtuk_wallet.dart';
@@ -40,6 +43,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               Row(
                 children: [
                   Column(

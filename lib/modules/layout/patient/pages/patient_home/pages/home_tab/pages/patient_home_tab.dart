@@ -227,33 +227,33 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                   )
                 : SizedBox(),
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
-            // (searchList.isEmpty) ?CustomElevatedButton(
-            //   child: Row(
-            //     children: [
-            //       Icon(
-            //         FontAwesomeIcons.userDoctor,
-            //         color: AppColors.primaryColor,
-            //       ),
-            //       0.01.width.vSpace,
-            //       Text(
-            //         local.joinUs,
-            //         style: theme.textTheme.labelLarge!.copyWith(
-            //           color: AppColors.primaryColor,
-            //         ),
-            //       ),
-            //       Spacer(),
-            //       Icon(
-            //         Icons.arrow_forward_ios,
-            //         color: AppColors.primaryColor,
-            //       ),
-            //     ],
-            //   ).hPadding(0.1.width),
-            //   onPressed: () =>
-            //       slideLeftWidget(
-            //         newPage: DoctorSignUp(),
-            //         context: context,
-            //       ),
-            // ) : SizedBox(),
+            (searchList.isEmpty) ?CustomElevatedButton(
+              child: Row(
+                children: [
+                  Icon(
+                    FontAwesomeIcons.userDoctor,
+                    color: AppColors.primaryColor,
+                  ),
+                  0.01.width.vSpace,
+                  Text(
+                    local.joinUs,
+                    style: theme.textTheme.labelLarge!.copyWith(
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primaryColor,
+                  ),
+                ],
+              ).hPadding(0.1.width),
+              onPressed: () =>
+                  slideLeftWidget(
+                    newPage: DoctorSignUp(),
+                    context: context,
+                  ),
+            ) : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
                     children: [

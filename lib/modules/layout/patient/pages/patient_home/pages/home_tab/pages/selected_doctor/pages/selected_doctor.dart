@@ -1,29 +1,22 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import 'package:salamtk/core/widget/icon_row.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/selected_doctor_rate_widget.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/day_widget.dart';
-import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/mixed_text_colors.dart';
 import '../../../../../../../../../../core/functions/translation_services.dart';
 import '/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/reviews_widget.dart';
 import '/core/extensions/align.dart';
 import '/core/utils/doctors/reviews/reviews_collection.dart';
 import '/models/doctors_models/reviews_models.dart';
-import '/core/functions/launchers_classes.dart';
-import '/core/widget/custom_container.dart';
-import '/modules/layout/patient/pages/patient_home/pages/all_reviews/page/all_reviews_page.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/reservation.dart';
-import '/core/extensions/alignment.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/theme/app_colors.dart';
 import '/core/widget/custom_elevated_button.dart';
-import '/core/widget/custom_text_button.dart';
-import '/modules/layout/patient/pages/patient_home/widget/most_doctors_booked.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectedDoctor extends StatefulWidget {
@@ -37,6 +30,37 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   ReviewsModels? _reviews;
   String? failReason;
   bool isLoading = true;
+
+  String getTheTranslateOfTheDays(String day) {
+    log("The Day is $day");
+    var newDay = day;
+    day = day.toLowerCase();
+    switch (day) {
+      case "monday":
+      case "mon":
+        return "الاثنين";
+      case "tue":
+      case "tuesday":
+        return "الثلاثاء";
+      case "wed":
+      case "wednesday":
+        return "الاربعاء";
+      case "thu":
+        case "thursday":
+        return "الخميس";
+      case "fri":
+        case "friday":
+        return "جمعه";
+      case "sat":
+        case "saturday":
+        return "سبت";
+      case "sun":
+        case "sunday":
+        return "الاحد";
+      default:
+        return "خطأ";
+    }
+  }
 
   Future<void> _getAllReviews() async {
     String doctorId =
@@ -176,7 +200,8 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                                   "No Specialist"
                               : TranslationServices.translateCategoriesToAr(
                                   provider.getDoctor?.specialist ??
-                                      "No Specialist"),
+                                      "No Specialist",
+                                ),
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium!
@@ -246,7 +271,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                             provider.getDoctor!.secondClinic == null)
                         ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.clinicWorkingTo ?? ""}"
                         : "${provider.getDoctor?.secondClinic?.clinicDays.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicDays.last ?? ""}"
-                    : "${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingTo ?? "")}",
+                    : "${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingTo ?? "")}",
               ),
               0.02.height.hSpace,
               IconRow(
@@ -258,7 +283,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                         : (_currentIndex == 1)
                             ? "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
                             : "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
-                    : "${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${TranslationServices.translateDaysToAr(provider.getDoctor?.clinicWorkingTo ?? "")}",
+                    : "${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingTo ?? "")}",
               ),
               0.02.height.hSpace,
               IconRow(
