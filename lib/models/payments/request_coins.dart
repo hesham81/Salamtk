@@ -3,11 +3,14 @@ class RequestCoins {
 
   final double points;
 
-  final String screenShotUrl;
+   String? screenShotUrl;
 
   final String status;
 
+  final String phoneNumber ;
+
   RequestCoins({
+    required this.phoneNumber,
     required this.uid,
     required this.status,
     required this.points,
@@ -16,6 +19,7 @@ class RequestCoins {
 
   factory RequestCoins.fromMap(Map<String, dynamic> map) {
     return RequestCoins(
+      phoneNumber: map['phoneNumber'],
       uid: map['uid'],
       points: map['points'],
       screenShotUrl: map['screenShotUrl'],
@@ -25,6 +29,7 @@ class RequestCoins {
 
   Map<String, dynamic> toMap() {
     return {
+      'phoneNumber': phoneNumber,
       'uid': uid,
       'points': points,
       'screenShotUrl': screenShotUrl,

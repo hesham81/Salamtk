@@ -9,6 +9,7 @@ import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/main.dart';
 
 import '../../../models/payments/coins_data_model.dart';
+import '../../../models/payments/request_coins.dart';
 
 abstract class PaymentsCollections {
   static final _firestore =
@@ -239,7 +240,7 @@ abstract class PaymentsCollections {
     return _collectionReference().snapshots();
   }
 
-
+  /// Request Section
 
 
 }

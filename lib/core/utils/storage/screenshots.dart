@@ -13,7 +13,6 @@ abstract class ScreenShotsStorageManager {
       await _supabase.upload(
         "${uid}/${fileName}",
         file,
-        fileOptions: const FileOptions(upsert: true),
       );
       return null;
     } catch (error) {
