@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/constant/app_assets.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salamtk/core/theme/app_colors.dart';
 import 'package:salamtk/core/utils/payment/payments_collections.dart';
 import 'package:salamtk/models/payments/coins_data_model.dart';
+import 'package:salamtk/modules/layout/patient/pages/wallet/pages/all_money_requests.dart';
 import 'package:salamtk/modules/layout/patient/pages/wallet/pages/request_money.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -43,6 +45,34 @@ class _SalamtukWalletState extends State<SalamtukWallet> {
           Icons.add,
           color: AppColors.primaryColor,
         ),
+      ),
+      appBar: AppBar(
+        title: Text(
+          local!.salamtukWallet,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: AppColors.primaryColor,
+              ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => slideLeftWidget(
+              newPage: AllMoneyRequests(),
+              context: context,
+            ),
+            icon: Icon(
+              FontAwesomeIcons.moneyCheck,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: SafeArea(
