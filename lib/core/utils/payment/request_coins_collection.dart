@@ -35,7 +35,7 @@ abstract class RequestCoinsCollection {
       //   file: file,
       // );
 
-     await _supabase.upload(
+      await _supabase.upload(
         "${requestDataModel.uid}/${id}",
         file,
       );
@@ -60,4 +60,7 @@ abstract class RequestCoinsCollection {
       EasyLoading.dismiss();
     }
   }
+
+  static Stream<QuerySnapshot<RequestCoins>> getStreamData() =>
+      _collectionReference().snapshots();
 }

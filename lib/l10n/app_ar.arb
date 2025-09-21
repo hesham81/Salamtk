@@ -224,7 +224,10 @@
      "salamtukWallet":"محفظه سلامتك",
      "welcomeBack": "مرحبا بك",
      "balance":"الرصيد",
-     "requestMoney":"طلب تحويل مالي"
+     "requestMoney":"طلب تحويل مالي",
+     "allMoneyRequests":"جميع طلبات التحويل",
+       "addRequest":"اضافه طلب تحويل"
+
 
 
 

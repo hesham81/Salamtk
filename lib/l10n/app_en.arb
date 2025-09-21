@@ -260,7 +260,9 @@
   "salamtukWallet":"Salamtuk Wallet",
   "welcomeBack":"Welcome Back",
   "balance":"Balance",
-  "requestMoney":"Request Money"
+  "requestMoney":"Request Money",
+  "allMoneyRequests":"All Money Requests",
+  "addRequest":"Add Request"
 
 
 
