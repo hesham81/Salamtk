@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,7 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
     widget.isLiked =
         await fav.checkIfDoctorIsLikedOrNot(doctorId: widget.model.uid!) ??
             false;
+    log("The Specialist is ${widget.model.specialist}");
     setState(() {});
   }
 
@@ -109,7 +112,8 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
                   (languageProvider.getLanguage == "en")
                       ? widget.model.specialist
                       : TranslationServices.translateCategoriesToAr(
-                          widget.model.specialist),
+                          widget.model.specialist,
+                        ),
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!

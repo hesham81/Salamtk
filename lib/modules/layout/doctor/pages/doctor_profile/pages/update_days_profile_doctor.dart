@@ -15,11 +15,13 @@ class UpdateDaysProfileDoctor extends StatefulWidget {
   const UpdateDaysProfileDoctor({super.key});
 
   @override
-  State<UpdateDaysProfileDoctor> createState() => _UpdateDaysProfileDoctorState();
+  State<UpdateDaysProfileDoctor> createState() =>
+      _UpdateDaysProfileDoctorState();
 }
 
 class _UpdateDaysProfileDoctorState extends State<UpdateDaysProfileDoctor> {
-  List<String> data = [] ;
+  List<String> data = [];
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
@@ -55,9 +57,11 @@ class _UpdateDaysProfileDoctorState extends State<UpdateDaysProfileDoctor> {
                 selectedColor: AppColors.secondaryColor,
                 groupingType: GroupingType.wrap,
               ),
-              onSelected: (value, index, isSelected) => setState(() {
-                (isSelected) ? data.add(value) : data.remove(value);
-              }),
+              onSelected: (value, index, isSelected) => setState(
+                () {
+                  (isSelected) ? data.add(value) : data.remove(value);
+                },
+              ),
               maxSelected: provider.timeSlots.length,
               isRadio: false,
               enableDeselect: true,
@@ -72,9 +76,7 @@ class _UpdateDaysProfileDoctorState extends State<UpdateDaysProfileDoctor> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: (data.isEmpty)
-                  ? null
-                  : () => Navigator.pop(context),
+              onPressed: (data.isEmpty) ? null : () => Navigator.pop(context),
             ),
             0.01.height.hSpace
           ],

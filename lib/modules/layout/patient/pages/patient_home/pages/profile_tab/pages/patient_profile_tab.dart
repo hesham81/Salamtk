@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/constant/app_constants.dart';
 import 'package:salamtk/core/extensions/align.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/pharmcy/pages/pharmcy_profiles.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_ar.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/privacy_and_policy/pages/patient_privacy_and_policy_en.dart';
 import 'package:salamtk/modules/layout/patient/pages/wallet/pages/salamtuk_wallet.dart';
@@ -43,7 +44,6 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Row(
                 children: [
                   Column(
@@ -58,7 +58,7 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                       ),
                       0.01.height.hSpace,
                       Text(
-                        user?.email ?? local!.noEmail,
+                        user?.email!.replaceFirst("@gmail.com", "",) ?? local!.noEmail,
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!
@@ -99,6 +99,18 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                   width: double.maxFinite,
                   padding: EdgeInsets.symmetric(vertical: 0.013.height),
                   child: Text(local!.myAccount),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: PharmcyProfiles(),
+                  context: context,
+                ),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text(local!.salamtukPharamcy),
                 ),
               ),
               Divider(),

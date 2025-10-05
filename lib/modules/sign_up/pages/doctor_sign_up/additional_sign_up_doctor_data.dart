@@ -126,22 +126,22 @@ class _AdditionalSignUpDoctorDataState
               enableDeselect: true,
               buttons: (lang.getLanguage == "en")
                   ? [
+                      "Saturday",
+                      "Sunday",
                       "Monday",
                       "Tuesday",
                       "Wednesday",
                       "Thursday",
                       "Friday",
-                      "Saturday",
-                      "Sunday",
                     ]
                   : [
+                      "السبت",
+                      "الاحد",
                       "الاثنين",
                       "الثلاثاء",
                       "الاربعاء",
                       "الخميس",
                       "الجمعة",
-                      "السبت",
-                      "الاحد"
                     ],
             ),
             0.01.height.hSpace,
@@ -233,7 +233,7 @@ class _AdditionalSignUpDoctorDataState
               width: 1.width,
               child: CustomElevatedButton(
                 child: Text(
-                  (provider.secondClinicCity != null)
+                  (provider.isHaveSecondClinic)
                       ? local.goToSecondClinicProfile
                       : local.confirm,
                   style: theme.titleSmall!.copyWith(
@@ -257,7 +257,7 @@ class _AdditionalSignUpDoctorDataState
                       context,
                       message: local.pleaseCheckClinicInfo,
                     );
-                  } else if (provider.secondClinicCity != null) {
+                  } else if (provider.isHaveSecondClinic ) {
                     slideLeftWidget(
                       newPage: SecondClinicInfo(),
                       context: context,

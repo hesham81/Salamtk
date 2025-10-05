@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/utils/storage/screenshots.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/otp_of_change_password.dart';
 import '../../../../../../../../../../core/constant/app_constants.dart';
+import '../../../../../../../../../../core/utils/auth/auth_collections.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/medicals_prescriptions.dart';
 import '/core/extensions/align.dart';
 import '/models/prescription/prescription_model.dart';
@@ -32,12 +32,24 @@ class _MyAccountState extends State<MyAccount> {
   late PrescriptionModel? model;
 
   File? _image;
+  String? _phoneNumber;
+  String? _password;
+
+  Future<void> _getPhoneNumber() async {
+    print("The Debug: ");
+    _phoneNumber = await AuthCollections.getPhoneNumber();
+    print("The Debug: ${_phoneNumber}");
+    _password = await AuthCollections.getPassword();
+    print("The Debug: ${_password}");
+    setState(() {});
+  }
 
   Future<void> _uploadImage() async {
     EasyLoading.show();
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
     if (pickedFile != null) {
       setState(() {
@@ -55,7 +67,7 @@ class _MyAccountState extends State<MyAccount> {
       );
       FirebaseAuth.instance.currentUser!.updatePhotoURL(url);
       setState(() {});
-      EasyLoading.dismiss();
+      // EasyLoading.dismiss();
     } else {
       // User canceled the picker
       print('No image selected.');
@@ -64,6 +76,11 @@ class _MyAccountState extends State<MyAccount> {
 
   @override
   void initState() {
+    Future.wait(
+      [
+        _getPhoneNumber(),
+      ],
+    );
     super.initState();
   }
 
@@ -115,13 +132,12 @@ class _MyAccountState extends State<MyAccount> {
               ),
               0.01.height.hSpace,
               MixedTextColors(
-                title: local.email,
-                value: user.email!,
-              ),
-              0.01.height.hSpace,
-              MixedTextColors(
                 title: local.phoneNumber,
-                value: user.phoneNumber ?? local.noPhoneNumberSet,
+                value: user.email?.replaceFirst(
+                      "@gmail.com",
+                      "",
+                    ) ??
+                    local.noPhoneNumberSet,
               ),
               0.01.height.hSpace,
               GestureDetector(
@@ -132,9 +148,23 @@ class _MyAccountState extends State<MyAccount> {
                   );
                 },
                 child: MixedTextColors.widget(
-                  title: local.medicalPrescription,
+                  title: "${local.medicalPrescription}",
                   child: Icon(
                     Icons.arrow_forward_ios_rounded,
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+              ),
+              0.01.height.hSpace,
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: OtpOfChangePassword(),
+                  context: context,
+                ),
+                child: MixedTextColors.widget(
+                  title: local.password,
+                  child: Icon(
+                    Icons.lock,
                     color: AppColors.secondaryColor,
                   ),
                 ),
@@ -148,7 +178,7 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                 ),
                 onPressed: () async {
-                  EasyLoading.show();
+                  // EasyLoading.show();
                   await DeleteAccount.deleteAccount();
                   EasyLoading.dismiss();
                   slideLeftWidget(

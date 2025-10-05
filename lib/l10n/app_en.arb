@@ -262,7 +262,11 @@
   "balance":"Balance",
   "requestMoney":"Request Money",
   "allMoneyRequests":"All Money Requests",
-  "addRequest":"Add Request"
+  "addRequest":"Add Request",
+  "salamtukPharamcy" : "Salamtuk Pharmacies",
+  "secondClinicInfo":"Second Clinic Information",
+  "changePassword":"Change Password",
+  "done":"Done"
 
 
 

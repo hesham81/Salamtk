@@ -92,7 +92,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         ),
                   ),
                   Text(
-                    user?.email ?? local.noEmail,
+                    user?.email?.replaceFirst("@gmail.com", "") ?? local.noEmail,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: AppColors.secondaryColor,
                         ),

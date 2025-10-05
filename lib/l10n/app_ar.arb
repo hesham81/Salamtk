@@ -226,7 +226,11 @@
      "balance":"الرصيد",
      "requestMoney":"طلب تحويل مالي",
      "allMoneyRequests":"جميع طلبات التحويل",
-       "addRequest":"اضافه طلب تحويل"
+       "addRequest":"اضافه طلب تحويل",
+       "salamtukPharamcy" : "صيدليات سلامتك",
+       "secondClinicInfo":"معلومات العياده الثانيه",
+       "changePassword":"تغيير كلمه المرور",
+       "done":"تأكيد"
 
 
 

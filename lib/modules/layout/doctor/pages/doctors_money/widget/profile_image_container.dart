@@ -45,7 +45,7 @@ class ProfileImageContainer extends StatelessWidget {
                 ),
           ),
           Text(
-            email,
+            email.replaceFirst("@gmail.com", ""),
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: AppColors.primaryColor,
                 ),
