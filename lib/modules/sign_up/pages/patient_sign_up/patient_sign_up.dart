@@ -7,9 +7,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/constant/shared_preference_key.dart';
 import 'package:salamtk/core/functions/otp_services.dart';
+import 'package:salamtk/core/functions/security_functions.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/utils/auth/phone_auth.dart';
+import 'package:salamtk/core/validations/phone_validation.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/utils/auth/sign_up_auth.dart';
@@ -34,7 +36,7 @@ class _PatientSignUpState extends State<PatientSignUp> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -64,10 +66,21 @@ class _PatientSignUpState extends State<PatientSignUp> {
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: local.email,
-                    suffixIcon: Icons.email_outlined,
-                    validate: (value) => Validations.isEmailValid(value ?? ""),
-                    controller: emailController,
+                    hintText: local.phoneNumber,
+                    suffixIcon: Icons.phone,
+                    validate: (value) {
+                      if (value == null || value.isEmpty) {
+                        return local.emptyPhone;
+                      }
+                      // 01027002208@gmail.com --> email
+                      // password -->firestore
+                      final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                      if (!egyptPhoneRegex.hasMatch(value)) {
+                        return local.phoneError;
+                      }
+                      return null;
+                    },
+                    controller: phoneNumberController,
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
@@ -97,32 +110,71 @@ class _PatientSignUpState extends State<PatientSignUp> {
                 child: CustomElevatedButton(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      EasyLoading.show();
-                      await SignUpAuth.signUp(
-                        email: emailController.text,
-                        password: passwordController.text,
-                        name: nameController.text,
-                      ).then(
-                        (value) async {
-                          if (value == null) {
-                            SharedPreference.setString(
-                              SharedPreferenceKey.role,
-                              "patient",
-                            );
-                            slideLeftWidget(
-                              newPage: PatientHome(),
-                              context: context,
-                            );
-                          } else {
-                            SnackBarServices.showErrorMessage(
-                              context,
-                              message: value,
-                            );
-                          }
-                        },
-                      );
+                      // EasyLoading.show();
+                      // await SignUpAuth.signUp(
+                      //   email: phoneNumberController.text,
+                      //   password: passwordController.text,
+                      //   name: nameController.text,
+                      //   phoneNumber: phoneNumberController.text,
+                      // ).then(
+                      //   (value) async {
+                      //     if (value == null) {
+                      //       SharedPreference.setString(
+                      //         SharedPreferenceKey.role,
+                      //         "patient",
+                      //       );
+                      //       slideLeftWidget(
+                      //         newPage: PatientHome(),
+                      //         context: context,
+                      //       );
+                      //     } else {
+                      //       SnackBarServices.showErrorMessage(
+                      //         context,
+                      //         message: value,
+                      //       );
+                      //     }
+                      //   },
+                      // );
+                      //
+                      // EasyLoading.dismiss();
 
+                      EasyLoading.show();
+                      await OtpServices.sendOtp(
+                        phoneNumber: phoneNumberController.text,
+                        lang: 'ar',
+                        name: nameController.text,
+                      );
                       EasyLoading.dismiss();
+                      slideLeftWidget(
+                        newPage: Otp(
+                          route: PatientHome(),
+                          onCorrect: () async {
+                            EasyLoading.show();
+                            String? response = await SignUpAuth.signUp(
+                              email: "${phoneNumberController.text}@gmail.com",
+                              password: passwordController.text,
+                              name: nameController.text,
+                            );
+                            EasyLoading.dismiss();
+                            if (response != null) {
+                              SnackBarServices.showErrorMessage(
+                                context,
+                                message: response,
+                              );
+                            } else {
+                              SharedPreference.setString(
+                                SharedPreferenceKey.role,
+                                "patient",
+                              );
+                              slideLeftWidget(
+                                newPage: PatientHome(),
+                                context: context,
+                              );
+                            }
+                          },
+                        ),
+                        context: context,
+                      );
                     }
                   },
                   child: Text(

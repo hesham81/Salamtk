@@ -10,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:salamtk/core/services/local_storage/shared_preference.dart';
 import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
 
+import '../../functions/security_functions.dart';
 import '/core/utils/doctors/doctors_collection.dart';
 import '/core/utils/storage/doctors_storage.dart';
 import '/models/doctors_models/doctor_model.dart';
@@ -26,6 +27,15 @@ class SignUpProviders extends ChangeNotifier {
   Marker? _marker;
 
   String? _country;
+
+  bool _isHaveSecondClinic = false;
+
+  bool get isHaveSecondClinic => _isHaveSecondClinic;
+
+  void setIsHaveSecondClinic(bool value) {
+    _isHaveSecondClinic = value;
+    notifyListeners();
+  }
 
   String? _secondClinicCity;
   String? _secondClinicState;
@@ -142,6 +152,42 @@ class SignUpProviders extends ChangeNotifier {
     "11:30 PM"
   ];
 
+  final List<String> newTimeSlot = [
+    "12:00 AM",
+    "12:30 AM",
+    "01:00 AM",
+    "08:30 AM",
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
+    "03:00 PM",
+    "03:30 PM",
+    "04:00 PM",
+    "04:30 PM",
+    "05:00 PM",
+    "05:30 PM",
+    "06:00 PM",
+    "06:30 PM",
+    "07:00 PM",
+    "07:30 PM",
+    "08:00 PM",
+    "08:30 PM",
+    "09:00 PM",
+    "09:30 PM",
+    "10:00 PM",
+    "10:30 PM",
+    "11:00 PM",
+    "11:30 PM"
+  ];
   final List<String> days = [
     "Saturday",
     "Sunday",
@@ -371,6 +417,7 @@ class SignUpProviders extends ChangeNotifier {
         uid: user.user!.uid,
         phoneNumber: phoneNumber,
         role: "doctor",
+        hashedPassword: SecurityServices.encryptPassword(password: password!),
       ).then(
         (value) {
           return value;

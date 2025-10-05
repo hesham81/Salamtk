@@ -9,6 +9,7 @@ import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/otp_services.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import 'package:salamtk/core/utils/auth/phone_auth.dart';
+import 'package:salamtk/core/validations/phone_validation.dart';
 import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/utils/auth/social_auth.dart';
@@ -42,7 +43,6 @@ class _SignInState extends State<SignIn> {
   var formKey = GlobalKey<FormState>();
   var phoneNumberController = TextEditingController();
   var formNumberKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool loginWithEmail = true;
 
@@ -65,12 +65,20 @@ class _SignInState extends State<SignIn> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         CustomTextFormField(
-                          hintText: local!.email,
-                          suffixIcon: Icons.person_outline,
-                          controller: usernameController,
+                          hintText: local!.phoneNumber,
+                          suffixIcon: Icons.phone,
+                          controller: phoneNumberController,
                           validate: (value) {
-                            return Validations.isEmailValid(
-                                usernameController.text);
+                            if (value == null || value.isEmpty) {
+                              return local.emptyPhone;
+                            }
+                            // 01027002208@gmail.com --> email
+                            // password -->firestore
+                            final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                            if (!egyptPhoneRegex.hasMatch(value)) {
+                              return local.phoneError;
+                            }
+                            return null;
                           },
                         ),
                         0.02.height.hSpace,
@@ -105,8 +113,9 @@ class _SignInState extends State<SignIn> {
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               EasyLoading.show();
+                              log("${phoneNumberController.text}@gmail.com");
                               String? user = await LoginAuth.login(
-                                email: usernameController.text,
+                                email: "${phoneNumberController.text}@gmail.com",
                                 password: passwordController.text,
                               );
                               if (user == null) {
@@ -142,7 +151,7 @@ class _SignInState extends State<SignIn> {
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
                                     message:
-                                        '${local.welcomeBack} ${usernameController.text}',
+                                        '${local.welcomeBack} ${FirebaseAuth.instance.currentUser?.displayName}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -166,7 +175,7 @@ class _SignInState extends State<SignIn> {
                                     color: AppColors.secondaryColor,
                                     title: 'Success',
                                     message:
-                                        '${local.welcomeBack} ${usernameController.text}',
+                                        '${local.welcomeBack} ${phoneNumberController.text}',
                                     contentType: ContentType.success,
                                   ),
                                 );
@@ -248,8 +257,8 @@ class _SignInState extends State<SignIn> {
                               if (res != null) {
                                 await OtpServices.sendOtp(
                                   phoneNumber: phoneNumberController.text,
-                                  lan: "en",
                                   name: "",
+                                  lang: 'ar',
                                 );
                                 slideLeftWidget(
                                   newPage: Otp(),
@@ -269,45 +278,45 @@ class _SignInState extends State<SignIn> {
                     ).hPadding(0.03.width),
                   ),
             0.02.height.hSpace,
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    EasyLoading.show();
-                    await SocialAuthServices.loginWithGoogle(context);
-                    EasyLoading.dismiss();
-                  },
-                  child: CustomContainer(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          AppAssets.google,
-                          height: 25,
-                          width: 25,
-                        ),
-                        0.02.width.vSpace,
-                        Text(
-                          local.loginWithGoogle,
-                          style:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    color: AppColors.slateBlueColor,
-                                  ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                0.02.height.hSpace,
-                CustomTextButton(
-                  text: local.dontHaveAnAccountJoinUs,
-                  onPressed: () => slideLeftWidget(
-                    newPage: SelectType(),
-                    context: context,
-                  ),
-                )
-              ],
-            ).hPadding(0.03.width)
+            // Column(
+            //   children: [
+            //     GestureDetector(
+            //       onTap: () async {
+            //         EasyLoading.show();
+            //         await SocialAuthServices.loginWithGoogle(context);
+            //         EasyLoading.dismiss();
+            //       },
+            //       child: CustomContainer(
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             SvgPicture.asset(
+            //               AppAssets.google,
+            //               height: 25,
+            //               width: 25,
+            //             ),
+            //             0.02.width.vSpace,
+            //             Text(
+            //               local.loginWithGoogle,
+            //               style:
+            //                   Theme.of(context).textTheme.titleSmall!.copyWith(
+            //                         color: AppColors.slateBlueColor,
+            //                       ),
+            //             )
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //     0.02.height.hSpace,
+            //     CustomTextButton(
+            //       text: local.dontHaveAnAccountJoinUs,
+            //       onPressed: () => slideLeftWidget(
+            //         newPage: SelectType(),
+            //         context: context,
+            //       ),
+            //     )
+            //   ],
+            // ).hPadding(0.03.width)
           ],
         ),
       ),

@@ -125,15 +125,23 @@ class _AdditionalSignUpDoctorDataState
               isRadio: false,
               enableDeselect: true,
               buttons: (lang.getLanguage == "en")
-                  ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                  ? [
+                      "Saturday",
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                    ]
                   : [
+                      "السبت",
+                      "الاحد",
                       "الاثنين",
                       "الثلاثاء",
                       "الاربعاء",
                       "الخميس",
                       "الجمعة",
-                      "السبت",
-                      "الاحد"
                     ],
             ),
             0.01.height.hSpace,
@@ -214,7 +222,9 @@ class _AdditionalSignUpDoctorDataState
                 ? SizedBox()
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.file(provider.certificate!),
+                    child: Image.file(
+                      provider.certificate!,
+                    ),
                   ),
             0.01.height.hSpace,
 
@@ -223,7 +233,7 @@ class _AdditionalSignUpDoctorDataState
               width: 1.width,
               child: CustomElevatedButton(
                 child: Text(
-                  (provider.secondClinicCity != null)
+                  (provider.isHaveSecondClinic)
                       ? local.goToSecondClinicProfile
                       : local.confirm,
                   style: theme.titleSmall!.copyWith(
@@ -247,7 +257,7 @@ class _AdditionalSignUpDoctorDataState
                       context,
                       message: local.pleaseCheckClinicInfo,
                     );
-                  } else if (provider.secondClinicCity != null) {
+                  } else if (provider.isHaveSecondClinic ) {
                     slideLeftWidget(
                       newPage: SecondClinicInfo(),
                       context: context,

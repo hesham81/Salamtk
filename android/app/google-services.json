@@ -250,19 +250,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "8747852076-kbseu34c39k3rgoqaodu7eutf5s68uh0.apps.googleusercontent.com",
+          "client_id": "8747852076-sr6thn8pkjul48h0jfdqd5jb8ikqfs7i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.salamtuk.hesham",
-            "certificate_hash": "a62e51c08509763dc62820a0bc5202aace715ae2"
-          }
-        },
-        {
-          "client_id": "8747852076-s08tu2ou2i6241h7vucncf19qpsg8d8c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.salamtuk.hesham",
-            "certificate_hash": "8cb79a8e7b98569ec4ff69497fabd31cc40f57cb"
+            "certificate_hash": "b9b239066e566be4252305d1647ca926aaaedf0f"
           }
         },
         {
