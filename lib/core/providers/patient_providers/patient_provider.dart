@@ -765,7 +765,8 @@ class PatientProvider extends ChangeNotifier {
         "color": Colors.orangeAccent,
       },
       {
-        "icon": "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "icon":
+            "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
         "text": local?.physicalTherapy,
         "color": Colors.orangeAccent,
       },
@@ -803,7 +804,8 @@ class PatientProvider extends ChangeNotifier {
       },
       {
         "icon": null,
-        "text": local?.rheumatology,
+        "text": (lang == 'en') ? "Rheumatology" : "طب الروماتيزم",
+        // local?.rheumatology,
         "color": Colors.redAccent,
       },
       {
@@ -963,6 +965,7 @@ class PatientProvider extends ChangeNotifier {
       },
     ];
   }
+
   DateTime? _selectedDate;
   String? _selectedPaymentMethod;
 

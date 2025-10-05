@@ -31,6 +31,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
   String? failReason;
   bool isLoading = true;
 
+  // Thursday
   String getTheTranslateOfTheDays(String day) {
     log("The Day is $day");
     var newDay = day;
@@ -46,20 +47,42 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
       case "wednesday":
         return "الاربعاء";
       case "thu":
-        case "thursday":
+      case "thursday":
         return "الخميس";
       case "fri":
-        case "friday":
+      case "friday":
         return "جمعه";
       case "sat":
-        case "saturday":
+      case "saturday":
         return "سبت";
       case "sun":
-        case "sunday":
+      case "sunday":
         return "الاحد";
       default:
         return "خطأ";
     }
+  }
+
+  String formatTime(String? time, LanguageProvider language) {
+    if (time == null) return "";
+    if (language.getLanguage != "ar") return time;
+
+    // Example: Convert "AM" → "ص", "PM" → "م"
+    var result = time
+        .replaceAll("AM", "ص")
+        .replaceAll("PM", "م")
+        .replaceAll("am", "ص")
+        .replaceAll("pm", "م")
+        .replaceAll("Pm", "م")
+        .replaceAll("pM", "م");
+    log("The Time is $time");
+    return time
+        .replaceAll("AM", "ص")
+        .replaceAll("PM", "م")
+        .replaceAll("am", "ص")
+        .replaceAll("pm", "م")
+        .replaceAll("Pm", "م")
+        .replaceAll("pM", "م");
   }
 
   Future<void> _getAllReviews() async {
@@ -264,27 +287,70 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               ),
               0.02.height.hSpace,
               IconRow(
-                color: AppColors.blackColor,
-                icon: Icons.date_range,
-                text: (language.getLanguage == "en")
-                    ? (_currentIndex == 0 &&
-                            provider.getDoctor!.secondClinic == null)
-                        ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.clinicWorkingTo ?? ""}"
-                        : "${provider.getDoctor?.secondClinic?.clinicDays.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicDays.last ?? ""}"
-                    : "${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingTo ?? "")}",
-              ),
+                  color: AppColors.blackColor,
+                  icon: Icons.date_range,
+                  text: (language.getLanguage == "en")
+                      ? (_currentIndex == 0)
+                          ? "${provider.getDoctor?.clinicDays?.first} - ${provider.getDoctor?.clinicDays?.last}"
+                          : "${provider.getDoctor?.secondClinic?.clinicDays?.first} - ${provider.getDoctor?.secondClinic?.clinicDays?.last}"
+                      : (_currentIndex == 0)
+                          ? "${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.last)}"
+                          : "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
+
+                  // (language.getLanguage == "en")
+                  //     ? (_currentIndex == 0
+                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
+                  //             ? "${provider.getDoctor!.days!.first} - ${provider.getDoctor!.days!.last}"
+                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
+                  //         : (provider.getDoctor?.secondClinic?.clinicDays
+                  //                     ?.isNotEmpty ==
+                  //                 true
+                  //             ? "${provider.getDoctor!.secondClinic!.clinicDays!.first} - ${provider.getDoctor!.secondClinic!.clinicDays!.last}"
+                  //             : ""))
+                  //     : (_currentIndex == 0
+                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
+                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.days!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.days!.last)}"
+                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
+                  //         : (provider.getDoctor?.secondClinic?.clinicDays
+                  //                     ?.isNotEmpty ==
+                  //                 true
+                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
+                  //             : ""))
+                  // : (language.getLanguage == "en")
+                  //     ? (_currentIndex == 0
+                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
+                  //             ? "${provider.getDoctor!.days!.first} - ${provider.getDoctor!.days!.last}"
+                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
+                  //         : (provider.getDoctor?.secondClinic?.clinicDays
+                  //                     ?.isNotEmpty ==
+                  //                 true
+                  //             ? "${provider.getDoctor!.secondClinic!.clinicDays!.first} - ${provider.getDoctor!.secondClinic!.clinicDays!.last}"
+                  //             : ""))
+                  //     : (_currentIndex == 0
+                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
+                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.days!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.days!.last)}"
+                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
+                  //         : (provider.getDoctor?.secondClinic?.clinicDays
+                  //                     ?.isNotEmpty ==
+                  //                 true
+                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
+                  //             : "")),
+                  ),
               0.02.height.hSpace,
               IconRow(
-                color: AppColors.blackColor,
-                icon: Icons.alarm,
-                text: (language.getLanguage == "en")
-                    ? (_currentIndex == 0)
-                        ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.workingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.workingTo ?? ""}"
-                        : (_currentIndex == 1)
-                            ? "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
-                            : "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
-                    : "${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingFrom ?? "")} - ${getTheTranslateOfTheDays(provider.getDoctor?.clinicWorkingTo ?? "")}",
-              ),
+                  color: AppColors.blackColor,
+                  icon: Icons.alarm,
+                  text: (language.getLanguage == "en")
+                      ? (_currentIndex == 0)
+                          ? "${provider.getDoctor?.days?.first ?? provider.getDoctor?.workingFrom ?? ""} - ${provider.getDoctor?.days?.last ?? provider.getDoctor?.workingTo ?? ""}"
+                          : (_currentIndex == 1)
+                              ? "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
+                              : "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
+                      : (_currentIndex == 0)
+                          ? "${formatTime(provider.getDoctor?.days?.first ?? "", language)} - ${(provider.getDoctor?.days?.last)}"
+                          : (_currentIndex == 1)
+                              ? "${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? "", language)} - ${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? "", language)}"
+                              : "${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? "", language)} - ${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? "", language)}"),
               0.02.height.hSpace,
               IconRow(
                 color: AppColors.blackColor,

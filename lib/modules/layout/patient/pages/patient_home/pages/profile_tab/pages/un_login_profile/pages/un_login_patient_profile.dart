@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/providers/patient_providers/patient_provider.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/call_us/pages/call_us.dart';
+import '../../../../../../../../../sign_up/pages/doctor_sign_up/doctor_sign_up.dart';
 import '/modules/sign_in/pages/sign_in.dart';
 import '/core/providers/app_providers/language_provider.dart';
 import '/core/extensions/extensions.dart';
@@ -106,6 +107,18 @@ class UnLoginPatientProfile extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: DoctorSignUp(),
+                  context: context,
+                ),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
+                  child: Text(local.joinUs),
                 ),
               ),
               0.01.height.hSpace,
