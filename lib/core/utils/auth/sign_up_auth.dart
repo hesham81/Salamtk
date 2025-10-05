@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:salamtk/core/functions/security_functions.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/services/local_storage/shared_preference.dart';
 import '/core/utils/doctors/doctors_collection.dart';
@@ -20,18 +23,24 @@ abstract class SignUpAuth {
         email: email,
         password: password,
       );
+      var hashedPassword = SecurityServices.encryptPassword(password: password);
+
       user.user!.updateDisplayName(name);
+      log("[Authentication] Start Working With The User Role");
       await AuthCollections.insertRole(
         uid: user.user!.uid,
-        phoneNumber: phoneNumber,
+        phoneNumber: email.replaceFirst("@gmail.com", ""),
         role: isDoctor ? "doctor" : "patient",
+        hashedPassword: hashedPassword,
       ).then(
         (value) {
+          log("[Authentication] User Role Inserted Successfully");
           return value;
         },
       );
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      log("[Authentication] FirebaseAuthException: ${e.message}");
+      return e.message!.replaceFirst("email", "Phone Number").replaceFirst("address", "");
     }
     return null;
   }

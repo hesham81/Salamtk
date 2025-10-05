@@ -39,6 +39,10 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   TextEditingController specialistController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController clinicPhoneNumberController = TextEditingController();
+  TextEditingController secondClinicPhoneNumberController =
+      TextEditingController();
+  TextEditingController secondClinicCityController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String specialist;
   String? workingFrom;
@@ -96,6 +100,8 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
     phoneNumberController.text = widget.doctor.phoneNumber;
     clinicPhoneNumberController.text = widget.doctor.clinicPhoneNumber;
     specialist = widget.doctor.specialist;
+    secondClinicPhoneNumberController.text =
+        widget.doctor.secondClinic?.clinicPhone ?? "";
   }
 
   final List<String> allSlots = [
@@ -457,6 +463,32 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 },
               ),
               0.01.height.hSpace,
+              DividersWord(
+                text: local.secondClinicInfo,
+              ),
+              0.01.height.hSpace,
+              CustomTextFormField(
+                hintText: "",
+                controller: secondClinicPhoneNumberController,
+                keyboardType: TextInputType.phone,
+                validate: (value) {
+                  if (value == null || value.isEmpty) {
+                    return local.emptyPhone;
+                  }
+
+                  final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                  if (!egyptPhoneRegex.hasMatch(value)) {
+                    return local.phoneError;
+                  }
+
+                  return null;
+                },
+              ),
+              0.01.height.hSpace,
+              CustomDropdown(
+                items: [],
+                onChanged: (p0) {},
+              ),
               SizedBox(
                 width: double.maxFinite,
                 child: CustomElevatedButton(

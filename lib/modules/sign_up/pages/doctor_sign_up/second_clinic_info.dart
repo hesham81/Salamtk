@@ -97,7 +97,15 @@ class _SecondClinicInfoState extends State<SecondClinicInfo> {
                 isRadio: false,
                 enableDeselect: true,
                 buttons: (lang.getLanguage == "en")
-                    ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                    ? [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday",
+                      ]
                     : [
                         "الاثنين",
                         "الثلاثاء",

@@ -11,10 +11,18 @@ import '../../../core/theme/app_colors.dart';
 
 class Otp extends StatefulWidget {
   final Widget? route;
+  final bool isSignUp;
+
+  final bool isSignIn;
+
+  final Function()? onCorrect;
 
   const Otp({
     super.key,
     this.route,
+    this.isSignIn = true,
+    this.isSignUp = false,
+    this.onCorrect,
   });
 
   @override
@@ -28,16 +36,6 @@ class _OtpState extends State<Otp> {
   }
 
   String otp = "";
-
-  _createAuth() async {
-    await SharedPreference.remove("otp");
-    var data = await PhoneNumberAuth.getToken(
-      phoneNumber: "01027002208",
-    );
-    await FirebaseAuth.instance.signInWithPhoneNumber(
-      "01027002208",
-    );
-  }
 
   @override
   void initState() {
@@ -56,6 +54,12 @@ class _OtpState extends State<Otp> {
     );
   }
 
+  // _signInMethod({
+  //   required String phoneNumber,
+  //   required String hashedPassword ,
+  //   required String
+  // }) {}
+
   @override
   Widget build(BuildContext context) {
     _getAutoFill();
@@ -69,16 +73,17 @@ class _OtpState extends State<Otp> {
             OtpTextField(
               onSubmit: (value) async {
                 if (value == otp) {
-                  await _createAuth();
-                  slideLeftWidget(
-                    newPage: widget.route ?? PatientHome(),
-                    context: context,
-                  );
+                  (this.widget.onCorrect == null)
+                      ? slideLeftWidget(
+                          newPage: widget.route ?? PatientHome(),
+                          context: context,
+                        )
+                      : this.widget.onCorrect!();
                 }
               },
               keyboardType: TextInputType.number,
               enabled: true,
-              numberOfFields: 6,
+              numberOfFields: 4,
               cursorColor: AppColors.slateBlueColor,
               focusedBorderColor: AppColors.slateBlueColor,
               enabledBorderColor: AppColors.secondaryColor,

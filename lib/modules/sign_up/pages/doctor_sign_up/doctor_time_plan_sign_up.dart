@@ -57,10 +57,10 @@ class _DoctorTimePlanSignUpState extends State<DoctorTimePlanSignUp> {
               onSelected: (value, index, isSelected) => setState(() {
                 (isSelected) ? data.add(value) : data.remove(value);
               }),
-              maxSelected: provider.timeSlots.length,
+              maxSelected: provider.newTimeSlot.length,
               isRadio: false,
               enableDeselect: true,
-              buttons: provider.timeSlots,
+              buttons: provider.newTimeSlot,
             ),
             0.01.height.hSpace,
             CustomElevatedButton(

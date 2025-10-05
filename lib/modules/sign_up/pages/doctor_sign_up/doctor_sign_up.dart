@@ -33,7 +33,6 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   TextEditingController clinicStateController = TextEditingController();
   TextEditingController clinicStreetController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
@@ -118,11 +117,30 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     controller: description,
                   ),
                   0.02.height.hSpace,
+                  // CustomTextFormField(
+                  //   hintText: local.phoneNumber,
+                  //   suffixIcon: Icons.email_outlined,
+                  //   validate: (value) => Validations.isEmailValid(value ?? ""),
+                  //   controller: emailController,
+                  // ),
+                  // 0.02.height.hSpace,
                   CustomTextFormField(
-                    hintText: local.email,
-                    suffixIcon: Icons.email_outlined,
-                    validate: (value) => Validations.isEmailValid(value ?? ""),
-                    controller: emailController,
+                    hintText: local!.phoneNumber,
+                    controller: phoneNumberController,
+                    suffixIcon: Icons.phone_android_outlined,
+                    keyboardType: TextInputType.number,
+                    validate: (value) {
+                      if (value == null || value.isEmpty) {
+                        return local.emptyPhone;
+                      }
+
+                      final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                      if (!egyptPhoneRegex.hasMatch(value)) {
+                        return local.phoneError;
+                      }
+
+                      return null;
+                    },
                   ),
                   0.02.height.hSpace,
                   CustomTextFormField(
@@ -142,25 +160,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     ),
                     controller: confirmPasswordController,
                   ),
-                  0.02.height.hSpace,
-                  CustomTextFormField(
-                    hintText: local!.phoneNumber,
-                    controller: phoneNumberController,
-                    suffixIcon: Icons.phone_android_outlined,
-                    keyboardType: TextInputType.number,
-                    validate: (value) {
-                      if (value == null || value.isEmpty) {
-                        return local.emptyPhone;
-                      }
 
-                      final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                      if (!egyptPhoneRegex.hasMatch(value)) {
-                        return local.phoneError;
-                      }
-
-                      return null;
-                    },
-                  ),
                   0.02.height.hSpace,
                   CustomTextFormField(
                     hintText: local.price,
@@ -394,24 +394,36 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   CustomTextFormField(
                     hintText: local.city,
                     controller: clinicCityController,
+
                   ),
                   0.01.height.hSpace,
                   CustomTextFormField(
                     hintText: local.state,
                     controller: clinicStateController,
+                    validate: (value) {
+                      if (clinicCityController.text.isNotEmpty && value == null) {
+                        return local.error;
+                      }
+                      return null;
+                    },
                   ),
                   0.01.height.hSpace,
                   CustomTextFormField(
                     hintText: local.address,
                     controller: clinicStreetController,
+                    validate: (value) {
+                      if (clinicCityController.text.isNotEmpty && value == null) {
+                        return local.error;
+                      }
+                      return null;
+                    },
                   ),
                   0.01.height.hSpace,
-
-                  /// Ending of the custom text form field
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomElevatedButton(
                       onPressed: () async {
+
                         if (formKey.currentState!.validate() &&
                             selectedSpecialist != null &&
                             selectedCity != null &&
@@ -428,7 +440,17 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                           provider.setSecondClinicStreet(
                             clinicStreetController.text,
                           );
-
+                          if (clinicStateController.text.isNotEmpty) {
+                            provider.setIsHaveSecondClinic(true);
+                          }
+                          if (clinicCityController.text.isNotEmpty ||
+                              clinicStateController.text.isNotEmpty ||
+                              clinicStreetController.text.isNotEmpty) {
+                            provider.setIsHaveSecondClinic(true);
+                          }else
+                            {
+                              provider.setIsHaveSecondClinic(false);
+                            }
                           provider.setDoctorData(
                             distinctiveMark:
                                 distinctiveMarkController.text.isEmpty
@@ -436,7 +458,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                                     : distinctiveMarkController.text,
                             name: nameController.text,
                             description: description.text,
-                            email: emailController.text,
+                            email: "${phoneNumberController.text}@gmail.com",
                             password: passwordController.text,
                             phoneNumber: phoneNumberController.text,
                             price: double.tryParse(price.text) ?? 0.0,
@@ -446,7 +468,6 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                             street: streetController.text,
                             secondSpecialist: secondSpecialist,
                             thirdSpecialist: thirdSpecialist,
-
                           );
                           slideLeftWidget(
                             newPage: DoctorTimePlanSignUp(),

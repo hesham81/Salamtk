@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import '/core/theme/app_colors.dart';
@@ -63,7 +64,7 @@ class _ViewMapState extends State<ViewMap> {
         Marker(
           point: widget.location,
           child: Icon(
-            Icons.location_on_outlined,
+            FontAwesomeIcons.hospitalUser,
             color: AppColors.secondaryColor,
           ),
         ),
@@ -73,7 +74,10 @@ class _ViewMapState extends State<ViewMap> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controller.move(
-            LatLng(_locationData!.latitude!, _locationData!.longitude!),
+            LatLng(
+              _locationData!.latitude!,
+              _locationData!.longitude!,
+            ),
             17.0,
           );
         },
@@ -102,7 +106,10 @@ class _ViewMapState extends State<ViewMap> {
                 ),
               ),
               showAccuracyCircle: false,
-              markerSize: const Size(40, 40),
+              markerSize: const Size(
+                40,
+                40,
+              ),
               markerDirection: MarkerDirection.heading,
             ),
           ),

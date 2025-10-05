@@ -78,7 +78,11 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                     child: ProfileImageContainer(
                       name: doctor?.name ?? local!.noName,
                       imageUrl: doctor?.imagePath ?? AppAssets.doctorAvatar,
-                      email: FirebaseAuth.instance.currentUser?.email ??
+                      email: FirebaseAuth.instance.currentUser?.email
+                              ?.replaceFirst(
+                            "@gmail.com",
+                            "",
+                          ) ??
                           "doctor@gmail.com",
                     ),
                   ),
