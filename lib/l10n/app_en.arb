@@ -266,7 +266,8 @@
   "salamtukPharamcy" : "Salamtuk Pharmacies",
   "secondClinicInfo":"Second Clinic Information",
   "changePassword":"Change Password",
-  "done":"Done"
+  "done":"Done",
+  "phoneNumberIsNotExist":"PhoneNumberIsNotExist"
 
 
 

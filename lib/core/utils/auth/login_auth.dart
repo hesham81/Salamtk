@@ -60,7 +60,7 @@ abstract class LoginAuth {
     }
   }
 
-  static Future<String?> deleteAccount()async{
+  static Future<String?> deleteAccount() async {
     try {
       await _firebase.currentUser!.delete();
       return null;
@@ -68,4 +68,11 @@ abstract class LoginAuth {
       return e.message!;
     }
   }
+
+  // static Future<bool> checkIfPhoneNumberIsExist() async {
+  //   try {
+  //     var allAuthFiles =await _
+  //   } catch (error) {
+  //   } finally {}
+  // }
 }

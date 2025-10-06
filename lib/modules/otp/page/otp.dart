@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/utils/auth/phone_auth.dart';
+import 'package:salamtk/l10n/app_localizations.dart';
 import '/core/services/local_storage/shared_preference.dart';
 import '/modules/layout/patient/pages/patient_home/pages/patient_home.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Otp extends StatefulWidget {
   final Widget? route;
@@ -33,6 +35,10 @@ class _OtpState extends State<Otp> {
   Future<void> _getOtpValue() async {
     otp = await SharedPreference.getString("otp") ?? "";
     setState(() {});
+  }
+
+  String _reverseOtp(String otp) {
+    return String.fromCharCodes(otp.runes.toList().reversed);
   }
 
   String otp = "";
@@ -64,6 +70,25 @@ class _OtpState extends State<Otp> {
   Widget build(BuildContext context) {
     _getAutoFill();
     return Scaffold(
+      appBar:
+      AppBar(
+        title: Text(
+          "OTP",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -72,7 +97,7 @@ class _OtpState extends State<Otp> {
             ),
             OtpTextField(
               onSubmit: (value) async {
-                if (value == otp) {
+                if (value == otp || value == _reverseOtp(otp)) {
                   (this.widget.onCorrect == null)
                       ? slideLeftWidget(
                           newPage: widget.route ?? PatientHome(),

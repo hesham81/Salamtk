@@ -263,7 +263,9 @@
          "dermatovenereology": "الأمراض الجلدية والتناسلية",
          "ivfAndFertility": "أطفال الأنابيب والعقم",
          "andrologyAndInfertility": "الذكورة والعقم",
-         "painManagement": "إدارة الألم"
+         "painManagement": "إدارة الألم",
+           "phoneNumberIsNotExist":"رقم الهاتف غير موجود"
+
 
 
 

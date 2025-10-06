@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 abstract class AuthCollections {
   static final _firestore = FirebaseFirestore.instance.collection("users");
@@ -50,7 +51,7 @@ abstract class AuthCollections {
       print("The Debug: $uid");
       var res = await _firestore.doc(uid).get().then(
             (value) => value.data(),
-      );
+          );
       print("The Debug: ${res}");
       return res?["hashedPassword"] ?? null;
     } catch (error) {
@@ -83,7 +84,30 @@ abstract class AuthCollections {
     }
   }
 
+  static Future<bool> checkIfThePhoneNumberIsExist({
+    required String phoneNumber,
+  }) async {
+    try {
+      EasyLoading.show();
+      List<Map<String, dynamic>> users = await _firestore.get().then(
+            (value) => value.docs
+                .map(
+                  (e) => e.data(),
+                )
+                .toList(),
+          );
+      for (var user in users)
+        if (user.containsValue(phoneNumber)) {
+          return true;
+        }
 
+      return false;
+    } catch (error) {
+      return false;
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 
   static Future<String?> getRole({
     required String uid,

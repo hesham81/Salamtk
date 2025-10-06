@@ -10,6 +10,7 @@ import 'package:salamtk/core/functions/otp_services.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import 'package:salamtk/core/utils/auth/phone_auth.dart';
 import 'package:salamtk/core/validations/phone_validation.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/otp_of_change_password.dart';
 import 'package:salamtk/modules/otp/page/otp.dart';
 import '/core/services/snack_bar_services.dart';
 import '/core/utils/auth/social_auth.dart';
@@ -74,7 +75,8 @@ class _SignInState extends State<SignIn> {
                             }
                             // 01027002208@gmail.com --> email
                             // password -->firestore
-                            final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+                            final egyptPhoneRegex =
+                                RegExp(r'^0(10|11|12|15)\d{8}$');
                             if (!egyptPhoneRegex.hasMatch(value)) {
                               return local.phoneError;
                             }
@@ -96,10 +98,19 @@ class _SignInState extends State<SignIn> {
                         ),
                         CustomTextButton(
                           text: local.forgetPassword,
-                          onPressed: () => slideLeftWidget(
-                            newPage: ForgetPassword(),
-                            context: context,
-                          ),
+                          onPressed: () async {
+                            EasyLoading.show();
+                            OtpServices.sendOtp(
+                              phoneNumber: phoneNumberController.text,
+                              lang: "ar",
+                              name: "Salamtuk Application",
+                            );
+                            EasyLoading.dismiss();
+                            slideLeftWidget(
+                              newPage: OtpOfChangePassword(),
+                              context: context,
+                            );
+                          },
                         ).alignBottomRight(),
                         CustomElevatedButton(
                           child: Text(
@@ -115,7 +126,8 @@ class _SignInState extends State<SignIn> {
                               EasyLoading.show();
                               log("${phoneNumberController.text}@gmail.com");
                               String? user = await LoginAuth.login(
-                                email: "${phoneNumberController.text}@gmail.com",
+                                email:
+                                    "${phoneNumberController.text}@gmail.com",
                                 password: passwordController.text,
                               );
                               if (user == null) {
@@ -278,45 +290,13 @@ class _SignInState extends State<SignIn> {
                     ).hPadding(0.03.width),
                   ),
             0.02.height.hSpace,
-            // Column(
-            //   children: [
-            //     GestureDetector(
-            //       onTap: () async {
-            //         EasyLoading.show();
-            //         await SocialAuthServices.loginWithGoogle(context);
-            //         EasyLoading.dismiss();
-            //       },
-            //       child: CustomContainer(
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             SvgPicture.asset(
-            //               AppAssets.google,
-            //               height: 25,
-            //               width: 25,
-            //             ),
-            //             0.02.width.vSpace,
-            //             Text(
-            //               local.loginWithGoogle,
-            //               style:
-            //                   Theme.of(context).textTheme.titleSmall!.copyWith(
-            //                         color: AppColors.slateBlueColor,
-            //                       ),
-            //             )
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //     0.02.height.hSpace,
-            //     CustomTextButton(
-            //       text: local.dontHaveAnAccountJoinUs,
-            //       onPressed: () => slideLeftWidget(
-            //         newPage: SelectType(),
-            //         context: context,
-            //       ),
-            //     )
-            //   ],
-            // ).hPadding(0.03.width)
+            CustomTextButton(
+              text: local.dontHaveAnAccountJoinUs,
+              onPressed: () => slideLeftWidget(
+                newPage: SelectType(),
+                context: context,
+              ),
+            ).hPadding(0.03.width)
           ],
         ),
       ),
