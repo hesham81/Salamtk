@@ -28,7 +28,14 @@ class SignUpProviders extends ChangeNotifier {
 
   String? _country;
   List<String> _updatedTimes = [];
+  List<String> _firstClinicTime = [];
 
+  List<String> get firstClinicTime => _firstClinicTime;
+
+  void setFirstClinicTime(List<String> value) {
+    _firstClinicTime = value;
+    notifyListeners();
+  }
   // _updatedTimes = [];
 
   List get updatedTimes => _updatedTimes;

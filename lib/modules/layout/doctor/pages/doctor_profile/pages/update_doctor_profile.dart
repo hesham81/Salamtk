@@ -1,18 +1,34 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/extensions/align.dart';
 import 'package:salamtk/core/functions/doctors_profile_methods.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/utils/auth/login_auth.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/validations/validations.dart';
 import 'package:salamtk/core/widget/custom_container.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_second_clinic_profile_info.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/otp_of_change_password.dart';
+import '../../../../../../core/constant/app_constants.dart';
+import '../../../../../../core/functions/otp_services.dart';
+import '../../../../../../core/providers/sign_up_providers/sign_up_providers.dart';
+import '../../../../../../core/utils/auth/auth_collections.dart';
+import '../../../../../../core/utils/storage/screenshots.dart';
+import '../../../../../otp/page/otp.dart';
+import '../../../../patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/change_password.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -58,7 +74,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   var user = FirebaseAuth.instance.currentUser;
 
   _updateDoctorProfile() async {
-    EasyLoading.show();
+    // EasyLoading.show();
     try {
       widget.doctor.workingFrom = workingFrom ?? widget.doctor.workingFrom;
       widget.doctor.workingTo = workingTo ?? widget.doctor.workingTo;
@@ -77,7 +93,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
       user!.updateDisplayName(nameController.text);
       user!.updateEmail(emailController.text);
       await user!.reload();
-      EasyLoading.dismiss();
+      // EasyLoading.dismiss();
       SnackBarServices.showSuccessMessage(
         context,
         message: "Profile Updated Succefully",
@@ -104,6 +120,49 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
     specialist = widget.doctor.specialist;
     secondClinicPhoneNumberController.text =
         widget.doctor.secondClinic?.clinicPhone ?? "";
+  }
+
+  File? _image;
+  String? _phoneNumber;
+  String? _password;
+
+  Future<void> _getPhoneNumber() async {
+    print("The Debug: ");
+    _phoneNumber = await AuthCollections.getPhoneNumber();
+    print("The Debug: ${_phoneNumber}");
+    _password = await AuthCollections.getPassword();
+    print("The Debug: ${_password}");
+    setState(() {});
+  }
+
+  Future<void> _uploadImage() async {
+    // EasyLoading.show();
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      var imageId = Random().nextInt(100000).toString();
+      await ScreenShotsStorageManager.uploadScreenShot(
+        uid: imageId,
+        fileName: "profile",
+        file: _image!,
+      );
+      var url = await ScreenShotsStorageManager.getScreenShotUrl(
+        uid: imageId,
+        fileName: 'profile',
+      );
+      FirebaseAuth.instance.currentUser!.updatePhotoURL(url);
+      setState(() {});
+      // // EasyLoading.dismiss();
+    } else {
+      // User canceled the picker
+      print('No image selected.');
+    }
   }
 
   final List<String> allSlots = [
@@ -190,6 +249,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
+    var signUpProvider = Provider.of<SignUpProviders>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -253,6 +313,14 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
               //     }
               //   },
               // ),
+              CircularProfileAvatar(
+                user?.photoURL ?? AppConstants.placeHolderImage,
+                borderColor: AppColors.secondaryColor,
+                borderWidth: 3.5,
+                radius: 90,
+                cacheImage: true,
+                onTap: _uploadImage,
+              ).center,
               0.01.height.hSpace,
               CustomTextFormField(
                 hintText: local.name,
@@ -367,42 +435,45 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                     ],
                   )),
               CustomElevatedButton(
-                child: Row(
-                  children: [
-                    Text(
-                      local.password,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ).hPadding(0.03.width),
-                    Spacer(),
-                    Icon(
-                      Icons.lock,
-                      color: AppColors.primaryColor,
-                    ).hPadding(0.03.width)
-                  ],
-                ),
-                onPressed: () async {
-                  try {
+                  child: Row(
+                    children: [
+                      Text(
+                        local.password,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ).hPadding(0.03.width),
+                      Spacer(),
+                      Icon(
+                        Icons.lock,
+                        color: AppColors.primaryColor,
+                      ).hPadding(0.03.width)
+                    ],
+                  ),
+                  onPressed: () async {
                     EasyLoading.show();
-                    await LoginAuth.forgetPassword(
-                      email: user!.email!,
+                    await OtpServices.sendOtp(
+                      phoneNumber: phoneNumberController.text,
+                      lang: 'ar',
+                      name: FirebaseAuth.instance.currentUser?.displayName ??
+                          local.noName,
                     );
-                    SnackBarServices.showSuccessMessage(
-                      context,
-                      message: local.passwordResetEmailSent,
-                    );
-                  } catch (error) {
-                    SnackBarServices.showErrorMessage(
-                      context,
-                      message: error.toString(),
-                    );
-                  } finally {
                     EasyLoading.dismiss();
-                  }
-                },
-              ),
+                    slideLeftWidget(
+                      newPage: Otp(
+                        onCorrect: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangePassword(),
+                            ),
+                          );
+                        },
+                      ),
+                      context: context,
+                    );
+                  }),
               0.02.height.hSpace,
               Visibility(
                 visible: widget.doctor.days != null,
@@ -410,7 +481,9 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                   child: Row(
                     children: [
                       Text(
-                        local.customizeYourTime,
+                        (signUpProvider.firstClinicTime.isEmpty)
+                            ? local.customizeYourTime
+                            : "${signUpProvider.firstClinicTime.first} ${local.to} ${signUpProvider.firstClinicTime.last}",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.bold,
@@ -423,7 +496,15 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                       ).hPadding(0.03.width)
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    slideLeftWidget(
+                      newPage: UpdateDays(
+                        title: local.updateClinicTimesSlots,
+                        isFirstClinic: true,
+                      ),
+                      context: context,
+                    );
+                  },
                 ),
               ),
               0.01.height.hSpace,

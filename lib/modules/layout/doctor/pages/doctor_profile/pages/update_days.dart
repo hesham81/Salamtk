@@ -11,10 +11,12 @@ import '../../../../../../core/theme/app_colors.dart';
 
 class UpdateDays extends StatefulWidget {
   final String title;
+  final bool isFirstClinic;
 
   const UpdateDays({
     super.key,
     required this.title,
+    this.isFirstClinic = false,
   });
 
   @override
@@ -54,7 +56,11 @@ class _UpdateDaysState extends State<UpdateDays> {
         onPressed: (data.isEmpty)
             ? null
             : () {
-                provider.setUpdatedTimes(data);
+                if (widget.isFirstClinic) {
+                  provider.setFirstClinicTime(data);
+                } else {
+                  provider.setUpdatedTimes(data);
+                }
                 Navigator.pop(context);
               },
       ).allPadding(7),
