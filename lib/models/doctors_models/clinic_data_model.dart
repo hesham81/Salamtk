@@ -12,7 +12,7 @@ class ClinicDataModel extends Equatable {
 
   // final String clinicEmail;
 
-  final List<String> clinicDays;
+   List<String> clinicDays;
 
   final List<String> clinicTimeSlots;
 

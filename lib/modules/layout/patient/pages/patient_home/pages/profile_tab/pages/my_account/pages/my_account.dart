@@ -10,6 +10,7 @@ import 'package:salamtk/core/utils/storage/screenshots.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/otp_of_change_password.dart';
 import '../../../../../../../../../../core/constant/app_constants.dart';
 import '../../../../../../../../../../core/utils/auth/auth_collections.dart';
+import '../../../../../../../../../../core/utils/auth/sign_up_auth.dart';
 import '/modules/layout/patient/pages/patient_home/pages/profile_tab/pages/my_account/pages/medicals_prescriptions.dart';
 import '/core/extensions/align.dart';
 import '/models/prescription/prescription_model.dart';
@@ -44,8 +45,10 @@ class _MyAccountState extends State<MyAccount> {
     setState(() {});
   }
 
+  String? imageUrl;
+
   Future<void> _uploadImage() async {
-    EasyLoading.show();
+    // EasyLoading.show();
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -66,8 +69,13 @@ class _MyAccountState extends State<MyAccount> {
         fileName: 'profile',
       );
       FirebaseAuth.instance.currentUser!.updatePhotoURL(url);
+      imageUrl = url;
+      SignUpAuth.updatePatientImage(
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        imageUrl: url!,
+      );
       setState(() {});
-      // EasyLoading.dismiss();
+      // // EasyLoading.dismiss();
     } else {
       // User canceled the picker
       print('No image selected.');
@@ -178,9 +186,9 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                 ),
                 onPressed: () async {
-                  // EasyLoading.show();
+                  // // EasyLoading.show();
                   await DeleteAccount.deleteAccount();
-                  EasyLoading.dismiss();
+                  // // EasyLoading.dismiss();
                   slideLeftWidget(
                     newPage: PatientHome(),
                     context: context,

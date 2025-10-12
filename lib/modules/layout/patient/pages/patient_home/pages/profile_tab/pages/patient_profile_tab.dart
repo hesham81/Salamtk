@@ -128,17 +128,17 @@ class _PatientProfileTabState extends State<PatientProfileTab> {
                 ),
               ),
               Divider(),
-              GestureDetector(
-                onTap: () => slideLeftWidget(
-                  newPage: SalamtukWallet(),
-                  context: context,
-                ),
-                child: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.symmetric(vertical: 0.013.height),
-                  child: Text(local.salamtukWallet),
-                ),
-              ),Divider(),
+              // GestureDetector(
+              //   onTap: () => slideLeftWidget(
+              //     newPage: SalamtukWallet(),
+              //     context: context,
+              //   ),
+              //   child: Container(
+              //     width: double.maxFinite,
+              //     padding: EdgeInsets.symmetric(vertical: 0.013.height),
+              //     child: Text(local.salamtukWallet),
+              //   ),
+              // ),Divider(),
               GestureDetector(
                 onTap: () => slideLeftWidget(
                   newPage: DoctorSignUp(),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salamtk/models/doctors_models/supervised_doctors_model.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctors_data_screen/pages/doctors_data_screen.dart';
 
 abstract class SupervisesDoctorsCollections {
   static final _firestore =
@@ -71,4 +72,8 @@ abstract class SupervisesDoctorsCollections {
   static Stream<QuerySnapshot<SupervisedDoctorsModel>> getDoctors() {
     return _collectionRef().snapshots();
   }
+
+  // static acceptAllDoctors()async{
+  //   List<DoctorsDataScreen> doctors
+  // }
 }

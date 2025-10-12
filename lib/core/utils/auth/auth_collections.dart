@@ -13,6 +13,7 @@ abstract class AuthCollections {
     String? specialist,
     String? phoneNumber,
     String? hashedPassword,
+
   }) async {
     try {
       log("[Authentication] Start Working With The User Role");

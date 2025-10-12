@@ -44,7 +44,6 @@ class _MostDoctorsBookedState extends State<MostDoctorsBooked> {
     widget.isLiked =
         await fav.checkIfDoctorIsLikedOrNot(doctorId: widget.model.uid!) ??
             false;
-    log("The Specialist is ${widget.model.specialist}");
     setState(() {});
   }
 

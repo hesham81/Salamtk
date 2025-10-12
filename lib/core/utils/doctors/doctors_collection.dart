@@ -81,10 +81,95 @@ abstract class DoctorsCollection {
 
   static Future<DoctorModel> searchForDoctorUsingDoctorId({
     required String doctorId,
-  }) async{
+  }) async {
     var res = await _collectionReference().doc(doctorId).get();
     return res.data()!;
   }
 
-  // static Future<bool> updateSecondClinicData({required ClinicDataModel clinic})
+  static Future<void> acceptAllDoctors() async {
+    List<DoctorModel> doctors = await _collectionReference().get().then(
+          (value) => value.docs
+              .map(
+                (e) => e.data(),
+              )
+              .toList(),
+        );
+    for (DoctorModel doctor in doctors) {
+      doctor.isVerified = true;
+      await _collectionReference().doc(doctor.uid).set(doctor);
+    }
+  }
+
+  static String _getTheTranslateOfTheDays(String day) {
+    // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+    String normalizedDay = day
+        .trim()
+        .replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+
+    switch (normalizedDay) {
+      case "الاثنين":
+      case "اثنين":
+        return "Monday";
+      case "الثلاثاء":
+      case "ثلاثاء":
+        return "Tuesday";
+      case "الأربعاء":
+      case "اربعاء":
+      case "الاربعاء":
+        return "Wednesday";
+      case "الخميس":
+      case "خميس":
+        return "Thursday";
+      case "الجمعة":
+      case "جمعه":
+      case "جمعة":
+        return "Friday";
+      case "السبت":
+      case "سبت":
+        return "Saturday";
+      case "الأحد":
+      case "احد":
+      case "الاحد":
+        return "Sunday";
+      default:
+        return "Error";
+    }
+  }
+
+  static DoctorModel _changeDates({
+    required DoctorModel doctor,
+  }) {
+    List<String> days = [];
+
+    for (var day in doctor.clinicDays!)
+      days.add(_getTheTranslateOfTheDays(day));
+
+    doctor.clinicDays = days;
+
+    if (doctor.secondClinic != null) {
+      List<String> secondDays = [];
+
+      for (var day in doctor.clinicDays!)
+        secondDays.add(_getTheTranslateOfTheDays(day));
+      doctor.secondClinic!.clinicDays = secondDays;
+    }
+    return doctor;
+  }
+
+  static Future<void> changeTheDates() async {
+    List<DoctorModel> doctors = await _collectionReference().get().then(
+          (value) => value.docs
+              .map(
+                (e) => e.data(),
+              )
+              .toList(),
+        );
+    for (DoctorModel doctor in doctors) {
+      await _collectionReference().doc(doctor.uid).set(
+            _changeDates(doctor: doctor),
+          );
+    }
+  }
+
+// static Future<bool> updateSecondClinicData({required ClinicDataModel clinic})
 }

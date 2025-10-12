@@ -1,8 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:salamtk/core/extensions/align.dart';
 import 'package:salamtk/core/extensions/extensions.dart';
 import 'package:salamtk/core/utils/payment/request_coins_collection.dart';
+import 'package:salamtk/core/utils/storage/screenshots.dart';
 import 'package:salamtk/models/payments/request_coins.dart';
 
 import '../../../../../../core/functions/check_balance_from_screenshot.dart';
@@ -42,11 +44,28 @@ class _RequestMoneyState extends State<RequestMoney> {
   ];
 
   _setBalance(String balance) {
-    if (balance == "Amount Not Found") {
-      SnackBarServices.showErrorMessage(context, message: balance);
+    if (balance == "Amount Not Found" || balance.contains("models")) {
+      SnackBarServices.showErrorMessage(
+        context,
+        message: "من فضلك ارفع صوره للتحويل صحيحه",
+      );
       return;
     }
     this.balance = balance;
+  }
+
+  _uploadScreenShot() async {
+    var fileName = Random(5000).toString();
+    await ScreenShotsStorageManager.uploadScreenShot(
+      uid: uid,
+      fileName: fileName,
+      file: image!,
+    );
+    var url = await ScreenShotsStorageManager.getScreenShotUrl(
+      uid: uid,
+      fileName: fileName,
+    );
+    return url;
   }
 
   final TextEditingController phoneNumber = TextEditingController();
@@ -123,10 +142,11 @@ class _RequestMoneyState extends State<RequestMoney> {
                   image = File(
                     selectedImage!.path,
                   );
-                  log("message");
+                  // log("message");
                   var res = await extractAmountFromArabicTransferMessage(
                     imageFile: image!,
                   );
+
                   _setBalance(res);
                   setState(() {});
                 }
@@ -308,9 +328,11 @@ class _RequestMoneyState extends State<RequestMoney> {
                       ),
                       onPressed: () async {
                         if (formKey.currentState!.validate() && image != null) {
+                          EasyLoading.show();
+                          var url = await _uploadScreenShot();
                           RequestCoins requestDataModel = RequestCoins(
                             points: double.parse(balance ?? "0"),
-                            screenShotUrl: null,
+                            screenShotUrl: url,
                             status: "pending",
                             uid: uid,
                             phoneNumber: phoneNumber.text,

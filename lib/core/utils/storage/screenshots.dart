@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,6 +17,7 @@ abstract class ScreenShotsStorageManager {
       );
       return null;
     } catch (error) {
+      log("Error ON Upload ScreenShot ${error}");
       return error.toString();
     }
   }

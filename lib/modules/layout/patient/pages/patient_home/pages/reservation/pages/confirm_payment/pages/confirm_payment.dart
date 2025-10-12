@@ -1,7 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import '../../../../../../../../../../core/route/route_names.dart';
+import '../../../../../../../../../../core/services/snack_bar_services.dart';
+import '../../../../../../../../../../core/utils/fcm_service.dart';
+import '../../../../../../../../../../core/utils/reservations/reservation_collection.dart';
+import '../../../../../../../../../../models/reservations_models/reservation_model.dart';
+import '../../../../patient_home.dart';
 import '/modules/layout/patient/pages/patient_home/pages/reservation/pages/pay_with_electronic_wallet/pages/pay_with_electronic_wallet.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_container.dart';
@@ -65,16 +72,59 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
             provider.setReservationPhoneNumber(phoneNumberController.text);
             provider.setReservationName(nameController.text);
             provider.setReservationEmail(emailController.text);
-            slideLeftWidget(
-              newPage: PayWithElectronicWallet(
-                isSecondClinic: widget.isSecondClinic,
-              ),
-              context: context,
+            ReservationModel model = ReservationModel(
+              screenshotUrl: provider.getScreenshot ?? "",
+              cashedPhoneNumber: provider.getAppPhoneNumber,
+              selectedPhoneNumber: provider.getPhoneNumber,
+              patientPhoneNumber:
+              provider.reservationPhoneNumber ?? "",
+              reservationId: "",
+              uid: FirebaseAuth.instance.currentUser!.uid,
+              doctorId: provider.getDoctor!.uid!,
+              date: provider.getSelectedDate!,
+              slot: provider.getSelectedSlot!,
+              price: provider.getDoctor!.price,
+              paymentMethod: "Electronic Wallet",
+              email: FirebaseAuth.instance.currentUser!.uid
+                  .replaceFirst("@gmail.com", ""),
+              patientName: provider.reservationName ?? "No Name",
+              isSecondClinic: (widget.isSecondClinic) ? true : null,
+            );
+
+            await ReservationCollection.addReservation(model).then(
+                  (value) async {
+                if (value) {
+                  EasyLoading.dismiss();
+                  SnackBarServices.showSuccessMessage(
+                    context,
+                    message: local
+                        .reservationCompletedWaitingToDoctorApproved,
+                  );
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => PatientHome(),
+                  //   ),
+                  //       (route) =>
+                  //   route.settings.name ==
+                  //       RouteNames.revisionPage,
+                  // );
+                  await FCMService.subscribeToTopic(
+                      provider.getDoctor!.uid!);
+                  provider.disposeData();
+                } else {
+                  EasyLoading.dismiss();
+                  SnackBarServices.showErrorMessage(
+                    context,
+                    message: "There's an error",
+                  );
+                }
+              },
             );
           }
         },
         child: Text(
-          local.next,
+          local.confirm,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: AppColors.primaryColor,
               ),
@@ -227,6 +277,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                     ? false
                     : reserveToYourSelf,
                 controller: nameController,
+                borderRadius: 10,
                 validate: (value) {
                   if (value == null || value.isEmpty) {
                     return local.noName;
@@ -244,6 +295,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
               CustomTextFormField(
                 keyboardType: TextInputType.phone,
                 hintText: local.phoneNumber,
+                borderRadius: 10,
                 controller: phoneNumberController,
                 suffixIcon: Icons.phone_android_outlined,
                 validate: (value) {
@@ -260,25 +312,25 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 },
               ),
               0.02.height.hSpace,
-              Text(
-                local.email,
-                style: Theme.of(context).textTheme.titleSmall!,
-              ),
-              0.01.height.hSpace,
-              CustomTextFormField(
-                isReadOnly: (FirebaseAuth.instance.currentUser!.email != null)
-                    ? true
-                    : false,
-                hintText: local.email,
-                controller: emailController,
-                suffixIcon: Icons.email_outlined,
-                validate: (value) {
-                  if (value == null || value.isEmpty) {
-                    return local.noEmail;
-                  }
-                  return null;
-                },
-              ),
+              // Text(
+              //   local.email,
+              //   style: Theme.of(context).textTheme.titleSmall!,
+              // ),
+              // 0.01.height.hSpace,
+              // CustomTextFormField(
+              //   isReadOnly: (FirebaseAuth.instance.currentUser!.email != null)
+              //       ? true
+              //       : false,
+              //   hintText: local.email,
+              //   controller: emailController,
+              //   suffixIcon: Icons.email_outlined,
+              //   validate: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return local.noEmail;
+              //     }
+              //     return null;
+              //   },
+              // ),
               0.01.height.hSpace,
             ],
           ).hPadding(0.03.width),

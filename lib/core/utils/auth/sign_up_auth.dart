@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salamtk/core/functions/security_functions.dart';
 import '/core/constant/shared_preference_key.dart';
@@ -10,6 +11,7 @@ import '/core/utils/auth/auth_collections.dart';
 
 abstract class SignUpAuth {
   static final _firebase = FirebaseAuth.instance;
+  static final _firestore = FirebaseFirestore.instance.collection("users");
 
   static Future<String?> signUp({
     required String email,
@@ -40,9 +42,21 @@ abstract class SignUpAuth {
       );
     } on FirebaseAuthException catch (e) {
       log("[Authentication] FirebaseAuthException: ${e.message}");
-      return e.message!.replaceFirst("email", "Phone Number").replaceFirst("address", "");
+      return e.message!
+          .replaceFirst("email", "Phone Number")
+          .replaceFirst("address", "");
     }
     return null;
+  }
+
+  static Future<void> updatePatientImage({
+    required String uid,
+    required String imageUrl,
+  }) async {
+    await _firestore.doc(uid).update({
+      "imageUrl": imageUrl,
+    });
+    // return null;
   }
 
   static Future<String?> doctorSignUp({

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -127,6 +129,25 @@ class _ReservationState extends State<Reservation> {
     );
   }
 
+  List<String> days = [];
+
+  // _initDate() {
+  //   var provider = Provider.of<PatientProvider>(context, listen: false);
+  //
+  //   var dataProvider = Provider.of<AllAppProvidersDb>(context, listen: false);
+  //
+  //   for (var day in (widget.isSecondClinic)
+  //       ? provider!.getDoctor!.secondClinic!.clinicDays
+  //       : provider!.getDoctor!.clinicDays!) {
+  //     days.add(dataProvider.getTheTranslateOfTheDays(day));
+  //     log(dataProvider.getTheTranslateOfTheDays(day));
+  //   }
+  //   (widget.isSecondClinic)
+  //       ? provider.getDoctor!.secondClinic!.clinicDays = days
+  //       : provider.getDoctor!.clinicDays = days;
+  //   setState(() {});
+  // }
+
   @override
   void initState() {
     _focusedDay = DateTime.now();
@@ -134,6 +155,7 @@ class _ReservationState extends State<Reservation> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkSlots();
     });
+
     super.initState();
   }
 
@@ -203,19 +225,21 @@ class _ReservationState extends State<Reservation> {
           TableCalendar(
             locale: Provider.of<LanguageProvider>(context).getLanguage,
             focusedDay: _focusedDay,
-            // Allow only two months: today to +60 days
             firstDay: DateTime.now(),
-            lastDay: DateTime.now().add(const Duration(days: 60)),
-            selectedDayPredicate: (day) =>
-                isSameDay(provider.getSelectedDate, day),
+            lastDay: DateTime.now().add(
+              const Duration(days: 60),
+            ),
+            selectedDayPredicate: (day) => isSameDay(
+              provider.getSelectedDate,
+              day,
+            ),
             onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-              });
-              // SnackBarServices.showSuccessMessage(
-              //   context,
-              //   message: selectedDay.weekday.toString(),
-              // );
+              setState(
+                () {
+                  _focusedDay = focusedDay;
+                },
+              );
+              log(selectedDay.weekday.toString());
               provider.setSelectedDate(selectedDay);
               isNotWorking = provider.handleDoctorDayIndex(
                 context,
@@ -225,9 +249,11 @@ class _ReservationState extends State<Reservation> {
               _checkSlots();
             },
             onPageChanged: (focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-              });
+              setState(
+                () {
+                  _focusedDay = focusedDay;
+                },
+              );
             },
             startingDayOfWeek: StartingDayOfWeek.saturday,
             daysOfWeekHeight: 0.05.height,

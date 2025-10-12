@@ -19,11 +19,11 @@ class ReservationModel {
 
   final String patientPhoneNumber;
 
-  final String screenshotUrl;
+  final String? screenshotUrl;
 
-  final String cashedPhoneNumber;
+  final String? cashedPhoneNumber;
 
-  final String selectedPhoneNumber;
+  final String? selectedPhoneNumber;
 
   String status;
 

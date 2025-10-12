@@ -135,8 +135,8 @@ class _RevisionPageState extends State<RevisionPage> {
 
                       ReservationModel model = ReservationModel(
                         screenshotUrl: provider.getScreenshot ?? "",
-                        cashedPhoneNumber: provider.getAppPhoneNumber!,
-                        selectedPhoneNumber: provider.getPhoneNumber!,
+                        cashedPhoneNumber: provider.getAppPhoneNumber,
+                        selectedPhoneNumber: provider.getPhoneNumber,
                         patientPhoneNumber:
                             provider.reservationPhoneNumber ?? "",
                         reservationId: "",
@@ -146,7 +146,8 @@ class _RevisionPageState extends State<RevisionPage> {
                         slot: provider.getSelectedSlot!,
                         price: provider.getDoctor!.price,
                         paymentMethod: "Electronic Wallet",
-                        email: provider.reservationEmail ?? "No Email",
+                        email: FirebaseAuth.instance.currentUser!.uid
+                            .replaceFirst("@gmail.com", ""),
                         patientName: provider.reservationName ?? "No Name",
                         isSecondClinic: (widget.isSecondClinic) ? true : null,
                       );

@@ -118,6 +118,39 @@ class AllAppProvidersDb extends ChangeNotifier {
     }
   }
 
+  // String getTheTranslateOfTheDays(String day) {
+  //   // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+  //   String normalizedDay = day.trim().replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+  //
+  //   switch (normalizedDay) {
+  //     case "الاثنين":
+  //     case "اثنين":
+  //       return "Monday";
+  //     case "الثلاثاء":
+  //     case "ثلاثاء":
+  //       return "Tuesday";
+  //     case "الأربعاء":
+  //     case "اربعاء":
+  //     case "الاربعاء":
+  //       return "Wednesday";
+  //     case "الخميس":
+  //     case "خميس":
+  //       return "Thursday";
+  //     case "الجمعة":
+  //     case "جمعه":
+  //     case "جمعة":
+  //       return "Friday";
+  //     case "السبت":
+  //     case "سبت":
+  //       return "Saturday";
+  //     case "الأحد":
+  //     case "احد":
+  //     case "الاحد":
+  //       return "Sunday";
+  //     default:
+  //       return "Error";
+  //   }
+  // }
   Future<void> checkSlots({
     required DateTime date,
     required DoctorModel doctor,

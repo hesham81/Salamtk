@@ -12,8 +12,12 @@ import '../../../models/payments/coins_data_model.dart';
 import '../../../models/payments/request_coins.dart';
 
 abstract class PaymentsCollections {
+  // PaymentsCollections() {
+  //   _checkIfExist();
+  // }
+
   static final _firestore =
-  FirebaseFirestore.instance.collection("PaymentsAndFinancials");
+      FirebaseFirestore.instance.collection("PaymentsAndFinancials");
 
   static final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -23,6 +27,16 @@ abstract class PaymentsCollections {
             CoinsDataModel.fromMap(snapshot.data()!),
         toFirestore: (value, options) => value.toMap(),
       );
+
+  static Future<void> checkIfExist() async {
+    var response = await _collectionReference().doc(userId).get();
+    if (!response.exists) {
+      log("Document not found. Initializing...");
+      await _initCoinsDataModel(
+        uid: userId,
+      );
+    }
+  }
 
   static Future<Either<String, CoinsDataModel>> getAllCoins() async {
     try {
@@ -57,16 +71,17 @@ abstract class PaymentsCollections {
 
     // ✅ Use .set() — safe for non-existing documents
     await _collectionReference().doc(uid ?? userId).set(
-      coinsDataModel,
-      SetOptions(merge: true), // optional: merge if doc exists
-    );
+          coinsDataModel,
+          SetOptions(merge: true), // optional: merge if doc exists
+        );
 
     log("Initialized coins data for user: ${uid ?? userId}");
     return coinsDataModel;
   }
 
   static Future<Either<String, CoinsDataModel>> getCustomCoins(
-      String uid,) async {
+    String uid,
+  ) async {
     try {
       final responseData = await _collectionReference().doc(uid).get();
       log(responseData.exists.toString());
@@ -90,28 +105,24 @@ abstract class PaymentsCollections {
     }
   }
 
-  static String _addTransaction(CoinsDataModel coins,
-      double amount, {
-        bool isReciever = false,
-        bool isWithdraw = false,
-        String? name,
-      }) {
+  static String _addTransaction(
+    CoinsDataModel coins,
+    double amount, {
+    bool isReciever = false,
+    bool isWithdraw = false,
+    String? name,
+  }) {
     final remainingBalance = coins.totalCurrency;
 
     final formatter = DateFormat('d MMMM yyyy', 'ar').format(DateTime.now());
 
     if (isReciever) {
       final senderText = name != null ? " من الحساب $name" : "";
-      return "تم استلام مبلغ$senderText بتاريخ $formatter بمبلغ ${amount
-          .toStringAsFixed(2)} جنيه. رصيدك الحالي: ${remainingBalance
-          .toStringAsFixed(2)} جنيه.";
+      return "تم استلام مبلغ$senderText بتاريخ $formatter بمبلغ ${amount.toStringAsFixed(2)} جنيه. رصيدك الحالي: ${remainingBalance.toStringAsFixed(2)} جنيه.";
     } else if (isWithdraw) {
-      return "تم سحب مبلغ بتاريخ $formatter بمبلغ ${amount.toStringAsFixed(
-          2)} جنيه. رصيدك الحالي: ${remainingBalance.toStringAsFixed(2)} جنيه.";
+      return "تم سحب مبلغ بتاريخ $formatter بمبلغ ${amount.toStringAsFixed(2)} جنيه. رصيدك الحالي: ${remainingBalance.toStringAsFixed(2)} جنيه.";
     } else {
-      return "تم تنفيذ تحويل لحظي بتاريخ $formatter بمبلغ ${amount
-          .toStringAsFixed(2)} جنيه. رصيدك الحالي: ${remainingBalance
-          .toStringAsFixed(2)} جنيه.";
+      return "تم تنفيذ تحويل لحظي بتاريخ $formatter بمبلغ ${amount.toStringAsFixed(2)} جنيه. رصيدك الحالي: ${remainingBalance.toStringAsFixed(2)} جنيه.";
     }
   }
 
@@ -122,8 +133,8 @@ abstract class PaymentsCollections {
       EasyLoading.show();
       var coinsData = await getAllCoins();
       CoinsDataModel coins = coinsData.fold(
-            (l) => throw l,
-            (r) => r,
+        (l) => throw l,
+        (r) => r,
       );
       if (coins.totalCurrency < points) {
         return ("You don't have enough coins");
@@ -158,8 +169,8 @@ abstract class PaymentsCollections {
       var response = await getAllCoins();
 
       var coins = response.fold(
-            (l) => throw l,
-            (r) => r,
+        (l) => throw l,
+        (r) => r,
       );
       log(coins.totalCurrency.toString());
 
@@ -171,8 +182,8 @@ abstract class PaymentsCollections {
       var receiverResponse = await getCustomCoins(receiverId);
 
       var receiverCoins = receiverResponse.fold(
-            (l) => throw l,
-            (r) => r,
+        (l) => throw l,
+        (r) => r,
       );
 
       receiverCoins.totalCurrency += amount;
@@ -211,8 +222,8 @@ abstract class PaymentsCollections {
       EasyLoading.show();
       var response = await getAllCoins();
       var coins = response.fold(
-            (l) => throw l,
-            (r) => r,
+        (l) => throw l,
+        (r) => r,
       );
       if (!_checkIfAmountIsEnoughOrNot(coins, amount)) {
         SnackBarServices.showErrorMessage(
@@ -241,6 +252,4 @@ abstract class PaymentsCollections {
   }
 
   /// Request Section
-
-
 }

@@ -1164,19 +1164,20 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<DoctorModel?> searchForDoctor(
-      {required String doctorPhoneNumber}) async {
+  Future<DoctorModel?> searchForDoctor({
+    required String doctorPhoneNumber,
+  }) async {
     return await DoctorsCollection.getDoctorData(uid: doctorPhoneNumber);
   }
 
   final List<String> daysEn = [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
   ];
 
   final List<String> daysOrder = [
@@ -1198,44 +1199,6 @@ class PatientProvider extends ChangeNotifier {
     "الجمعة",
     "السبت"
   ];
-
-  bool _handleContDays(
-    int selectedDay, {
-    bool isSecondClinic = false,
-  }) {
-    var startDay = this._selectedDoctor!.clinicWorkingFrom;
-    var endDay = this._selectedDoctor!.clinicWorkingTo;
-
-    if (startDay == null || endDay == null)
-      return true; // No range → block all?
-
-    const List<String> daysOrder = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ];
-
-    int startIndex = daysOrder.indexOf(startDay);
-    int endIndex = daysOrder.indexOf(endDay);
-    int selectedDayIndex = _weekdayToDayOrderIndex(
-        selectedDay); // Convert weekday to index in daysOrder
-
-    if (startIndex == -1 || endIndex == -1 || selectedDayIndex == -1) {
-      return true; // Invalid day name → block
-    }
-
-    if (startIndex <= endIndex) {
-      // Normal range: Sunday (0) to Thursday (4)
-      return selectedDayIndex < startIndex || selectedDayIndex > endIndex;
-    } else {
-      // Wrap-around: Friday (5) to Monday (1) → valid: 5,6,0,1 → invalid: 2,3,4
-      return selectedDayIndex > endIndex && selectedDayIndex < startIndex;
-    }
-  }
 
 // Helper: Convert DateTime.weekday (1-7) to index in daysOrder [Sun=0, ..., Sat=6]
   int _weekdayToDayOrderIndex(int weekday) {
@@ -1264,13 +1227,13 @@ class PatientProvider extends ChangeNotifier {
     bool isSecondClinic = false,
   }) {
     if (isSecondClinic) {
-      return (this._selectedDoctor?.secondClinic!.clinicDays != null)
-          ? _handleSpecDays(context, weekDay)
-          : _handleContDays(weekDay);
+      return _handleSpecDays(
+        context,
+        weekDay,
+        isSecondClinic: true,
+      );
     }
-    return (this._selectedDoctor?.clinicDays != null)
-        ? _handleSpecDays(context, weekDay)
-        : _handleContDays(weekDay);
+    return _handleSpecDays(context, weekDay);
   }
 
   void initFavourites() async {

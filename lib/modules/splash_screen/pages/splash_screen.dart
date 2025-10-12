@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salamtk/core/extensions/extensions.dart';
+import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
+import 'package:salamtk/core/utils/payment/payments_collections.dart';
 import '/modules/layout/doctor/pages/doctor_home.dart';
 import '/core/constant/shared_preference_key.dart';
 import '/core/services/local_storage/shared_preference.dart';
@@ -22,6 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
   String? token;
 
   Future<void> getRole() async {
+    // await DoctorsCollection.changeTheDates();
+    await PaymentsCollections.checkIfExist();
     role = await SharedPreference.getString(SharedPreferenceKey.role).then(
       (value) => value,
     );

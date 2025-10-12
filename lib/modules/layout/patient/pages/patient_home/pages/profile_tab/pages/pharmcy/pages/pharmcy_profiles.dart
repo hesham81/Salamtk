@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:salamtk/core/constant/app_assets.dart';
 import 'package:salamtk/core/constant/app_constants.dart';
+import 'package:salamtk/core/extensions/align.dart';
 import 'package:salamtk/core/providers/app_providers/all_app_providers_db.dart';
 import 'package:salamtk/core/widget/view_map.dart';
 
@@ -22,29 +25,33 @@ class _PharmcyProfilesState extends State<PharmcyProfiles> {
     var local = AppLocalizations.of(context);
     var provider = Provider.of<AllAppProvidersDb>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Pharmacy",
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: AppColors.primaryColor,
-              ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.primaryColor,
-          ),
-        ),
-      ),
-      body: ViewMap(
-        location: LatLng(
-          provider.lo.latitude + 0.2,
-          provider.lo.longitude + 0.2,
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     "Pharmacy",
+      //     style: Theme.of(context).textTheme.titleMedium!.copyWith(
+      //           color: AppColors.primaryColor,
+      //         ),
+      //   ),
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //     icon: Icon(
+      //       Icons.arrow_back_ios,
+      //       color: AppColors.primaryColor,
+      //     ),
+      //   ),
+      // ),
+      // body: ViewMap(
+      //   location: LatLng(
+      //     provider.lo.latitude + 0.2,
+      //     provider.lo.longitude + 0.2,
+      //   ),
+      // ),
+      body: CachedNetworkImage(
+              imageUrl:
+                  "https://i.pinimg.com/1200x/ad/3a/c1/ad3ac1c75907ca7572c5473847f9f712.jpg")
+          .center,
     );
   }
 }
