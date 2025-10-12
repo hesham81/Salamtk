@@ -10,7 +10,9 @@ import 'package:salamtk/core/services/snack_bar_services.dart';
 import 'package:salamtk/core/utils/auth/login_auth.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/validations/validations.dart';
+import 'package:salamtk/core/widget/custom_container.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_second_clinic_profile_info.dart';
 import '/core/extensions/extensions.dart';
 import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_elevated_button.dart';
@@ -240,17 +242,17 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
           child: Column(
             children: [
               0.01.height.hSpace,
-              CustomTextFormField(
-                hintText: local.email,
-                controller: emailController,
-                validate: (value) {
-                  if (value!.isEmpty) {
-                    return local.noEmail;
-                  } else {
-                    return Validations.isEmailValid(value);
-                  }
-                },
-              ),
+              // CustomTextFormField(
+              //   hintText: local.email,
+              //   controller: emailController,
+              //   validate: (value) {
+              //     if (value!.isEmpty) {
+              //       return local.noEmail;
+              //     } else {
+              //       return Validations.isEmailValid(value);
+              //     }
+              //   },
+              // ),
               0.01.height.hSpace,
               CustomTextFormField(
                 hintText: local.name,
@@ -467,33 +469,59 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 text: local.secondClinicInfo,
               ),
               0.01.height.hSpace,
-              CustomTextFormField(
-                hintText: "",
-                controller: secondClinicPhoneNumberController,
-                keyboardType: TextInputType.phone,
-                validate: (value) {
-                  if (value == null || value.isEmpty) {
-                    return local.emptyPhone;
-                  }
-
-                  final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                  if (!egyptPhoneRegex.hasMatch(value)) {
-                    return local.phoneError;
-                  }
-
-                  return null;
-                },
+              // CustomTextFormField(
+              //   hintText: "",
+              //   controller: secondClinicPhoneNumberController,
+              //   keyboardType: TextInputType.phone,
+              //   validate: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return local.emptyPhone;
+              //     }
+              //
+              //     final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
+              //     if (!egyptPhoneRegex.hasMatch(value)) {
+              //       return local.phoneError;
+              //     }
+              //
+              //     return null;
+              //   },
+              // ),
+              0.01.height.hSpace,
+              GestureDetector(
+                onTap: () => slideLeftWidget(
+                  newPage: UpdateSecondClinicProfileInfo(
+                    doctor: widget.doctor,
+                    secondClinicDataModel: widget.doctor.secondClinic,
+                  ),
+                  context: context,
+                ),
+                child: CustomContainer(
+                  child: Row(
+                    children: [
+                      Text(
+                        local.updateSecondClinicInformation,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               0.01.height.hSpace,
-              CustomDropdown(
-                items: [],
-                onChanged: (p0) {},
-              ),
+              // CustomDropdown(
+              //   items: [],
+              //   onChanged: (p0) {},
+              // ),
               SizedBox(
                 width: double.maxFinite,
                 child: CustomElevatedButton(
                   child: Text(
-                    "Update",
+                    local.confirm,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: AppColors.primaryColor,
                         ),

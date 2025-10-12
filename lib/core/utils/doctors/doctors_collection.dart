@@ -85,4 +85,6 @@ abstract class DoctorsCollection {
     var res = await _collectionReference().doc(doctorId).get();
     return res.data()!;
   }
+
+  // static Future<bool> updateSecondClinicData({required ClinicDataModel clinic})
 }

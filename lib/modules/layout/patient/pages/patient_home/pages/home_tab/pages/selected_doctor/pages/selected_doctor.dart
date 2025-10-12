@@ -33,33 +33,37 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
 
   // Thursday
   String getTheTranslateOfTheDays(String day) {
-    log("The Day is $day");
-    var newDay = day;
-    day = day.toLowerCase();
-    switch (day) {
-      case "monday":
-      case "mon":
-        return "الاثنين";
-      case "tue":
-      case "tuesday":
-        return "الثلاثاء";
-      case "wed":
-      case "wednesday":
-        return "الاربعاء";
-      case "thu":
-      case "thursday":
-        return "الخميس";
-      case "fri":
-      case "friday":
-        return "جمعه";
-      case "sat":
-      case "saturday":
-        return "سبت";
-      case "sun":
-      case "sunday":
-        return "الاحد";
+    log("اليوم هو $day");
+    // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+    String normalizedDay = day.trim().replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+
+    switch (normalizedDay) {
+      case "الاثنين":
+      case "اثنين":
+        return "Monday";
+      case "الثلاثاء":
+      case "ثلاثاء":
+        return "Tuesday";
+      case "الأربعاء":
+      case "اربعاء":
+      case "الاربعاء":
+        return "Wednesday";
+      case "الخميس":
+      case "خميس":
+        return "Thursday";
+      case "الجمعة":
+      case "جمعه":
+      case "جمعة":
+        return "Friday";
+      case "السبت":
+      case "سبت":
+        return "Saturday";
+      case "الأحد":
+      case "احد":
+      case "الاحد":
+        return "Sunday";
       default:
-        return "خطأ";
+        return "Error";
     }
   }
 
@@ -289,7 +293,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
               IconRow(
                   color: AppColors.blackColor,
                   icon: Icons.date_range,
-                  text: (language.getLanguage == "en")
+                  text: (language.getLanguage == "ar")
                       ? (_currentIndex == 0)
                           ? "${provider.getDoctor?.clinicDays?.first} - ${provider.getDoctor?.clinicDays?.last}"
                           : "${provider.getDoctor?.secondClinic?.clinicDays?.first} - ${provider.getDoctor?.secondClinic?.clinicDays?.last}"

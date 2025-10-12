@@ -267,7 +267,11 @@
   "secondClinicInfo":"Second Clinic Information",
   "changePassword":"Change Password",
   "done":"Done",
-  "phoneNumberIsNotExist":"PhoneNumberIsNotExist"
+  "phoneNumberIsNotExist":"PhoneNumberIsNotExist",
+  "updateSecondClinicInformation": "Update Second Clinic Information",
+  "addAnotherClinic" : "Add Another Clinic",
+  "updateProfile":"Update",
+  "updateClinicTimesSlots" : "Update Clinic Times Slots"
 
 
 

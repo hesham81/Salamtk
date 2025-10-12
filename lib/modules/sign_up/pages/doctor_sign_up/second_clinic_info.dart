@@ -98,22 +98,22 @@ class _SecondClinicInfoState extends State<SecondClinicInfo> {
                 enableDeselect: true,
                 buttons: (lang.getLanguage == "en")
                     ? [
+                        "Saturday",
+                        "Sunday",
                         "Monday",
                         "Tuesday",
                         "Wednesday",
                         "Thursday",
                         "Friday",
-                        "Saturday",
-                        "Sunday",
                       ]
                     : [
+                        "السبت",
+                        "الاحد",
                         "الاثنين",
                         "الثلاثاء",
                         "الاربعاء",
                         "الخميس",
                         "الجمعة",
-                        "السبت",
-                        "الاحد"
                       ],
               ).hPadding(0.03.width),
               0.04.height.hSpace,

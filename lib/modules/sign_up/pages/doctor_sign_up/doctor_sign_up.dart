@@ -345,10 +345,11 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                       });
                     },
                     decoration: CustomDropdownDecoration(
-                        closedBorder: Border.all(
-                          color: AppColors.secondaryColor,
-                        ),
-                        closedBorderRadius: BorderRadius.circular(25)),
+                      closedBorder: Border.all(
+                        color: AppColors.secondaryColor,
+                      ),
+                      closedBorderRadius: BorderRadius.circular(25),
+                    ),
                   ),
                   0.01.height.hSpace,
                   CustomTextFormField(
@@ -394,14 +395,14 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   CustomTextFormField(
                     hintText: local.city,
                     controller: clinicCityController,
-
                   ),
                   0.01.height.hSpace,
                   CustomTextFormField(
                     hintText: local.state,
                     controller: clinicStateController,
                     validate: (value) {
-                      if (clinicCityController.text.isNotEmpty && value == null) {
+                      if (clinicCityController.text.isNotEmpty &&
+                          value == null) {
                         return local.error;
                       }
                       return null;
@@ -412,7 +413,8 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     hintText: local.address,
                     controller: clinicStreetController,
                     validate: (value) {
-                      if (clinicCityController.text.isNotEmpty && value == null) {
+                      if (clinicCityController.text.isNotEmpty &&
+                          value == null) {
                         return local.error;
                       }
                       return null;
@@ -423,7 +425,6 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                     width: double.maxFinite,
                     child: CustomElevatedButton(
                       onPressed: () async {
-
                         if (formKey.currentState!.validate() &&
                             selectedSpecialist != null &&
                             selectedCity != null &&
@@ -447,10 +448,9 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                               clinicStateController.text.isNotEmpty ||
                               clinicStreetController.text.isNotEmpty) {
                             provider.setIsHaveSecondClinic(true);
-                          }else
-                            {
-                              provider.setIsHaveSecondClinic(false);
-                            }
+                          } else {
+                            provider.setIsHaveSecondClinic(false);
+                          }
                           provider.setDoctorData(
                             distinctiveMark:
                                 distinctiveMarkController.text.isEmpty

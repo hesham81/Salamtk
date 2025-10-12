@@ -27,6 +27,16 @@ class SignUpProviders extends ChangeNotifier {
   Marker? _marker;
 
   String? _country;
+  List<String> _updatedTimes = [];
+
+  // _updatedTimes = [];
+
+  List get updatedTimes => _updatedTimes;
+
+  void setUpdatedTimes(List<String> value) {
+    _updatedTimes = value;
+    notifyListeners();
+  }
 
   bool _isHaveSecondClinic = false;
 

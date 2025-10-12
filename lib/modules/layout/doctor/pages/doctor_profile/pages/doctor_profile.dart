@@ -92,7 +92,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         ),
                   ),
                   Text(
-                    user?.email?.replaceFirst("@gmail.com", "") ?? local.noEmail,
+                    user?.email?.replaceFirst("@gmail.com", "") ??
+                        local.noEmail,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: AppColors.secondaryColor,
                         ),
@@ -125,7 +126,11 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: Icons.folder_special_outlined,
-                    content: "${doctor!.specialist}",
+                    // content: "${doctor!.specialist}",
+                    content: (language.getLanguage == 'ar')
+                        ? TranslationServices.translateCategoriesToAr(
+                            doctor?.specialist ?? "")
+                        : doctor?.specialist ?? "",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
@@ -154,10 +159,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   0.01.height.hSpace,
                   DoctorProfileComponent(
                     icon: FontAwesomeIcons.timeline,
-                    content:
-                        "${local.clinicWorkingTo} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingTo ?? "",
-                          ) : doctor!.clinicWorkingTo}",
+                    content: "${local.workingDays} ${doctor?.clinicDays?.first ?? ""}",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(
@@ -169,7 +171,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     width: 1.width,
                     child: CustomElevatedButton(
                       child: Text(
-                        "Update Profile",
+                        local.updateProfile,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: AppColors.primaryColor,
                             ),

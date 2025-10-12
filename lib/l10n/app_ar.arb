@@ -264,7 +264,15 @@
          "ivfAndFertility": "أطفال الأنابيب والعقم",
          "andrologyAndInfertility": "الذكورة والعقم",
          "painManagement": "إدارة الألم",
-           "phoneNumberIsNotExist":"رقم الهاتف غير موجود"
+           "phoneNumberIsNotExist":"رقم الهاتف غير موجود",
+             "updateSecondClinicInformation": "تعديل معلومات العياده الثانيه",
+               "addAnotherClinic" : "اضف عياده اخري",
+                 "updateProfile":"تحديث الملف الشخصي",
+                   "updateClinicTimesSlots" : "تحديث بيانات وقت العياده "
+
+
+
+
 
 
 
