@@ -27,6 +27,61 @@ class _AdditionalSignUpDoctorDataState
     extends State<AdditionalSignUpDoctorData> {
   List<String> data = [];
 
+  String getTheTranslateOfTheDays(String day) {
+    // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+    String normalizedDay = day
+        .trim()
+        .replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+
+    switch (normalizedDay) {
+      case "الاثنين":
+      case "اثنين":
+        return "Monday";
+      case "الثلاثاء":
+      case "ثلاثاء":
+        return "Tuesday";
+      case "الأربعاء":
+      case "اربعاء":
+      case "الاربعاء":
+        return "Wednesday";
+      case "الخميس":
+      case "خميس":
+        return "Thursday";
+      case "الجمعة":
+      case "جمعه":
+      case "جمعة":
+        return "Friday";
+      case "السبت":
+      case "سبت":
+        return "Saturday";
+      case "الأحد":
+      case "احد":
+      case "الاحد":
+        return "Sunday";
+      default:
+        return "Error";
+    }
+  }
+
+  var daysAr = [
+    "السبت",
+    "الاحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الاربعاء",
+    "الخميس",
+    "الجمعة",
+  ];
+  var daysEn = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
@@ -147,53 +202,6 @@ class _AdditionalSignUpDoctorDataState
             0.01.height.hSpace,
             Divider().hPadding(0.1.width),
             0.01.height.hSpace,
-            // CustomTextButton(
-            //   text: local.clickToCustomizeYourTime,
-            //   onPressed: () => slideLeftWidget(
-            //     newPage: DoctorTimePlanSignUp(),
-            //     context: context,
-            //   ),
-            // ),
-            // Row(
-            //   children: [
-            //     Text(
-            //       "${local.workingFrom} : ",
-            //       style: theme.labelLarge!.copyWith(
-            //         color: AppColors.secondaryColor,
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: CustomDropdown(
-            //         hintText: provider.workingFrom ?? local.workingFrom,
-            //         items: provider.timeSlots,
-            //         onChanged: (p0) {
-            //           provider.setWorkingFrom(p0!);
-            //         },
-            //       ),
-            //     )
-            //   ],
-            // ),
-            // 0.01.height.hSpace,
-            // Row(
-            //   children: [
-            //     Text(
-            //       "${local.workingTo} : ",
-            //       style: theme.labelLarge!.copyWith(
-            //         color: AppColors.secondaryColor,
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: CustomDropdown(
-            //         hintText: provider.workingTo ?? local.workingTo,
-            //         items: provider.workingToList,
-            //         onChanged: (p0) {
-            //           provider.setWorkingTo(p0!);
-            //         },
-            //       ),
-            //     )
-            //   ],
-            // ),
-            0.02.height.hSpace,
             CustomElevatedButton(
               child: Row(
                 children: [
@@ -227,7 +235,6 @@ class _AdditionalSignUpDoctorDataState
                     ),
                   ),
             0.01.height.hSpace,
-
             0.02.height.hSpace,
             SizedBox(
               width: 1.width,
@@ -257,13 +264,29 @@ class _AdditionalSignUpDoctorDataState
                       context,
                       message: local.pleaseCheckClinicInfo,
                     );
-                  } else if (provider.isHaveSecondClinic ) {
+                  } else if (provider.isHaveSecondClinic) {
                     slideLeftWidget(
                       newPage: SecondClinicInfo(),
                       context: context,
                     );
                   } else {
-                    provider.confirm(context, data).then(
+                    List<String> listOfIndexes = [];
+                    if (lang.getLanguage == "ar") {
+                      for (var i in data) {
+                        var index = daysAr.indexOf(i);
+                        listOfIndexes.add(
+                          daysEn[index],
+                        );
+                      }
+                    } else {
+                      listOfIndexes = data;
+                    }
+                    provider
+                        .confirm(
+                      context,
+                      listOfIndexes,
+                    )
+                        .then(
                       (value) {
                         if (value == null) {
                           SnackBarServices.showSuccessMessage(

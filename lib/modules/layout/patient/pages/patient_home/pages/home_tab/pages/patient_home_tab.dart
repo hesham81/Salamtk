@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/extensions/alignment.dart';
+import 'package:salamtk/modules/layout/patient/pages/patient_home/widget/join_us_icon.dart';
 import '/core/functions/location_services.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/modules/layout/patient/pages/patient_home/pages/filtered_doctors/pages/filtered_cities/pages/filtered_cities.dart';
@@ -233,7 +234,9 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                     ],
                   )
                 : SizedBox(),
+
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
+            (searchList.isEmpty) ? JoinUsIcon() : SizedBox(),
             // (searchList.isEmpty)
             //     ? CustomElevatedButton(
             //         child: Row(

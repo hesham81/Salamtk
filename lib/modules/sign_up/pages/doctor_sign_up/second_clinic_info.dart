@@ -24,6 +24,61 @@ class SecondClinicInfo extends StatefulWidget {
 class _SecondClinicInfoState extends State<SecondClinicInfo> {
   List<String> data = [];
   List<String> timeData = [];
+
+  String getTheTranslateOfTheDays(String day) {
+    // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+    String normalizedDay = day
+        .trim()
+        .replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+
+    switch (normalizedDay) {
+      case "الاثنين":
+      case "اثنين":
+        return "Monday";
+      case "الثلاثاء":
+      case "ثلاثاء":
+        return "Tuesday";
+      case "الأربعاء":
+      case "اربعاء":
+      case "الاربعاء":
+        return "Wednesday";
+      case "الخميس":
+      case "خميس":
+        return "Thursday";
+      case "الجمعة":
+      case "جمعه":
+      case "جمعة":
+        return "Friday";
+      case "السبت":
+      case "سبت":
+        return "Saturday";
+      case "الأحد":
+      case "احد":
+      case "الاحد":
+        return "Sunday";
+      default:
+        return "Error";
+    }
+  }
+
+  var daysAr = [
+    "السبت",
+    "الاحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الاربعاء",
+    "الخميس",
+    "الجمعة",
+  ];
+  var daysEn = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
   TextEditingController clinicPhoneController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
@@ -172,9 +227,20 @@ class _SecondClinicInfoState extends State<SecondClinicInfo> {
                         message: local.phoneNumber,
                       );
                     } else {
+                      List<String> listOfIndexes = [];
+                      if (lang.getLanguage == "ar") {
+                        for (var i in data) {
+                          var index = daysAr.indexOf(i);
+                          listOfIndexes.add(
+                            daysEn[index],
+                          );
+                        }
+                      } else {
+                        listOfIndexes = data;
+                      }
                       final secondClinicData = ClinicDataModel(
                         clinicStreet: provider.secondClinicStreet ?? "",
-                        clinicDays: data,
+                        clinicDays: listOfIndexes,
                         clinicTimeSlots: timeData,
                         clinicCity: provider.secondClinicCity ?? "",
                         clinicZone: provider.secondClinicState ?? "",

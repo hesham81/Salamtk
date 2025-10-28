@@ -19,12 +19,50 @@ class _SelectCustomDaysState extends State<SelectCustomDays> {
 
   String? selectedTo;
 
+
   @override
   Widget build(BuildContext context) {
     var lang = Provider.of<LanguageProvider>(context);
     var local = AppLocalizations.of(context);
     var theme = Theme.of(context).textTheme;
     List<String> data = [];
+
+    String getTheTranslateOfTheDays(String day) {
+      // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+      String normalizedDay = day
+          .trim()
+          .replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+
+      switch (normalizedDay) {
+        case "الاثنين":
+        case "اثنين":
+          return "Monday";
+        case "الثلاثاء":
+        case "ثلاثاء":
+          return "Tuesday";
+        case "الأربعاء":
+        case "اربعاء":
+        case "الاربعاء":
+          return "Wednesday";
+        case "الخميس":
+        case "خميس":
+          return "Thursday";
+        case "الجمعة":
+        case "جمعه":
+        case "جمعة":
+          return "Friday";
+        case "السبت":
+        case "سبت":
+          return "Saturday";
+        case "الأحد":
+        case "احد":
+        case "الاحد":
+          return "Sunday";
+        default:
+          return "Error";
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -60,9 +98,9 @@ class _SelectCustomDaysState extends State<SelectCustomDays> {
                 selectedColor: AppColors.secondaryColor,
                 groupingType: GroupingType.wrap,
               ),
-              // onSelected: (value, index, isSelected) => setState(() {
-              //   (isSelected) ? data.add(value) : data.remove(value);
-              // }),
+              onSelected: (value, index, isSelected) => setState(() {
+                (isSelected) ? data.add(value) : data.remove(value);
+              }),
               maxSelected: 7,
               isRadio: false,
               enableDeselect: true,

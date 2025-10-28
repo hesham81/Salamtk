@@ -440,6 +440,7 @@ class SignUpProviders extends ChangeNotifier {
           return value;
         },
       );
+
       await DoctorsCollection.setDoctor(
         DoctorModel(
           distinctiveMark: distinctiveMark,

@@ -60,9 +60,13 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   TextEditingController secondClinicPhoneNumberController =
       TextEditingController();
   TextEditingController secondClinicCityController = TextEditingController();
+  TextEditingController secondSpecialistController = TextEditingController();
+  TextEditingController thirdSpecialistController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String specialist;
+  String? secondSpecialist;
+  String? thirdSpecialist;
   String? workingFrom;
 
   String? workingTo;
@@ -88,6 +92,8 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
       widget.doctor.description = descriptionController.text;
       widget.doctor.specialist = specialist;
       widget.doctor.phoneNumber = phoneNumberController.text;
+      widget.doctor.secondSpecialist = secondSpecialist ?? widget.doctor.secondSpecialist;
+      widget.doctor.thirdSpecialist = thirdSpecialist ?? widget.doctor.thirdSpecialist;
 
       await DoctorsCollection.updateDoctor(widget.doctor);
       user!.updateDisplayName(nameController.text);
@@ -120,6 +126,8 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
     specialist = widget.doctor.specialist;
     secondClinicPhoneNumberController.text =
         widget.doctor.secondClinic?.clinicPhone ?? "";
+    secondSpecialistController.text = widget.doctor.secondSpecialist ?? "";
+    thirdSpecialistController.text = widget.doctor.thirdSpecialist ?? "";
   }
 
   File? _image;
@@ -387,53 +395,70 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 initialItem: widget.doctor.specialist,
               ),
               0.01.height.hSpace,
-              Visibility(
-                  visible: widget.doctor.workingTo == null,
-                  replacement: CustomElevatedButton(
-                    child: Row(
-                      children: [
-                        Text(
-                          local.customizeYourTime,
-                          style:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    color: AppColors.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ).hPadding(0.03.width),
-                        Spacer(),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.primaryColor,
-                        ).hPadding(0.03.width)
-                      ],
-                    ),
-                    onPressed: () => slideLeftWidget(
-                      newPage: UpdateDaysProfileDoctor(),
-                      context: context,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      CustomDropdown<String>(
-                        items: allSlots,
-                        onChanged: (p0) {
-                          workingFrom = p0!;
-                          setState(() {});
-                        },
-                        hintText: widget.doctor.workingFrom,
-                      ),
-                      0.01.height.hSpace,
-                      CustomDropdown<String>(
-                        items: (workingFrom == null)
-                            ? allSlots
-                            : DoctorsProfileMethods.handleSlots(workingFrom!),
-                        onChanged: (p0) {
-                          workingTo = p0;
-                        },
-                        hintText: widget.doctor.workingTo,
-                      ),
-                    ],
-                  )),
+              CustomDropdown(
+                items: specialists,
+                onChanged: (p0) {
+                  secondSpecialist = p0!;
+                },
+                initialItem: widget.doctor.secondSpecialist ?? "",
+              ),
+              0.01.height.hSpace,
+              CustomDropdown(
+                items: specialists,
+                onChanged: (p0) {
+                  thirdSpecialist = p0!;
+                },
+                initialItem: widget.doctor.thirdSpecialist ?? "",
+              ),
+
+              0.01.height.hSpace,
+              // Visibility(
+              //     visible: widget.doctor.workingTo == null,
+              //     replacement: CustomElevatedButton(
+              //       child: Row(
+              //         children: [
+              //           Text(
+              //             local.customizeYourTime,
+              //             style:
+              //                 Theme.of(context).textTheme.titleSmall!.copyWith(
+              //                       color: AppColors.primaryColor,
+              //                       fontWeight: FontWeight.bold,
+              //                     ),
+              //           ).hPadding(0.03.width),
+              //           Spacer(),
+              //           Icon(
+              //             Icons.arrow_forward_ios,
+              //             color: AppColors.primaryColor,
+              //           ).hPadding(0.03.width)
+              //         ],
+              //       ),
+              //       onPressed: () => slideLeftWidget(
+              //         newPage: UpdateDaysProfileDoctor(),
+              //         context: context,
+              //       ),
+              //     ),
+              //     child: Column(
+              //       children: [
+              //         CustomDropdown<String>(
+              //           items: allSlots,
+              //           onChanged: (p0) {
+              //             workingFrom = p0!;
+              //             setState(() {});
+              //           },
+              //           hintText: widget.doctor.workingFrom,
+              //         ),
+              //         0.01.height.hSpace,
+              //         CustomDropdown<String>(
+              //           items: (workingFrom == null)
+              //               ? allSlots
+              //               : DoctorsProfileMethods.handleSlots(workingFrom!),
+              //           onChanged: (p0) {
+              //             workingTo = p0;
+              //           },
+              //           hintText: widget.doctor.workingTo,
+              //         ),
+              //       ],
+              //     )),
               CustomElevatedButton(
                   child: Row(
                     children: [

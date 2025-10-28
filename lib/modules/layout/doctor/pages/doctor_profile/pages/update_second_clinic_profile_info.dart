@@ -1,29 +1,23 @@
+import 'dart:developer';
+
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:salamtk/core/functions/doctors_profile_methods.dart';
 import 'package:salamtk/core/providers/sign_up_providers/sign_up_providers.dart';
 import 'package:salamtk/core/services/snack_bar_services.dart';
-import 'package:salamtk/core/utils/auth/login_auth.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
-import 'package:salamtk/core/validations/validations.dart';
 import 'package:salamtk/core/widget/custom_container.dart';
 import 'package:salamtk/models/doctors_models/clinic_data_model.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
-import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_second_clinic_profile_info.dart';
 import '../../../../../../core/providers/app_providers/language_provider.dart';
 import '/core/extensions/extensions.dart';
-import '/core/providers/patient_providers/patient_provider.dart';
 import '/core/widget/custom_elevated_button.dart';
 import '/core/widget/custom_text_form_field.dart';
-import '/core/widget/dividers_word.dart';
 import '/models/doctors_models/doctor_model.dart';
 import '/core/theme/app_colors.dart';
 
@@ -53,6 +47,78 @@ class _UpdateSecondClinicProfileInfoState
   String? selectedCity = null;
   String? selectedLocation = null;
   List<String> data = [];
+  var daysAr = [
+    "السبت",
+    "الاحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الاربعاء",
+    "الخميس",
+    "الجمعة",
+  ];
+  var daysEn = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+
+  List<String> _handlerDays() {
+    List<String> listOfIndexes = [];
+    for (var i in data) {
+      var index = daysAr.indexOf(i);
+      listOfIndexes.add(
+        daysEn[index],
+      );
+    }
+    return listOfIndexes;
+  }
+
+  // String getTheTranslateOfTheDays(String day) {
+  //   // توحيد المدخل: إزالة المسافات الزائدة وتحويل إلى صيغة موحدة (بدون تشكيل، وحروف عادية)
+  //   String normalizedDay = day
+  //       .trim()
+  //       .replaceAll(RegExp(r'[ًٌٍَُِّْـ]'), ''); // إزالة التشكيل إن وُجد
+  //
+  //   // "السبت",
+  //   // "الاحد",
+  //   // "الاثنين",
+  //   // "الثلاثاء",
+  //   // "الاربعاء",
+  //   // "الخميس",
+  //   // "الجمعة",
+  //   switch (normalizedDay) {
+  //     case "الاثنين":
+  //     case "اثنين":
+  //       return "Monday";
+  //     case "الثلاثاء":
+  //     case "ثلاثاء":
+  //       return "Tuesday";
+  //     case "الأربعاء":
+  //     case "اربعاء":
+  //     case "الاربعاء":
+  //       return "Wednesday";
+  //     case "الخميس":
+  //     case "خميس":
+  //       return "Thursday";
+  //     case "الجمعة":
+  //     case "جمعه":
+  //     case "جمعة":
+  //       return "Friday";
+  //     case "السبت":
+  //     case "سبت":
+  //       return "Saturday";
+  //     case "الأحد":
+  //     case "احد":
+  //     case "الاحد":
+  //       return "Sunday";
+  //     default:
+  //       return "Error";
+  //   }
+  // }
 
   @override
   void initState() {
@@ -101,9 +167,20 @@ class _UpdateSecondClinicProfileInfoState
                   data.isEmpty)
               ? null
               : () async {
+                  List<String> listOfIndexes = [];
+                  if (lang.getLanguage == "ar") {
+                    for (var i in data) {
+                      var index = daysAr.indexOf(i);
+                      listOfIndexes.add(
+                        daysEn[index],
+                      );
+                    }
+                  } else {
+                    listOfIndexes = data;
+                  }
                   ClinicDataModel _secondClinic = ClinicDataModel(
                     clinicStreet: addressController.text,
-                    clinicDays: data,
+                    clinicDays: listOfIndexes,
                     clinicTimeSlots: provider.updatedTimes as List<String>,
                     clinicCity: selectedCity ?? "",
                     clinicZone: selectedLocation ?? "",

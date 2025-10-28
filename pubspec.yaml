@@ -1,7 +1,7 @@
 name: salamtk
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+3
+version: 1.0.0+6
 
 environment:
   sdk: ^3.6.1
@@ -9,8 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.17
   route_transitions: ^2.0.1

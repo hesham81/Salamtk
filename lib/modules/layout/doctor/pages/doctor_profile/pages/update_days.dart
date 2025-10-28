@@ -6,6 +6,7 @@ import 'package:salamtk/core/extensions/extensions.dart';
 import 'package:salamtk/core/widget/custom_elevated_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../../../core/providers/app_providers/language_provider.dart';
 import '../../../../../../core/providers/sign_up_providers/sign_up_providers.dart';
 import '../../../../../../core/theme/app_colors.dart';
 

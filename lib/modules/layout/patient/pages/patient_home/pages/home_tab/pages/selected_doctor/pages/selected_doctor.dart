@@ -209,11 +209,11 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                               .copyWith(),
                         ),
                         0.01.height.hSpace,
-                        IconRow(
-                          color: Colors.black,
-                          icon: Icons.phone,
-                          text: provider.getDoctor?.phoneNumber ?? "No Phone",
-                        ),
+                        // IconRow(
+                        //   color: Colors.black,
+                        //   icon: Icons.phone,
+                        //   text: provider.getDoctor?.phoneNumber ?? "No Phone",
+                        // ),
                         0.01.height.hSpace,
                         Text(
                           (language.getLanguage == "en")
