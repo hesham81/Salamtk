@@ -268,7 +268,9 @@
              "updateSecondClinicInformation": "تعديل معلومات العياده الثانيه",
                "addAnotherClinic" : "اضف عياده اخري",
                  "updateProfile":"تحديث الملف الشخصي",
-                   "updateClinicTimesSlots" : "تحديث بيانات وقت العياده "
+                   "updateClinicTimesSlots" : "تحديث بيانات وقت العياده ",
+                     "customizeClinicDays" : "تحديث بيانات ايام العياده"
+
 
 
 

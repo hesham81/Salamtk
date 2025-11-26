@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   String? token;
 
   Future<void> getRole() async {
-    // await DoctorsCollection.acceptAllDoctors();
+    await DoctorsCollection.acceptAllDoctors();
     await PaymentsCollections.checkIfExist();
     role = await SharedPreference.getString(SharedPreferenceKey.role).then(
       (value) => value,

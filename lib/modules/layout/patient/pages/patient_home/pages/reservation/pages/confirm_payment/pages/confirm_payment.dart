@@ -21,7 +21,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ConfirmPayment extends StatefulWidget {
   bool isSecondClinic;
 
-   ConfirmPayment({
+  ConfirmPayment({
     super.key,
     this.isSecondClinic = false,
   });
@@ -41,6 +41,93 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
   bool reserveToYourSelf = false;
   bool isConfirm = false;
   bool pay = false;
+
+  void _showDialog(
+    BuildContext context,
+    PatientProvider provider,
+    AppLocalizations local,
+  ) {
+    showDialog(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          title: const Text('Payment Options'),
+          content: const Text('Would you like to pay now or later?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  provider
+                      .setReservationPhoneNumber(phoneNumberController.text);
+                  provider.setReservationName(nameController.text);
+                  provider.setReservationEmail(emailController.text);
+                  ReservationModel model = ReservationModel(
+                    screenshotUrl: provider.getScreenshot ?? "",
+                    cashedPhoneNumber: provider.getAppPhoneNumber,
+                    selectedPhoneNumber: provider.getPhoneNumber,
+                    patientPhoneNumber: provider.reservationPhoneNumber ?? "",
+                    reservationId: "",
+                    uid: FirebaseAuth.instance.currentUser!.uid,
+                    doctorId: provider.getDoctor!.uid!,
+                    date: provider.getSelectedDate!,
+                    slot: provider.getSelectedSlot!,
+                    price: provider.getDoctor!.price,
+                    paymentMethod: "Electronic Wallet",
+                    email: FirebaseAuth.instance.currentUser!.uid
+                        .replaceFirst("@gmail.com", ""),
+                    patientName: provider.reservationName ?? "No Name",
+                    isSecondClinic: (widget.isSecondClinic) ? true : null,
+                  );
+
+                  await ReservationCollection.addReservation(model).then(
+                    (value) async {
+                      if (value) {
+                        EasyLoading.dismiss();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PatientHome(),
+                          ),
+                          (route) => false,
+                        );
+                        SnackBarServices.showSuccessMessage(
+                          context,
+                          message:
+                              local.reservationCompletedWaitingToDoctorApproved,
+                        );
+                        await FCMService.subscribeToTopic(
+                            provider.getDoctor!.uid!);
+                        provider.disposeData();
+                      } else {
+                        EasyLoading.dismiss();
+                        SnackBarServices.showErrorMessage(
+                          context,
+                          message: "There's an error",
+                        );
+                      }
+                    },
+                  );
+                }
+              },
+              child: const Text('Pay Later'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                slideLeftWidget(
+                  newPage: PayWithElectronicWallet(),
+                  context: context,
+                ); // Close d;ialog
+                // Handle "Pay Now" logic here
+              },
+              child: const Text('Pay Now'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,60 +155,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
       ),
       bottomNavigationBar: CustomElevatedButton(
         onPressed: () async {
-          if (formKey.currentState!.validate()) {
-            provider.setReservationPhoneNumber(phoneNumberController.text);
-            provider.setReservationName(nameController.text);
-            provider.setReservationEmail(emailController.text);
-            ReservationModel model = ReservationModel(
-              screenshotUrl: provider.getScreenshot ?? "",
-              cashedPhoneNumber: provider.getAppPhoneNumber,
-              selectedPhoneNumber: provider.getPhoneNumber,
-              patientPhoneNumber:
-              provider.reservationPhoneNumber ?? "",
-              reservationId: "",
-              uid: FirebaseAuth.instance.currentUser!.uid,
-              doctorId: provider.getDoctor!.uid!,
-              date: provider.getSelectedDate!,
-              slot: provider.getSelectedSlot!,
-              price: provider.getDoctor!.price,
-              paymentMethod: "Electronic Wallet",
-              email: FirebaseAuth.instance.currentUser!.uid
-                  .replaceFirst("@gmail.com", ""),
-              patientName: provider.reservationName ?? "No Name",
-              isSecondClinic: (widget.isSecondClinic) ? true : null,
-            );
-
-            await ReservationCollection.addReservation(model).then(
-                  (value) async {
-                if (value) {
-                  EasyLoading.dismiss();
-                  SnackBarServices.showSuccessMessage(
-                    context,
-                    message: local
-                        .reservationCompletedWaitingToDoctorApproved,
-                  );
-                  // Navigator.pushAndRemoveUntil(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => PatientHome(),
-                  //   ),
-                  //       (route) =>
-                  //   route.settings.name ==
-                  //       RouteNames.revisionPage,
-                  // );
-                  await FCMService.subscribeToTopic(
-                      provider.getDoctor!.uid!);
-                  provider.disposeData();
-                } else {
-                  EasyLoading.dismiss();
-                  SnackBarServices.showErrorMessage(
-                    context,
-                    message: "There's an error",
-                  );
-                }
-              },
-            );
-          }
+          _showDialog(context, provider, local);
         },
         child: Text(
           local.confirm,

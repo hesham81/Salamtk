@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +16,7 @@ import 'package:salamtk/core/utils/auth/login_auth.dart';
 import 'package:salamtk/core/utils/doctors/doctors_collection.dart';
 import 'package:salamtk/core/validations/validations.dart';
 import 'package:salamtk/core/widget/custom_container.dart';
+import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_clinic_days.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_days_profile_doctor.dart';
 import 'package:salamtk/modules/layout/doctor/pages/doctor_profile/pages/update_second_clinic_profile_info.dart';
@@ -92,8 +91,10 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
       widget.doctor.description = descriptionController.text;
       widget.doctor.specialist = specialist;
       widget.doctor.phoneNumber = phoneNumberController.text;
-      widget.doctor.secondSpecialist = secondSpecialist ?? widget.doctor.secondSpecialist;
-      widget.doctor.thirdSpecialist = thirdSpecialist ?? widget.doctor.thirdSpecialist;
+      widget.doctor.secondSpecialist =
+          secondSpecialist ?? widget.doctor.secondSpecialist;
+      widget.doctor.thirdSpecialist =
+          thirdSpecialist ?? widget.doctor.thirdSpecialist;
 
       await DoctorsCollection.updateDoctor(widget.doctor);
       user!.updateDisplayName(nameController.text);
@@ -255,6 +256,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.doctor.secondClinic!.clinicDays.first);
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
     var signUpProvider = Provider.of<SignUpProviders>(context);
@@ -532,25 +534,30 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                   },
                 ),
               ),
-              0.01.height.hSpace,
-              DividersWord(
-                text: local.clinicInfo,
-              ),
-              0.01.height.hSpace,
-              CustomDropdown(
-                items: provider.days,
-                onChanged: (p0) {
-                  ClinicWorkingFrom = p0!;
-                },
-                initialItem: widget.doctor.clinicWorkingFrom,
-              ),
-              0.01.height.hSpace,
-              CustomDropdown(
-                items: provider.days,
-                onChanged: (p0) {
-                  ClinicWorkingTo = p0!;
-                },
-                initialItem: widget.doctor.clinicWorkingTo,
+              0.02.height.hSpace,
+              CustomElevatedButton(
+                child: Row(
+                  children: [
+                    Text(
+                      local.customizeClinicDays,
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ).hPadding(0.03.width),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.primaryColor,
+                    ).hPadding(0.03.width)
+                  ],
+                ),
+                onPressed: () => slideLeftWidget(
+                  newPage: UpdateClinicDays(
+                    doctor: widget.doctor,
+                  ),
+                  context: context,
+                ),
               ),
               0.01.height.hSpace,
               CustomTextFormField(
@@ -574,24 +581,6 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
               DividersWord(
                 text: local.secondClinicInfo,
               ),
-              0.01.height.hSpace,
-              // CustomTextFormField(
-              //   hintText: "",
-              //   controller: secondClinicPhoneNumberController,
-              //   keyboardType: TextInputType.phone,
-              //   validate: (value) {
-              //     if (value == null || value.isEmpty) {
-              //       return local.emptyPhone;
-              //     }
-              //
-              //     final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-              //     if (!egyptPhoneRegex.hasMatch(value)) {
-              //       return local.phoneError;
-              //     }
-              //
-              //     return null;
-              //   },
-              // ),
               0.01.height.hSpace,
               GestureDetector(
                 onTap: () => slideLeftWidget(

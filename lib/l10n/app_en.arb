@@ -271,7 +271,8 @@
   "updateSecondClinicInformation": "Update Second Clinic Information",
   "addAnotherClinic" : "Add Another Clinic",
   "updateProfile":"Update",
-  "updateClinicTimesSlots" : "Update Clinic Times Slots"
+  "updateClinicTimesSlots" : "Update Clinic Times Slots",
+  "customizeClinicDays" : "Customize Clinic Days"
 
 
 

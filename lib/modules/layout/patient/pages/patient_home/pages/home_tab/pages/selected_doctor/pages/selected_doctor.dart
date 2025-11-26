@@ -232,7 +232,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                         IconRow(
                           icon: Icons.location_on_outlined,
                           text:
-                              " ${provider.getDoctor?.state} , ${provider.getDoctor?.city} ",
+                              " ${provider.getDoctor?.state} , ${provider.getDoctor?.city} , ${provider.getDoctor?.street}",
                         ),
                         0.01.height.hSpace,
                         SelectedDoctorRateWidget(
@@ -295,44 +295,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                           ? "${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.last)}"
                           : "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
 
-                  // (language.getLanguage == "en")
-                  //     ? (_currentIndex == 0
-                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
-                  //             ? "${provider.getDoctor!.days!.first} - ${provider.getDoctor!.days!.last}"
-                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
-                  //         : (provider.getDoctor?.secondClinic?.clinicDays
-                  //                     ?.isNotEmpty ==
-                  //                 true
-                  //             ? "${provider.getDoctor!.secondClinic!.clinicDays!.first} - ${provider.getDoctor!.secondClinic!.clinicDays!.last}"
-                  //             : ""))
-                  //     : (_currentIndex == 0
-                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
-                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.days!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.days!.last)}"
-                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
-                  //         : (provider.getDoctor?.secondClinic?.clinicDays
-                  //                     ?.isNotEmpty ==
-                  //                 true
-                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
-                  //             : ""))
-                  // : (language.getLanguage == "en")
-                  //     ? (_currentIndex == 0
-                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
-                  //             ? "${provider.getDoctor!.days!.first} - ${provider.getDoctor!.days!.last}"
-                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
-                  //         : (provider.getDoctor?.secondClinic?.clinicDays
-                  //                     ?.isNotEmpty ==
-                  //                 true
-                  //             ? "${provider.getDoctor!.secondClinic!.clinicDays!.first} - ${provider.getDoctor!.secondClinic!.clinicDays!.last}"
-                  //             : ""))
-                  //     : (_currentIndex == 0
-                  //         ? (provider.getDoctor?.days?.isNotEmpty == true
-                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.days!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.days!.last)}"
-                  //             : "${provider.getDoctor?.clinicWorkingFrom ?? ""} - ${provider.getDoctor?.clinicWorkingTo ?? ""}")
-                  //         : (provider.getDoctor?.secondClinic?.clinicDays
-                  //                     ?.isNotEmpty ==
-                  //                 true
-                  //             ? "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
-                  //             : "")),
                   ),
               0.02.height.hSpace,
               IconRow(

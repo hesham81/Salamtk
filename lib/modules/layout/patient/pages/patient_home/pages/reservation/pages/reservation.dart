@@ -131,22 +131,6 @@ class _ReservationState extends State<Reservation> {
 
   List<String> days = [];
 
-  // _initDate() {
-  //   var provider = Provider.of<PatientProvider>(context, listen: false);
-  //
-  //   var dataProvider = Provider.of<AllAppProvidersDb>(context, listen: false);
-  //
-  //   for (var day in (widget.isSecondClinic)
-  //       ? provider!.getDoctor!.secondClinic!.clinicDays
-  //       : provider!.getDoctor!.clinicDays!) {
-  //     days.add(dataProvider.getTheTranslateOfTheDays(day));
-  //     log(dataProvider.getTheTranslateOfTheDays(day));
-  //   }
-  //   (widget.isSecondClinic)
-  //       ? provider.getDoctor!.secondClinic!.clinicDays = days
-  //       : provider.getDoctor!.clinicDays = days;
-  //   setState(() {});
-  // }
 
   @override
   void initState() {
