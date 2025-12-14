@@ -44,7 +44,6 @@ class _PatientOldReservationsState extends State<PatientOldReservations> {
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context);
     var difference = DateTime.now().difference(widget.model.date).inDays;
-    print(difference);
     return CustomContainer(
       child: Column(
         children: [

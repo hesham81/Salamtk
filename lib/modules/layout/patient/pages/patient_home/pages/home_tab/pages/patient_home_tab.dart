@@ -77,9 +77,9 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
         "color": Colors.red
       },
       {
-        "icon": "assets/icons/lung.png",
-        "text": local.lung,
-        "color": Colors.green
+        "icon": "assets/icons/categorize/Obstetrics & Gynecology.jpg",
+        "text": local?.obstetrics,
+        "color": Colors.orangeAccent,
       },
       {
         "icon": "assets/icons/teeth.png",
@@ -92,19 +92,20 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
         "color": Colors.orange
       },
       {
-        "icon": "assets/icons/general_doctor_icon.jpg",
-        "text": local.general,
-        "color": AppColors.secondaryColor
+        "icon": "assets/icons/categorize/Orthopedics.jpg",
+        "text": local?.orthopedics,
+        "color": AppColors.secondaryColor,
       },
       {
-        "icon": "assets/icons/elbatna_icon.jpg",
-        "text": local.theInterior,
-        "color": Colors.orange
+        "icon":
+        "assets/images/c47d18977f4567f97c2aa80da1d77294-removebg-preview.png",
+        "text": local?.physicalTherapy,
+        "color": Colors.orangeAccent,
       },
       {
-        "icon": "assets/icons/nerves_icon.jpg",
-        "text": local.nerves,
-        "color": Colors.red
+        "icon": "assets/icons/categorize/Nutritionist.jpg",
+        "text": local?.nutritionist,
+        "color": Colors.green,
       },
       {
         "icon": "assets/icons/surgery_icon.jpg",
@@ -173,7 +174,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                             categories[1]["icon"],
                           ),
                           color: AppColors.primaryColor,
-                        ).allPadding(15),
+                        ).allPadding(1),
                       ),
                       CategoryWidget.child(
                         text: provider.categories[1]["text"],
@@ -205,7 +206,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                         child: ImageIcon(
                           AssetImage(categories[4]["icon"]),
                           color: AppColors.primaryColor,
-                        ),
+                        ).allPadding(8),
                       ),
                       CategoryWidget.child(
                         text: categories[5]["text"],
@@ -213,7 +214,7 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                         child: ImageIcon(
                           AssetImage(categories[5]["icon"]),
                           color: AppColors.primaryColor,
-                        ),
+                        ).allPadding(8),
                       ),
                       CategoryWidget.child(
                         text: categories[6]["text"],
@@ -236,35 +237,35 @@ class _PatientHomeTabState extends State<PatientHomeTab> {
                 : SizedBox(),
 
             (searchList.isEmpty) ? 0.03.height.hSpace : SizedBox(),
-            (searchList.isEmpty) ? JoinUsIcon() : SizedBox(),
-            // (searchList.isEmpty)
-            //     ? CustomElevatedButton(
-            //         child: Row(
-            //           children: [
-            //             Icon(
-            //               FontAwesomeIcons.userDoctor,
-            //               color: AppColors.primaryColor,
-            //             ),
-            //             0.01.width.vSpace,
-            //             Text(
-            //               local.joinUs,
-            //               style: theme.textTheme.labelLarge!.copyWith(
-            //                 color: AppColors.primaryColor,
-            //               ),
-            //             ),
-            //             Spacer(),
-            //             Icon(
-            //               Icons.arrow_forward_ios,
-            //               color: AppColors.primaryColor,
-            //             ),
-            //           ],
-            //         ).hPadding(0.1.width),
-            //         onPressed: () => slideLeftWidget(
-            //           newPage: DoctorSignUp(),
-            //           context: context,
-            //         ),
-            //       )
-            //     : SizedBox(),
+            // (searchList.isEmpty) ? JoinUsIcon() : SizedBox(),
+            (searchList.isEmpty)
+                ? CustomElevatedButton(
+                    child: Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.userDoctor,
+                          color: AppColors.primaryColor,
+                        ),
+                        0.01.width.vSpace,
+                        Text(
+                          local.joinUs,
+                          style: theme.textTheme.labelLarge!.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ).hPadding(0.1.width),
+                    onPressed: () => slideLeftWidget(
+                      newPage: DoctorSignUp(),
+                      context: context,
+                    ),
+                  )
+                : SizedBox(),
             (searchList.isEmpty)
                 ? Row(
                     children: [

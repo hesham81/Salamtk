@@ -73,8 +73,9 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
             ),
             0.01.height.hSpace,
             StreamBuilder(
-              stream:
-                  CategorizedDoctorsData.getCategorizedDoctors(category: modal),
+              stream: CategorizedDoctorsData.getCategorizedDoctors(
+                category: modal,
+              ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -89,7 +90,10 @@ class _CategorizedDoctorsState extends State<CategorizedDoctors> {
                     )
                     .toList();
                 doctors = doctors
-                    .where((element) => element.specialist == modal || element.secondSpecialist == modal || element.thirdSpecialist == modal)
+                    .where((element) =>
+                        element.specialist == modal ||
+                        element.secondSpecialist == modal ||
+                        element.thirdSpecialist == modal)
                     .toList();
                 return (doctors.isEmpty)
                     ? Column(

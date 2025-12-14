@@ -260,13 +260,15 @@
          "pediatricSurgery": "جراحة الأطفال",
          "neurosurgery": "جراحة المخ والأعصاب",
          "maxillofacialSurgery": "جراحة الوجه والفكين",
-         "dermatovenereology": "الأمراض الجلدية والتناسلية",
+         "dermatovenereology": "الأمراض الجلدية التناسلية",
          "ivfAndFertility": "أطفال الأنابيب والعقم",
          "andrologyAndInfertility": "الذكورة والعقم",
          "painManagement": "إدارة الألم",
            "phoneNumberIsNotExist":"رقم الهاتف غير موجود",
              "updateSecondClinicInformation": "تعديل معلومات العياده الثانيه",
                "addAnotherClinic" : "اضف عياده اخري",
+                 "noPayment" : "لم يتم اثبات الدفع والدخول باسبقيه الحجز",
+
                  "updateProfile":"تحديث الملف الشخصي",
                    "updateClinicTimesSlots" : "تحديث بيانات وقت العياده ",
                      "customizeClinicDays" : "تحديث بيانات ايام العياده"

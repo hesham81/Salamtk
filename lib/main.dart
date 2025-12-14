@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigationKey,
       onGenerateRoute: OnGenerateRoute.route,
       builder: EasyLoading.init(),
+
     );
   }
 }

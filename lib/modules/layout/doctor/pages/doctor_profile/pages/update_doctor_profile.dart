@@ -57,28 +57,24 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController clinicPhoneNumberController = TextEditingController();
   TextEditingController secondClinicPhoneNumberController =
-      TextEditingController();
-  TextEditingController secondClinicCityController = TextEditingController();
+  TextEditingController();
   TextEditingController secondSpecialistController = TextEditingController();
   TextEditingController thirdSpecialistController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  late String specialist;
+  String? specialist;
   String? secondSpecialist;
   String? thirdSpecialist;
   String? workingFrom;
-
   String? workingTo;
-
   String? ClinicWorkingFrom;
-
   String? ClinicWorkingTo;
 
   var user = FirebaseAuth.instance.currentUser;
 
   _updateDoctorProfile() async {
-    // EasyLoading.show();
     try {
+      // Update working hours only if changed
       widget.doctor.workingFrom = workingFrom ?? widget.doctor.workingFrom;
       widget.doctor.workingTo = workingTo ?? widget.doctor.workingTo;
       widget.doctor.clinicWorkingFrom =
@@ -86,24 +82,24 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
       widget.doctor.clinicWorkingTo =
           ClinicWorkingTo ?? widget.doctor.clinicWorkingTo;
 
+      // Update other fields
       widget.doctor.name = nameController.text;
       widget.doctor.price = double.parse(priceController.text);
       widget.doctor.description = descriptionController.text;
-      widget.doctor.specialist = specialist;
+      widget.doctor.specialist = specialist ?? widget.doctor.specialist;
       widget.doctor.phoneNumber = phoneNumberController.text;
-      widget.doctor.secondSpecialist =
-          secondSpecialist ?? widget.doctor.secondSpecialist;
-      widget.doctor.thirdSpecialist =
-          thirdSpecialist ?? widget.doctor.thirdSpecialist;
+      widget.doctor.secondSpecialist = secondSpecialist;
+      widget.doctor.thirdSpecialist = thirdSpecialist;
 
       await DoctorsCollection.updateDoctor(widget.doctor);
-      user!.updateDisplayName(nameController.text);
-      user!.updateEmail(emailController.text);
-      await user!.reload();
-      // EasyLoading.dismiss();
+      await user?.updateDisplayName(nameController.text);
+      // Note: Firebase does not allow email update via client SDK without re-auth
+      // await user?.updateEmail(emailController.text);
+      await user?.reload();
+
       SnackBarServices.showSuccessMessage(
         context,
-        message: "Profile Updated Succefully",
+        message: "Profile Updated Successfully",
       );
       Navigator.pop(context);
     } catch (error) {
@@ -114,6 +110,12 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
     }
   }
 
+  // Helper to normalize empty strings to null
+  String? _normalizeSpecialist(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    return specialists.contains(value) ? value : null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -121,12 +123,16 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
     emailController.text = user?.email ?? "No Email";
     priceController.text = widget.doctor.price.toString();
     descriptionController.text = widget.doctor.description;
-    specialistController.text = widget.doctor.specialist;
     phoneNumberController.text = widget.doctor.phoneNumber;
     clinicPhoneNumberController.text = widget.doctor.clinicPhoneNumber;
-    specialist = widget.doctor.specialist;
-    secondClinicPhoneNumberController.text =
-        widget.doctor.secondClinic?.clinicPhone ?? "";
+
+    // Initialize specialty fields safely
+    specialist = _normalizeSpecialist(widget.doctor.specialist);
+    secondSpecialist = _normalizeSpecialist(widget.doctor.secondSpecialist);
+    thirdSpecialist = _normalizeSpecialist(widget.doctor.thirdSpecialist);
+
+    // Optional: set controller texts if needed elsewhere
+    specialistController.text = widget.doctor.specialist;
     secondSpecialistController.text = widget.doctor.secondSpecialist ?? "";
     thirdSpecialistController.text = widget.doctor.thirdSpecialist ?? "";
   }
@@ -136,25 +142,20 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
   String? _password;
 
   Future<void> _getPhoneNumber() async {
-    print("The Debug: ");
     _phoneNumber = await AuthCollections.getPhoneNumber();
-    print("The Debug: ${_phoneNumber}");
     _password = await AuthCollections.getPassword();
-    print("The Debug: ${_password}");
     setState(() {});
   }
 
   Future<void> _uploadImage() async {
-    // EasyLoading.show();
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
       });
+
       var imageId = Random().nextInt(100000).toString();
       await ScreenShotsStorageManager.uploadScreenShot(
         uid: imageId,
@@ -165,67 +166,23 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
         uid: imageId,
         fileName: 'profile',
       );
-      FirebaseAuth.instance.currentUser!.updatePhotoURL(url);
+      await FirebaseAuth.instance.currentUser?.updatePhotoURL(url);
       setState(() {});
-      // // EasyLoading.dismiss();
-    } else {
-      // User canceled the picker
-      print('No image selected.');
     }
   }
 
   final List<String> allSlots = [
-    "12:00 AM",
-    "12:30 AM",
-    "01:00 AM",
-    "01:30 AM",
-    "02:00 AM",
-    "02:30 AM",
-    "03:00 AM",
-    "03:30 AM",
-    "04:00 AM",
-    "04:30 AM",
-    "05:00 AM",
-    "05:30 AM",
-    "06:00 AM",
-    "06:30 AM",
-    "07:00 AM",
-    "07:30 AM",
-    "08:00 AM",
-    "08:30 AM",
-    "09:00 AM",
-    "09:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM",
-    "12:30 PM",
-    "01:00 PM",
-    "01:30 PM",
-    "02:00 PM",
-    "02:30 PM",
-    "03:00 PM",
-    "03:30 PM",
-    "04:00 PM",
-    "04:30 PM",
-    "05:00 PM",
-    "05:30 PM",
-    "06:00 PM",
-    "06:30 PM",
-    "07:00 PM",
-    "07:30 PM",
-    "08:00 PM",
-    "08:30 PM",
-    "09:00 PM",
-    "09:30 PM",
-    "10:00 PM",
-    "10:30 PM",
-    "11:00 PM",
-    "11:30 PM"
+    "12:00 AM", "12:30 AM", "01:00 AM", "01:30 AM", "02:00 AM", "02:30 AM",
+    "03:00 AM", "03:30 AM", "04:00 AM", "04:30 AM", "05:00 AM", "05:30 AM",
+    "06:00 AM", "06:30 AM", "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM",
+    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
+    "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
+    "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM",
+    "09:00 PM", "09:30 PM", "10:00 PM", "10:30 PM", "11:00 PM", "11:30 PM"
   ];
 
-  List<String> specialists = [
+  final List<String> specialists = [
     "Obstetrics",
     "Teeth",
     "Urology",
@@ -256,17 +213,17 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.doctor.secondClinic!.clinicDays.first);
     var local = AppLocalizations.of(context);
     var provider = Provider.of<PatientProvider>(context);
     var signUpProvider = Provider.of<SignUpProviders>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           local!.profile,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: AppColors.primaryColor,
-              ),
+            color: AppColors.primaryColor,
+          ),
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -283,13 +240,13 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 var message = await LoginAuth.deleteAccount();
                 (message == null)
                     ? SnackBarServices.showSuccessMessage(
-                        context,
-                        message: "Delete Email Request Sent Successfully",
-                      )
+                  context,
+                  message: "Delete Email Request Sent Successfully",
+                )
                     : SnackBarServices.showErrorMessage(
-                        context,
-                        message: message,
-                      );
+                  context,
+                  message: message,
+                );
               } catch (error) {
                 SnackBarServices.showErrorMessage(
                   context,
@@ -312,17 +269,6 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
           child: Column(
             children: [
               0.01.height.hSpace,
-              // CustomTextFormField(
-              //   hintText: local.email,
-              //   controller: emailController,
-              //   validate: (value) {
-              //     if (value!.isEmpty) {
-              //       return local.noEmail;
-              //     } else {
-              //       return Validations.isEmailValid(value);
-              //     }
-              //   },
-              // ),
               CircularProfileAvatar(
                 user?.photoURL ?? AppConstants.placeHolderImage,
                 borderColor: AppColors.secondaryColor,
@@ -336,11 +282,10 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 hintText: local.name,
                 controller: nameController,
                 validate: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return local.noName;
-                  } else {
-                    return null;
                   }
+                  return null;
                 },
               ),
               0.01.height.hSpace,
@@ -350,11 +295,10 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 minLine: 3,
                 maxLine: 4,
                 validate: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "No Description";
-                  } else {
-                    return null;
                   }
+                  return null;
                 },
               ),
               0.01.height.hSpace,
@@ -366,12 +310,10 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                   if (value == null || value.isEmpty) {
                     return local.emptyPhone;
                   }
-
                   final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
                   if (!egyptPhoneRegex.hasMatch(value)) {
                     return local.phoneError;
                   }
-
                   return null;
                 },
               ),
@@ -381,127 +323,96 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 controller: priceController,
                 keyboardType: TextInputType.number,
                 validate: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "No Price";
-                  } else {
-                    return null;
                   }
+                  return null;
                 },
               ),
               0.01.height.hSpace,
-              CustomDropdown(
+
+              // Primary Specialist (required)
+              CustomDropdown<String>(
                 items: specialists,
-                onChanged: (p0) {
-                  specialist = p0!;
+                onChanged: (value) {
+                  setState(() {
+                    specialist = value;
+                  });
                 },
-                initialItem: widget.doctor.specialist,
-              ),
-              0.01.height.hSpace,
-              CustomDropdown(
-                items: specialists,
-                onChanged: (p0) {
-                  secondSpecialist = p0!;
-                },
-                initialItem: widget.doctor.secondSpecialist ?? "",
-              ),
-              0.01.height.hSpace,
-              CustomDropdown(
-                items: specialists,
-                onChanged: (p0) {
-                  thirdSpecialist = p0!;
-                },
-                initialItem: widget.doctor.thirdSpecialist ?? "",
+                initialItem: specialist, // Already normalized in initState
               ),
 
               0.01.height.hSpace,
-              // Visibility(
-              //     visible: widget.doctor.workingTo == null,
-              //     replacement: CustomElevatedButton(
-              //       child: Row(
-              //         children: [
-              //           Text(
-              //             local.customizeYourTime,
-              //             style:
-              //                 Theme.of(context).textTheme.titleSmall!.copyWith(
-              //                       color: AppColors.primaryColor,
-              //                       fontWeight: FontWeight.bold,
-              //                     ),
-              //           ).hPadding(0.03.width),
-              //           Spacer(),
-              //           Icon(
-              //             Icons.arrow_forward_ios,
-              //             color: AppColors.primaryColor,
-              //           ).hPadding(0.03.width)
-              //         ],
-              //       ),
-              //       onPressed: () => slideLeftWidget(
-              //         newPage: UpdateDaysProfileDoctor(),
-              //         context: context,
-              //       ),
-              //     ),
-              //     child: Column(
-              //       children: [
-              //         CustomDropdown<String>(
-              //           items: allSlots,
-              //           onChanged: (p0) {
-              //             workingFrom = p0!;
-              //             setState(() {});
-              //           },
-              //           hintText: widget.doctor.workingFrom,
-              //         ),
-              //         0.01.height.hSpace,
-              //         CustomDropdown<String>(
-              //           items: (workingFrom == null)
-              //               ? allSlots
-              //               : DoctorsProfileMethods.handleSlots(workingFrom!),
-              //           onChanged: (p0) {
-              //             workingTo = p0;
-              //           },
-              //           hintText: widget.doctor.workingTo,
-              //         ),
-              //       ],
-              //     )),
+
+              // Second Specialist (optional)
+              CustomDropdown<String>(
+                items: specialists,
+                onChanged: (value) {
+                  setState(() {
+                    secondSpecialist = value;
+                  });
+                },
+                initialItem: secondSpecialist, // Could be null → shows nothing selected
+              ),
+
+              0.01.height.hSpace,
+
+              // Third Specialist (optional)
+              CustomDropdown<String>(
+                items: specialists,
+                onChanged: (value) {
+                  setState(() {
+                    thirdSpecialist = value;
+                  });
+                },
+                initialItem: thirdSpecialist, // Could be null
+              ),
+
+              0.01.height.hSpace,
+
               CustomElevatedButton(
-                  child: Row(
-                    children: [
-                      Text(
-                        local.password,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ).hPadding(0.03.width),
-                      Spacer(),
-                      Icon(
-                        Icons.lock,
+                child: Row(
+                  children: [
+                    Text(
+                      local.password,
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.primaryColor,
-                      ).hPadding(0.03.width)
-                    ],
-                  ),
-                  onPressed: () async {
-                    EasyLoading.show();
-                    await OtpServices.sendOtp(
-                      phoneNumber: phoneNumberController.text,
-                      lang: 'ar',
-                      name: FirebaseAuth.instance.currentUser?.displayName ??
-                          local.noName,
-                    );
-                    EasyLoading.dismiss();
-                    slideLeftWidget(
-                      newPage: Otp(
-                        onCorrect: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChangePassword(),
-                            ),
-                          );
-                        },
+                        fontWeight: FontWeight.bold,
                       ),
-                      context: context,
-                    );
-                  }),
+                    ).hPadding(0.03.width),
+                    Spacer(),
+                    Icon(
+                      Icons.lock,
+                      color: AppColors.primaryColor,
+                    ).hPadding(0.03.width)
+                  ],
+                ),
+                onPressed: () async {
+                  EasyLoading.show();
+                  await OtpServices.sendOtp(
+                    phoneNumber: phoneNumberController.text,
+                    lang: 'ar',
+                    name: FirebaseAuth.instance.currentUser?.displayName ??
+                        local.noName,
+                  );
+                  EasyLoading.dismiss();
+                  slideLeftWidget(
+                    newPage: Otp(
+                      onCorrect: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePassword(),
+                          ),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
               0.02.height.hSpace,
+
               Visibility(
                 visible: widget.doctor.days != null,
                 child: CustomElevatedButton(
@@ -512,9 +423,9 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                             ? local.customizeYourTime
                             : "${signUpProvider.firstClinicTime.first} ${local.to} ${signUpProvider.firstClinicTime.last}",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ).hPadding(0.03.width),
                       Spacer(),
                       Icon(
@@ -535,15 +446,16 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 ),
               ),
               0.02.height.hSpace,
+
               CustomElevatedButton(
                 child: Row(
                   children: [
                     Text(
                       local.customizeClinicDays,
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ).hPadding(0.03.width),
                     Spacer(),
                     Icon(
@@ -560,6 +472,7 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                 ),
               ),
               0.01.height.hSpace,
+
               CustomTextFormField(
                 hintText: local.phoneNumber,
                 controller: clinicPhoneNumberController,
@@ -568,58 +481,54 @@ class _UpdateDoctorProfileState extends State<UpdateDoctorProfile> {
                   if (value == null || value.isEmpty) {
                     return local.emptyPhone;
                   }
-
                   final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
                   if (!egyptPhoneRegex.hasMatch(value)) {
                     return local.phoneError;
                   }
-
                   return null;
                 },
               ),
               0.01.height.hSpace,
-              DividersWord(
-                text: local.secondClinicInfo,
-              ),
+
+              if (widget.doctor.secondClinic != null)
+                DividersWord(text: local.secondClinicInfo),
               0.01.height.hSpace,
-              GestureDetector(
-                onTap: () => slideLeftWidget(
-                  newPage: UpdateSecondClinicProfileInfo(
-                    doctor: widget.doctor,
-                    secondClinicDataModel: widget.doctor.secondClinic,
+
+              if (widget.doctor.secondClinic != null)
+                GestureDetector(
+                  onTap: () => slideLeftWidget(
+                    newPage: UpdateSecondClinicProfileInfo(
+                      doctor: widget.doctor,
+                      secondClinicDataModel: widget.doctor.secondClinic,
+                    ),
+                    context: context,
                   ),
-                  context: context,
-                ),
-                child: CustomContainer(
-                  child: Row(
-                    children: [
-                      Text(
-                        local.updateSecondClinicInformation,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                      ),
-                    ],
+                  child: CustomContainer(
+                    child: Row(
+                      children: [
+                        Text(
+                          local.updateSecondClinicInformation,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Spacer(),
+                        Icon(Icons.arrow_forward_ios),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               0.01.height.hSpace,
-              // CustomDropdown(
-              //   items: [],
-              //   onChanged: (p0) {},
-              // ),
+
               SizedBox(
                 width: double.maxFinite,
                 child: CustomElevatedButton(
                   child: Text(
                     local.confirm,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: AppColors.primaryColor,
-                        ),
+                      color: AppColors.primaryColor,
+                    ),
                   ),
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {

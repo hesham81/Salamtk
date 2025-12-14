@@ -152,14 +152,9 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   DoctorProfileComponent(
                     icon: FontAwesomeIcons.timeline,
                     content:
-                        "${local.clinicWorkingFrom} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
-                            doctor!.clinicWorkingFrom ?? "",
-                          ) : doctor!.clinicWorkingFrom}",
-                  ),
-                  0.01.height.hSpace,
-                  DoctorProfileComponent(
-                    icon: FontAwesomeIcons.timeline,
-                    content: "${local.workingDays} ${doctor?.clinicDays?.first ?? ""}",
+                        "${local.workingDays} ${(language.getLanguage == "ar") ? TranslationServices.translateDaysToAr(
+                            doctor!.clinicDays?.first ?? "",
+                          ) : doctor!.clinicDays?.last}",
                   ),
                   0.01.height.hSpace,
                   DoctorProfileComponent(

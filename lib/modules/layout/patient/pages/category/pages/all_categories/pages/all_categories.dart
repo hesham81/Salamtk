@@ -19,17 +19,6 @@ class AllCategories extends StatefulWidget {
 
 class _AllCategoriesState extends State<AllCategories> {
 
-  _handleText(String category) {
-    var language =
-        Provider.of<LanguageProvider>(navigationKey.currentContext!).getLanguage;
-    if (language == "ar" &&
-        TranslationServices.englishSpecialists.contains(category)) {
-      return TranslationServices.translateCategoriesToEn(category);
-    } else if (language == "en" &&
-        TranslationServices.arabicSpecialists.contains(category)) {
-      return TranslationServices.translateCategoriesToAr(category);
-    }
-  }
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PatientProvider>(context);

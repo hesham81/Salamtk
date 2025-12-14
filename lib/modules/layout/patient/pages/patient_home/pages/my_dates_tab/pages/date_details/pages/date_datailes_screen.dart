@@ -159,7 +159,12 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                     0.01.height.hSpace,
                     MixedTextColors(
                       title: local.paymentMethod,
-                      value: local.electronicWallet,
+                      value: (widget.model.cashedPhoneNumber == null)
+                          ? local.noPayment
+                          : local.electronicWallet,
+                      valueColor: (widget.model.cashedPhoneNumber == null)
+                          ? Colors.red
+                          : AppColors.secondaryColor,
                     ),
                     0.01.height.hSpace,
                     MixedTextColors(
@@ -170,11 +175,6 @@ class _DateDetailsScreenState extends State<DateDetailsScreen> {
                     MixedTextColors(
                       title: local.patientPhoneNumber,
                       value: widget.model.patientPhoneNumber,
-                    ),
-                    0.01.height.hSpace,
-                    MixedTextColors(
-                      title: local.email,
-                      value: widget.model.email,
                     ),
                     0.01.height.hSpace,
                     MixedTextColors(

@@ -111,7 +111,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                   );
                 }
               },
-              child: const Text('Pay Later'),
+              child: const Text('ادفع عند الطبيب'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -121,7 +121,7 @@ class _ConfirmPaymentState extends State<ConfirmPayment> {
                 ); // Close d;ialog
                 // Handle "Pay Now" logic here
               },
-              child: const Text('Pay Now'),
+              child: const Text('ادفع الأن'),
             ),
           ],
         );

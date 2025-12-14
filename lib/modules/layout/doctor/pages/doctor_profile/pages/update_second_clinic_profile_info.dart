@@ -43,10 +43,11 @@ class _UpdateSecondClinicProfileInfoState
   var cityController = TextEditingController();
   var zoneController = TextEditingController();
   var addressController = TextEditingController();
-  bool _isUpdatePhoneNumber = false;
-  String? selectedCity = null;
-  String? selectedLocation = null;
+
+  String? selectedCity;
+  String? selectedLocation;
   List<String> data = [];
+
   var daysAr = [
     "السبت",
     "الاحد",
@@ -66,24 +67,13 @@ class _UpdateSecondClinicProfileInfoState
     "Friday",
   ];
 
-  List<String> _handlerDays() {
-    List<String> listOfIndexes = [];
-    for (var i in data) {
-      var index = daysAr.indexOf(i);
-      listOfIndexes.add(
-        daysEn[index],
-      );
-    }
-    return listOfIndexes;
-  }
-
-
   @override
   void initState() {
-    this.phoneNumberController.text = widget.secondClinicDataModel!.clinicPhone;
-    this.cityController.text = widget.secondClinicDataModel!.clinicCity;
-    this.zoneController.text = widget.secondClinicDataModel!.clinicZone;
-    this.addressController.text = widget.secondClinicDataModel!.clinicStreet;
+    phoneNumberController.text =
+        widget.secondClinicDataModel!.clinicPhone;
+    cityController.text = widget.secondClinicDataModel!.clinicCity;
+    zoneController.text = widget.secondClinicDataModel!.clinicZone;
+    addressController.text = widget.secondClinicDataModel!.clinicStreet;
 
     super.initState();
   }
@@ -93,6 +83,7 @@ class _UpdateSecondClinicProfileInfoState
     var local = AppLocalizations.of(context);
     var provider = context.read<SignUpProviders>();
     var lang = context.read<LanguageProvider>();
+
     return Form(
       key: formKey,
       child: Scaffold(
@@ -100,8 +91,8 @@ class _UpdateSecondClinicProfileInfoState
           title: Text(
             local!.updateSecondClinicInformation,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColors.primaryColor,
-                ),
+              color: AppColors.primaryColor,
+            ),
           ),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -115,45 +106,68 @@ class _UpdateSecondClinicProfileInfoState
           child: Text(
             local.confirm,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: AppColors.primaryColor,
-                ),
+              color: AppColors.primaryColor,
+            ),
           ),
-          onPressed: (phoneNumberController.text.isEmpty ||
-                  selectedCity == null ||
-                  selectedLocation == null ||
-                  addressController.text.isEmpty ||
-                  data.isEmpty)
-              ? null
-              : () async {
-                  List<String> listOfIndexes = [];
-                  if (lang.getLanguage == "ar") {
-                    for (var i in data) {
-                      var index = daysAr.indexOf(i);
-                      listOfIndexes.add(
-                        daysEn[index],
-                      );
-                    }
-                  } else {
-                    listOfIndexes = data;
-                  }
-                  ClinicDataModel _secondClinic = ClinicDataModel(
-                    clinicStreet: addressController.text,
-                    clinicDays: listOfIndexes,
-                    clinicTimeSlots: provider.updatedTimes as List<String>,
-                    clinicCity: selectedCity ?? "",
-                    clinicZone: selectedLocation ?? "",
-                    clinicPhone: phoneNumberController.text,
-                  );
-                  var doctor = widget.doctor;
-                  doctor.secondClinic = _secondClinic;
-                  EasyLoading.show();
-                  await DoctorsCollection.updateDoctor(doctor);
-                  EasyLoading.dismiss();
-                  SnackBarServices.showSuccessMessage(
-                    context,
-                    message: "تم التحديث بنجاح",
-                  );
-                },
+          onPressed: () async {
+            final old = widget.secondClinicDataModel!;
+
+            // ---------------------------
+            // KEEP OLD VALUES IF NOT CHANGED
+            // ---------------------------
+
+            String finalPhone = phoneNumberController.text.isEmpty
+                ? old.clinicPhone
+                : phoneNumberController.text;
+
+            String finalCity = selectedCity ?? old.clinicCity;
+            String finalZone = selectedLocation ?? old.clinicZone;
+
+            String finalAddress = addressController.text.isEmpty
+                ? old.clinicStreet
+                : addressController.text;
+
+            List<String> finalDays = data.isEmpty
+                ? old.clinicDays
+                : (lang.getLanguage == "ar"
+                ? data
+                .map((d) => daysEn[daysAr.indexOf(d)])
+                .toList()
+                : data);
+
+            List<String> finalTimeSlots =
+            provider.updatedTimes.isEmpty
+                ? old.clinicTimeSlots
+                : provider.updatedTimes as List<String>;
+
+            // ---------------------------
+            // CREATE UPDATED MODEL
+            // ---------------------------
+
+            ClinicDataModel updatedClinic = ClinicDataModel(
+              clinicStreet: finalAddress,
+              clinicDays: finalDays,
+              clinicTimeSlots: finalTimeSlots,
+              clinicCity: finalCity,
+              clinicZone: finalZone,
+              clinicPhone: finalPhone,
+            );
+
+            // ---------------------------
+            // UPDATE DOCTOR
+            // ---------------------------
+            var doctor = widget.doctor;
+            doctor.secondClinic = updatedClinic;
+
+            EasyLoading.show();
+            await DoctorsCollection.updateDoctor(doctor);
+            EasyLoading.dismiss();
+
+            SnackBarServices.showSuccessMessage(
+              context,
+              message: "تم التحديث بنجاح",
+            );
+          },
         ).allPadding(8),
         body: Visibility(
           visible: widget.secondClinicDataModel != null,
@@ -169,8 +183,8 @@ class _UpdateSecondClinicProfileInfoState
                 child: Text(
                   local.addAnotherClinic,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: AppColors.primaryColor,
-                      ),
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 onPressed: () {},
               ),
@@ -186,18 +200,6 @@ class _UpdateSecondClinicProfileInfoState
                   keyboardType: TextInputType.phone,
                   suffixIcon: Icons.phone_android,
                   controller: phoneNumberController,
-                  validate: (value) {
-                    if (value == null || value.isEmpty) {
-                      return local.emptyPhone;
-                    }
-
-                    final egyptPhoneRegex = RegExp(r'^0(10|11|12|15)\d{8}$');
-                    if (!egyptPhoneRegex.hasMatch(value)) {
-                      return local.phoneError;
-                    }
-
-                    return null;
-                  },
                 ),
                 0.02.height.hSpace,
                 CustomDropdown<String>(
@@ -216,7 +218,8 @@ class _UpdateSecondClinicProfileInfoState
                 0.01.height.hSpace,
                 CustomDropdown<String>(
                   hintText: local.zones,
-                  items: DoctorsProfileMethods.getGov(city: selectedCity ?? ""),
+                  items: DoctorsProfileMethods.getGov(
+                      city: selectedCity ?? ""),
                   onChanged: (p0) {
                     setState(() {
                       selectedLocation = p0;
@@ -224,8 +227,7 @@ class _UpdateSecondClinicProfileInfoState
                   },
                   decoration: CustomDropdownDecoration(
                     closedBorder: Border.all(
-                      color: AppColors
-                          .slateBlueColor, // color: AppColors.secondaryColor,
+                      color: AppColors.slateBlueColor,
                     ),
                     closedBorderRadius: BorderRadius.circular(10),
                   ),
@@ -239,7 +241,7 @@ class _UpdateSecondClinicProfileInfoState
                   suffixIcon: Icons.streetview,
                 ),
                 0.02.height.hSpace,
-                0.01.height.hSpace,
+
                 GroupButton(
                   options: GroupButtonOptions(
                     borderRadius: BorderRadius.circular(10),
@@ -247,35 +249,17 @@ class _UpdateSecondClinicProfileInfoState
                     selectedColor: AppColors.secondaryColor,
                     groupingType: GroupingType.wrap,
                   ),
-                  onSelected: (value, index, isSelected) => setState(
-                    () {
-                      (isSelected) ? data.add(value) : data.remove(value);
-                    },
-                  ),
-                  maxSelected: provider.days.length,
+                  onSelected: (value, index, isSelected) => setState(() {
+                    (isSelected) ? data.add(value) : data.remove(value);
+                  }),
+                  maxSelected: 7,
                   isRadio: false,
                   enableDeselect: true,
-                  buttons: (lang.getLanguage == "en")
-                      ? [
-                          "Saturday",
-                          "Sunday",
-                          "Monday",
-                          "Tuesday",
-                          "Wednesday",
-                          "Thursday",
-                          "Friday",
-                        ]
-                      : [
-                          "السبت",
-                          "الاحد",
-                          "الاثنين",
-                          "الثلاثاء",
-                          "الاربعاء",
-                          "الخميس",
-                          "الجمعة",
-                        ],
+                  buttons: (lang.getLanguage == "en") ? daysEn : daysAr,
                 ),
+
                 0.02.height.hSpace,
+
                 GestureDetector(
                   onTap: () => slideLeftWidget(
                     newPage: UpdateDays(
@@ -291,14 +275,12 @@ class _UpdateSecondClinicProfileInfoState
                               ? local.updateClinicTimesSlots
                               : "${provider.updatedTimes.first} ${local.to} ${provider.updatedTimes.last}",
                           style:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          Theme.of(context).textTheme.titleSmall!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Spacer(),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                        ),
+                        Icon(Icons.arrow_forward_ios),
                       ],
                     ),
                   ),

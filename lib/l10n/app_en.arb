@@ -272,6 +272,7 @@
   "addAnotherClinic" : "Add Another Clinic",
   "updateProfile":"Update",
   "updateClinicTimesSlots" : "Update Clinic Times Slots",
+  "noPayment" : "No Payment",
   "customizeClinicDays" : "Customize Clinic Days"
 
 

@@ -39,7 +39,9 @@ class _PatientDatesTabState extends State<PatientDatesTab> {
           ? Column(
               children: [
                 0.3.height.hSpace,
-                SvgPicture.asset("assets/icons/no_medical_date.svg").center,
+                SvgPicture.asset(
+                  "assets/icons/no_medical_date.svg",
+                ).center,
                 0.03.height.hSpace,
                 Text(
                   (FirebaseAuth.instance.currentUser?.uid != null)

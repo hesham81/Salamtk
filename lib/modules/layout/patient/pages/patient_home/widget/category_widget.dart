@@ -65,9 +65,10 @@ class CategoryWidget extends StatelessWidget {
         ),
         0.01.height.hSpace,
         Text(
-          text,
+          (text.length > 9 && languageProvider.getLanguage == "en") ? text.substring(0, 9) : text,
           textAlign: TextAlign.center,
           style: TextStyle(
+            overflow: TextOverflow.ellipsis,
             color: AppColors.blackColor,
             fontWeight: FontWeight.bold,
           ),

@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:salamtk/core/functions/launchers_classes.dart';
 import 'package:salamtk/core/providers/app_providers/language_provider.dart';
 import 'package:salamtk/core/widget/icon_row.dart';
 import 'package:salamtk/modules/layout/patient/pages/patient_home/pages/home_tab/pages/selected_doctor/widget/selected_doctor_rate_widget.dart';
@@ -66,7 +65,6 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
     if (time == null) return "";
     if (language.getLanguage != "ar") return time;
 
-    // Example: Convert "AM" → "ص", "PM" → "م"
     var result = time
         .replaceAll("AM", "ص")
         .replaceAll("PM", "م")
@@ -189,56 +187,63 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: CachedNetworkImage(
-                        imageUrl: provider.getDoctor?.imageUrl ?? "",
-                        width: 0.3.width,
-                        height: 0.2.height,
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: provider.getDoctor?.imageUrl ?? "",
+                          width: 0.3.width,
+                          height: 0.2.height,
+                        ),
                       ),
                     ),
                     0.02.width.vSpace,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          provider.getDoctor?.name ?? "No Name",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge!
-                              .copyWith(),
-                        ),
-                        0.01.height.hSpace,
-                        // IconRow(
-                        //   color: Colors.black,
-                        //   icon: Icons.phone,
-                        //   text: provider.getDoctor?.phoneNumber ?? "No Phone",
-                        // ),
-                        0.01.height.hSpace,
-                        Text(
-                          (language.getLanguage == "en")
-                              ? provider.getDoctor?.specialist ??
-                                  "No Specialist"
-                              : TranslationServices.translateCategoriesToAr(
-                                  provider.getDoctor?.specialist ??
-                                      "No Specialist",
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            provider.getDoctor?.name ?? "No Name",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(color: Colors.black.withAlpha(80)),
-                        ),
-                        0.01.height.hSpace,
-                        IconRow(
-                          icon: Icons.location_on_outlined,
-                          text:
-                              " ${provider.getDoctor?.state} , ${provider.getDoctor?.city} , ${provider.getDoctor?.street}",
-                        ),
-                        0.01.height.hSpace,
-                        SelectedDoctorRateWidget(
-                          rate: provider.getDoctor?.rate ?? 0.0,
-                        ),
-                      ],
+                          ),
+                          0.01.height.hSpace,
+                          Text(
+                            (language.getLanguage == "en")
+                                ? provider.getDoctor?.specialist ??
+                                    "No Specialist"
+                                : TranslationServices.translateCategoriesToAr(
+                                    provider.getDoctor?.specialist ??
+                                        "No Specialist",
+                                  ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                  color: Colors.black,
+                                ),
+                          ),
+                          0.01.height.hSpace,
+                          IconRow(
+                            icon: Icons.location_on_outlined,
+                            text: (_currentIndex == 0)
+                                ? "${provider.getDoctor?.street}  ,  ${provider.getDoctor?.city} , ${provider.getDoctor?.state}"
+                                : "${provider.getDoctor?.secondClinic?.clinicStreet}  , ${provider.getDoctor?.secondClinic?.clinicZone} ,  ${provider.getDoctor?.secondClinic?.clinicCity} ",
+                          ),
+                          0.01.height.hSpace,
+                          SizedBox(
+                            width: 0.2.width,
+                            child: SelectedDoctorRateWidget(
+                              rate: provider.getDoctor?.rate ?? 0.0,
+                            ),
+                          ).center,
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -278,9 +283,25 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                     ),
               0.02.height.hSpace,
               Text(
-                local.clinicInfo,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                local.aboutDoctor,
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.blackColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              0.01.height.hSpace,
+              Text(
+                provider.getDoctor?.description ?? "No Description",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.blackColor,
+                    ),
+              ),
+              0.02.height.hSpace,
+              Text(
+                local.clinicInfo,
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
               0.02.height.hSpace,
@@ -293,9 +314,7 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                           : "${provider.getDoctor?.secondClinic?.clinicDays?.first} - ${provider.getDoctor?.secondClinic?.clinicDays?.last}"
                       : (_currentIndex == 0)
                           ? "${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.clinicDays!.last)}"
-                          : "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"
-
-                  ),
+                          : "${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.first)} - ${getTheTranslateOfTheDays(provider.getDoctor!.secondClinic!.clinicDays!.last)}"),
               0.02.height.hSpace,
               IconRow(
                   color: AppColors.blackColor,
@@ -307,39 +326,31 @@ class _SelectedDoctorState extends State<SelectedDoctor> {
                               ? "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
                               : "${provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? ""} - ${provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? ""}"
                       : (_currentIndex == 0)
-                          ? "${formatTime(provider.getDoctor?.days?.first ?? "", language)} - ${(provider.getDoctor?.days?.last)}"
+                          ? "${formatTime(provider.getDoctor?.days?.first ?? "", language)} - ${formatTime(provider.getDoctor?.days?.last, language)}"
                           : (_currentIndex == 1)
                               ? "${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? "", language)} - ${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? "", language)}"
                               : "${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.first ?? "", language)} - ${formatTime(provider.getDoctor?.secondClinic?.clinicTimeSlots.last ?? "", language)}"),
               0.02.height.hSpace,
-              IconRow(
-                color: AppColors.blackColor,
-                icon: Icons.phone_android,
-                text: (_currentIndex == 0)
-                    ? provider.getDoctor?.clinicPhoneNumber ??
-                        local.noPhoneNumberSet
-                    : provider.getDoctor?.secondClinic?.clinicPhone ??
-                        local.noPhoneNumberSet,
-              ),
-              0.02.height.hSpace,
-              Text(
-                local.aboutDoctor,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.blackColor,
-                    ),
-              ),
-              0.01.height.hSpace,
-              Text(
-                provider.getDoctor?.description ?? "No Description",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.blackColor,
-                    ),
+              InkWell(
+                onTap: () => LaunchersClasses.call(
+                  phoneNumber: provider.getDoctor!.phoneNumber,
+                ),
+                child: IconRow(
+                  color: AppColors.blackColor,
+                  icon: Icons.phone_android,
+                  text: (_currentIndex == 0)
+                      ? provider.getDoctor?.clinicPhoneNumber ??
+                          local.noPhoneNumberSet
+                      : provider.getDoctor?.secondClinic?.clinicPhone ??
+                          local.noPhoneNumberSet,
+                ),
               ),
               0.02.height.hSpace,
               Text(
                 local.reviews,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.blackColor,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
               0.01.height.hSpace,

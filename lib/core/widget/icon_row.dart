@@ -20,14 +20,18 @@ class IconRow extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: color ?? AppColors.blackColor.withAlpha(80),
+          color: color ?? AppColors.blackColor,
         ),
         0.01.width.vSpace,
-        Text(
-          text,
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                color: color ?? AppColors.blackColor.withAlpha(80),
-              ),
+        Expanded(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                  color: color ?? AppColors.blackColor,
+                ),
+          ),
         ),
       ],
     );

@@ -169,7 +169,7 @@ class _MoneyRequestModelSheetState extends State<MoneyRequestModelSheet> {
                             color: AppColors.primaryColor,
                           ),
                     ),
-                    onPressed: () {
+                    onPressed: ()async {
                       if (formKey.currentState!.validate()) {
                         OtpServices.sendOtp();
                         Navigator.pushReplacement(
